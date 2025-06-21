@@ -20,6 +20,8 @@ import {
 import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import type { CreateStreakFormData, RepeatType } from "../types";
+import type { Language } from "../utils/i18n";
+import { useTranslations } from "../utils/i18n";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,23 +36,27 @@ interface AddStreakBottomSheetProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: CreateStreakFormData) => void;
+  language: Language;
 }
-
-const dayNames = [
-  "Pazar",
-  "Pazartesi",
-  "Salı",
-  "Çarşamba",
-  "Perşembe",
-  "Cuma",
-  "Cumartesi",
-];
 
 const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   open,
   onClose,
   onSubmit,
+  language,
 }) => {
+  const t = useTranslations(language);
+
+  // Get day names based on current language
+  const dayNames = [
+    t.sunday,
+    t.monday,
+    t.tuesday,
+    t.wednesday,
+    t.thursday,
+    t.friday,
+    t.saturday,
+  ];
   const [step, setStep] = useState<"name" | "repeat" | "days">("name");
   const [formData, setFormData] = useState<CreateStreakFormData>({
     name: "",
@@ -115,13 +121,13 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   const getTitle = () => {
     switch (step) {
       case "name":
-        return "Yeni Streak";
+        return t.addStreak;
       case "repeat":
-        return "Tekrarlanma";
+        return t.repeatPattern;
       case "days":
-        return "Günler";
+        return t.selectDays;
       default:
-        return "Yeni Streak";
+        return t.addStreak;
     }
   };
 
@@ -197,10 +203,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           <TextField
             autoFocus
             fullWidth
-            label="Streak Adı"
+            label={t.streakName}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Örn: Su içmek, Egzersiz yapmak"
+            placeholder={t.streakNamePlaceholder}
             variant="filled"
             sx={{
               mt: 2,
@@ -227,7 +233,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
 
         {step === "repeat" && (
           <FormControl sx={{ mt: 2 }}>
-            <FormLabel>Ne sıklıkla tekrarlanacak?</FormLabel>
+            <FormLabel>{t.repeatPattern}</FormLabel>
             <RadioGroup
               value={formData.repeatType}
               onChange={(e) =>
@@ -240,17 +246,17 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               <FormControlLabel
                 value="day"
                 control={<Radio />}
-                label="Her gün"
+                label={t.daily}
               />
               <FormControlLabel
                 value="week"
                 control={<Radio />}
-                label="Haftada belirli günlerde"
+                label={t.weekly}
               />
               <FormControlLabel
                 value="month"
                 control={<Radio />}
-                label="Aylık"
+                label={t.monthly}
               />
             </RadioGroup>
           </FormControl>
@@ -259,7 +265,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
         {step === "days" && (
           <Box sx={{ mt: 2 }}>
             <Typography variant="body1" gutterBottom>
-              Hangi günlerde tekrarlanacak?
+              {t.selectDays}
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
               {dayNames.map((dayName, index) => (
@@ -312,7 +318,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               },
             }}
           >
-            Geri
+            {t.back}
           </Button>
         )}
         <Button
@@ -342,8 +348,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
         >
           {step === "days" ||
           (step === "repeat" && formData.repeatType !== "week")
-            ? "Tamamla"
-            : "İleri"}
+            ? t.create
+            : t.next}
         </Button>
       </DialogActions>
     </Dialog>

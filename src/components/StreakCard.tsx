@@ -10,12 +10,14 @@ import { CSS } from "@dnd-kit/utilities";
 import type { Streak } from "../types";
 import { getRepeatTypeDisplayText } from "../utils/localStorage";
 import { combinedFeedback } from "../utils/haptic";
+import type { Language } from "../utils/i18n";
 
 interface StreakCardProps {
   streak: Streak;
   onIncrement: (streakId: string) => void;
   onDelete: (streakId: string) => void;
   onReset: (streakId: string) => void;
+  language: Language;
 }
 
 const StreakCard: React.FC<StreakCardProps> = ({
@@ -23,6 +25,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   onIncrement,
   onDelete,
   onReset,
+  language,
 }) => {
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
   const [isShaking, setIsShaking] = useState(false); // Titreşim state'i
@@ -255,7 +258,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
               <Chip
                 label={getRepeatTypeDisplayText(
                   streak.repeatType,
-                  streak.selectedDays
+                  streak.selectedDays,
+                  language
                 )}
                 size="small"
                 sx={{

@@ -8,13 +8,25 @@ import {
   Typography,
   Fab,
   Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemText,
+  ListItemIcon,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import LanguageIcon from "@mui/icons-material/Language";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import type { Streak, CreateStreakFormData } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
+import {
+  getCurrentLanguage,
+  setLanguage,
+  useTranslations,
+  type Language,
+} from "./utils/i18n";
 
 const theme = createTheme({
   palette: {
@@ -59,12 +71,19 @@ function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
+  const [languageMenuAnchor, setLanguageMenuAnchor] =
+    useState<null | HTMLElement>(null);
 
-  // Load streaks from localStorage on component mount
+  const t = useTranslations(currentLanguage); // Load streaks from localStorage on component mount
   useEffect(() => {
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
     setIsLoaded(true);
+
+    // Load language preference
+    const savedLanguage = getCurrentLanguage();
+    setCurrentLanguage(savedLanguage);
 
     // Initialize audio context and load audio preference
     initAudio();
@@ -181,13 +200,28 @@ function App() {
     );
   };
 
+  // Language switching functions
+  const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setLanguageMenuAnchor(event.currentTarget);
+  };
+
+  const handleLanguageMenuClose = () => {
+    setLanguageMenuAnchor(null);
+  };
+
+  const handleLanguageChange = (language: Language) => {
+    setCurrentLanguage(language);
+    setLanguage(language);
+    setLanguageMenuAnchor(null);
+  };
+
   const handleReorderStreaks = (reorderedStreaks: Streak[]) => {
-    // Order değerlerini güncelle
-    const streaksWithUpdatedOrder = reorderedStreaks.map((streak, index) => ({
+    // Order değerini güncelle
+    const updatedStreaks = reorderedStreaks.map((streak, index) => ({
       ...streak,
       order: index,
     }));
-    setStreaks(streaksWithUpdatedOrder);
+    setStreaks(updatedStreaks);
   };
 
   return (
@@ -197,21 +231,21 @@ function App() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "100vh", // Fixed viewport height
+          height: "100vh", // Fixed height instead of minHeight
           backgroundColor: "background.default",
           position: "relative",
-          overflow: "hidden",
           width: "100%",
           maxWidth: "100vw",
+          overflow: "hidden", // Prevent body scroll
         }}
       >
-        {/* Header - Safe Area için padding */}
+        {/* Header with language switcher */}
         <AppBar
           position="sticky"
-          elevation={0}
           sx={{
+            color: "primary.main",
             backgroundColor: "background.paper",
-            color: "text.primary",
+
             width: "100%",
             left: 0,
             right: 0,
@@ -220,78 +254,99 @@ function App() {
             top: 0, // Sticky position için
           }}
         >
-          <Toolbar
-            sx={{
-              minHeight: 56,
-              px: 2,
-              width: "100%",
-            }}
-          >
+          <Toolbar>
             <Typography
               variant="h6"
-              component="div"
+              component="h1"
               sx={{
                 flexGrow: 1,
-                textAlign: "center",
                 fontWeight: 700,
+                fontSize: "1.25rem",
+              }}
+            >
+              {t.appTitle}
+            </Typography>
+
+            {/* Language switcher */}
+            <IconButton
+              onClick={handleLanguageMenuOpen}
+              sx={{
                 color: "primary.main",
               }}
             >
-              Streak Tracker
-            </Typography>
+              <LanguageIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={languageMenuAnchor}
+              open={Boolean(languageMenuAnchor)}
+              onClose={handleLanguageMenuClose}
+              sx={{
+                "& .MuiPaper-root": {
+                  mt: 1.5,
+                  minWidth: 120,
+                },
+              }}
+            >
+              <MenuItem
+                onClick={() => handleLanguageChange("en")}
+                selected={currentLanguage === "en"}
+              >
+                <ListItemIcon>🇺🇸</ListItemIcon>
+                <ListItemText>English</ListItemText>
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleLanguageChange("tr")}
+                selected={currentLanguage === "tr"}
+              >
+                <ListItemIcon>🇹🇷</ListItemIcon>
+                <ListItemText>Türkçe</ListItemText>
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
 
-        {/* Main Content Area */}
+        {/* Main content */}
         <Box
           sx={{
             flex: 1,
-            overflow: "hidden", // Parent'ta hidden, child'da scroll
-            width: "100%",
-            paddingBottom: "env(safe-area-inset-bottom)",
-            minHeight: 0, // Flexbox için gerekli
-            // Mobil için touch action
-            touchAction: "pan-y",
-            position: "relative",
             display: "flex",
             flexDirection: "column",
+            minHeight: 0, // Important for flex shrinking
+            overflow: "hidden",
           }}
         >
           <StreakList
             streaks={streaks}
-            onIncrementStreak={handleIncrementStreak}
-            onDeleteStreak={handleDeleteStreak}
-            onResetStreak={handleResetStreak}
-            onReorderStreaks={handleReorderStreaks}
+            onIncrement={handleIncrementStreak}
+            onDelete={handleDeleteStreak}
+            onReset={handleResetStreak}
+            onReorder={handleReorderStreaks}
+            language={currentLanguage}
           />
         </Box>
 
-        {/* Floating Action Button - Safe Area için padding */}
+        {/* Floating Action Button */}
         <Fab
           color="primary"
-          aria-label="add"
+          aria-label={t.addStreak}
           onClick={() => setIsBottomSheetOpen(true)}
           sx={{
             position: "fixed",
-            bottom: "max(16px, env(safe-area-inset-bottom))",
-            right: 16,
-            width: 64,
-            height: 64,
-            boxShadow: "0 8px 32px rgba(124, 58, 237, 0.3)",
-            "&:hover": {
-              transform: "scale(1.05)",
-              boxShadow: "0 12px 40px rgba(124, 58, 237, 0.4)",
-            },
-            transition: "all 0.2s ease-in-out",
+            bottom: 24,
+            right: 24,
+            zIndex: 1000,
           }}
         >
-          <AddIcon sx={{ fontSize: 32 }} />
+          <AddIcon />
         </Fab>
 
+        {/* Add Streak Bottom Sheet */}
         <AddStreakBottomSheet
           open={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
           onSubmit={handleAddStreak}
+          language={currentLanguage}
         />
       </Box>
     </ThemeProvider>

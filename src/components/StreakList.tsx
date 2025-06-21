@@ -18,22 +18,27 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import StreakCard from "./StreakCard";
 import type { Streak } from "../types";
+import type { Language } from "../utils/i18n";
+import { useTranslations } from "../utils/i18n";
 
 interface StreakListProps {
   streaks: Streak[];
-  onIncrementStreak: (streakId: string) => void;
-  onDeleteStreak: (streakId: string) => void;
-  onResetStreak: (streakId: string) => void;
-  onReorderStreaks: (streaks: Streak[]) => void; // Yeni prop
+  onIncrement: (streakId: string) => void;
+  onDelete: (streakId: string) => void;
+  onReset: (streakId: string) => void;
+  onReorder: (streaks: Streak[]) => void;
+  language: Language;
 }
 
 const StreakList: React.FC<StreakListProps> = ({
   streaks,
-  onIncrementStreak,
-  onDeleteStreak,
-  onResetStreak,
-  onReorderStreaks,
+  onIncrement,
+  onDelete,
+  onReset,
+  onReorder,
+  language,
 }) => {
+  const t = useTranslations(language);
   // Drag sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -57,7 +62,7 @@ const StreakList: React.FC<StreakListProps> = ({
       const newIndex = streaks.findIndex((streak) => streak.id === over.id);
 
       const reorderedStreaks = arrayMove(streaks, oldIndex, newIndex);
-      onReorderStreaks(reorderedStreaks);
+      onReorder(reorderedStreaks);
     }
   };
   if (streaks.length === 0) {
@@ -98,7 +103,7 @@ const StreakList: React.FC<StreakListProps> = ({
             mb: 1,
           }}
         >
-          Henüz hiç streak'iniz yok
+          {t.noStreaks}
         </Typography>
         <Typography
           variant="body1"
@@ -108,8 +113,7 @@ const StreakList: React.FC<StreakListProps> = ({
             lineHeight: 1.6,
           }}
         >
-          Yeni bir alışkanlık takibi başlatmak için sağ alttaki + butonuna
-          tıklayın
+          {t.startFirstStreak}
         </Typography>
       </Box>
     );
@@ -125,59 +129,56 @@ const StreakList: React.FC<StreakListProps> = ({
       <Box
         sx={{
           width: "100%",
-          flex: 1, // Parent'ın flex'inden yararlan
-          overflowY: "auto",
-          overflowX: "hidden",
-          px: 2,
-          py: 1,
-          paddingBottom: 10, // FAB için alan bırak
-          WebkitOverflowScrolling: "touch", // iOS için smooth scroll
-          minHeight: 0, // Flexbox shrinking için
-
-          // Mobil scroll optimizasyonu
-          scrollBehavior: "smooth",
-          touchAction: "pan-y", // Sadece Y ekseninde scroll
-
-          // Scrollbar styling - genişletilmiş
-          "&::-webkit-scrollbar": {
-            width: "2px", // Daha geniş scrollbar
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "rgba(0, 0, 0, 0.05)",
-            borderRadius: "4px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            background: "rgba(0, 0, 0, 0.3)",
-            borderRadius: "4px",
-            "&:hover": {
-              background: "rgba(0, 0, 0, 0.5)",
-            },
-            "&:active": {
-              background: "rgba(0, 0, 0, 0.6)",
-            },
-          },
-
-          // Mobil için ek optimizasyon
-          "@media (max-width: 768px)": {
-            "&::-webkit-scrollbar": {
-              width: "2px", // Mobilde daha da geniş
-            },
-            // Momentum scrolling
-            overscrollBehavior: "contain",
-          },
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0, // Important for flex shrinking
         }}
       >
-        <SortableContext items={streaks} strategy={verticalListSortingStrategy}>
-          {streaks.map((streak) => (
-            <StreakCard
-              key={streak.id}
-              streak={streak}
-              onIncrement={onIncrementStreak}
-              onDelete={onDeleteStreak}
-              onReset={onResetStreak}
-            />
-          ))}
-        </SortableContext>
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            overflowX: "hidden",
+            px: 2,
+            py: 1,
+            paddingBottom: 10, // FAB için alan bırak
+            WebkitOverflowScrolling: "touch", // iOS için smooth scroll
+            minHeight: 0, // Important for flex shrinking
+
+            // Scrollbar styling
+            "&::-webkit-scrollbar": {
+              width: "4px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "rgba(0, 0, 0, 0.05)",
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "rgba(0, 0, 0, 0.3)",
+              borderRadius: "4px",
+              "&:hover": {
+                background: "rgba(0, 0, 0, 0.5)",
+              },
+            },
+          }}
+        >
+          <SortableContext
+            items={streaks}
+            strategy={verticalListSortingStrategy}
+          >
+            {streaks.map((streak) => (
+              <StreakCard
+                key={streak.id}
+                streak={streak}
+                onIncrement={onIncrement}
+                onDelete={onDelete}
+                onReset={onReset}
+                language={language}
+              />
+            ))}
+          </SortableContext>
+        </Box>
       </Box>
     </DndContext>
   );

@@ -1,4 +1,5 @@
 import type { Streak } from '../types';
+import type { Language } from './i18n';
 
 const STORAGE_KEY = 'streak-tracker-data';
 
@@ -40,20 +41,27 @@ export const generateId = (): string => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
-export const getRepeatTypeDisplayText = (repeatType: string, selectedDays?: number[]): string => {
+export const getRepeatTypeDisplayText = (repeatType: string, selectedDays?: number[], language: Language = 'en'): string => {
+    const dayNames = language === 'tr'
+        ? ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt']
+        : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const translations = language === 'tr'
+        ? { daily: 'Her gün', weekly: 'Haftalık', monthly: 'Aylık', unknown: 'Bilinmiyor' }
+        : { daily: 'Every day', weekly: 'Weekly', monthly: 'Monthly', unknown: 'Unknown' };
+
     switch (repeatType) {
         case 'day':
-            return 'Her gün';
+            return translations.daily;
         case 'week':
             if (selectedDays && selectedDays.length > 0) {
-                const dayNames = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
                 const selectedDayNames = selectedDays.map(day => dayNames[day]);
                 return selectedDayNames.join(', ');
             }
-            return 'Haftalık';
+            return translations.weekly;
         case 'month':
-            return 'Aylık';
+            return translations.monthly;
         default:
-            return 'Bilinmiyor';
+            return translations.unknown;
     }
 };
