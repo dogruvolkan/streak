@@ -9,6 +9,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Streak } from "../types";
 import { getRepeatTypeDisplayText } from "../utils/localStorage";
+import { hapticFeedback } from "../utils/haptic";
 
 interface StreakCardProps {
   streak: Streak;
@@ -24,6 +25,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   onReset,
 }) => {
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
+  const [isShaking, setIsShaking] = useState(false); // Titreşim state'i
 
   // Drag and drop için sortable hook
   const {
@@ -42,15 +44,24 @@ const StreakCard: React.FC<StreakCardProps> = ({
   };
 
   const handleIncrement = () => {
+    // Haptic feedback (mobil titreşim)
+    hapticFeedback.light();
+
+    // Visual shake animation
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 300); // 300ms sonra animasyonu bitir
+
     onIncrement(streak.id);
   };
 
   const handleDelete = () => {
+    hapticFeedback.error(); // Error vibration for delete
     onDelete(streak.id);
     setIsSwipedOpen(false);
   };
 
   const handleReset = () => {
+    hapticFeedback.medium(); // Medium vibration for reset
     onReset(streak.id);
     setIsSwipedOpen(false);
   };
@@ -310,6 +321,17 @@ const StreakCard: React.FC<StreakCardProps> = ({
                     ? "primary.main"
                     : "grey.400",
                   transition: "all 0.2s ease-in-out",
+                  // Shake animation for button
+                  animation: isShaking
+                    ? "buttonShake 0.3s ease-in-out"
+                    : "none",
+                  "@keyframes buttonShake": {
+                    "0%": { transform: "scale(1)" },
+                    "25%": { transform: "scale(1.05) rotate(-1deg)" },
+                    "50%": { transform: "scale(1.1) rotate(1deg)" },
+                    "75%": { transform: "scale(1.05) rotate(-0.5deg)" },
+                    "100%": { transform: "scale(1) rotate(0deg)" },
+                  },
                   "&:hover": {
                     backgroundColor: clickedToday
                       ? "primary.dark"
@@ -353,6 +375,16 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   fontWeight: 700,
                   border: "2px solid white",
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  // Shake animation
+                  animation: isShaking ? "shake 0.3s ease-in-out" : "none",
+                  "@keyframes shake": {
+                    "0%": { transform: "translateX(0)" },
+                    "25%": { transform: "translateX(-3px) scale(1.1)" },
+                    "50%": { transform: "translateX(3px) scale(1.2)" },
+                    "75%": { transform: "translateX(-2px) scale(1.1)" },
+                    "100%": { transform: "translateX(0) scale(1)" },
+                  },
+                  transition: "all 0.2s ease-in-out",
                 }}
               >
                 {streak.count}
