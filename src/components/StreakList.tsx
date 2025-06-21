@@ -125,13 +125,14 @@ const StreakList: React.FC<StreakListProps> = ({
       <Box
         sx={{
           width: "100%",
-          height: "100%",
+          flex: 1, // Parent'ın flex'inden yararlan
           overflowY: "auto",
           overflowX: "hidden",
           px: 2,
           py: 1,
           paddingBottom: 10, // FAB için alan bırak
           WebkitOverflowScrolling: "touch", // iOS için smooth scroll
+          minHeight: 0, // Flexbox shrinking için
 
           // Mobil scroll optimizasyonu
           scrollBehavior: "smooth",

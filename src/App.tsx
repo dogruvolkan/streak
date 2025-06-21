@@ -211,6 +211,8 @@ function App() {
             left: 0,
             right: 0,
             paddingTop: "env(safe-area-inset-top)",
+            zIndex: 1100, // Material UI'ın AppBar z-index'i
+            top: 0, // Sticky position için
           }}
         >
           <Toolbar
@@ -242,10 +244,12 @@ function App() {
             overflow: "hidden", // Parent'ta hidden, child'da scroll
             width: "100%",
             paddingBottom: "env(safe-area-inset-bottom)",
-            height: "calc(100vh - 56px)", // AppBar height'ını çıkar
+            minHeight: 0, // Flexbox için gerekli
             // Mobil için touch action
             touchAction: "pan-y",
             position: "relative",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <StreakList
