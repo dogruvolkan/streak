@@ -14,6 +14,7 @@ import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import type { Streak, CreateStreakFormData } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
+import { initAudio, getAudioEnabled } from "./utils/audio";
 
 const theme = createTheme({
   palette: {
@@ -64,6 +65,10 @@ function App() {
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
     setIsLoaded(true);
+
+    // Initialize audio context and load audio preference
+    initAudio();
+    getAudioEnabled(); // This loads the preference from localStorage
   }, []);
 
   // Save streaks to localStorage whenever streaks state changes (but not on initial load)

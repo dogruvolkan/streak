@@ -9,7 +9,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Streak } from "../types";
 import { getRepeatTypeDisplayText } from "../utils/localStorage";
-import { hapticFeedback } from "../utils/haptic";
+import { combinedFeedback } from "../utils/haptic";
 
 interface StreakCardProps {
   streak: Streak;
@@ -44,8 +44,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
   };
 
   const handleIncrement = () => {
-    // Haptic feedback (mobil titreşim)
-    hapticFeedback.light();
+    // Combined haptic and audio feedback
+    combinedFeedback.increment();
 
     // Visual shake animation
     setIsShaking(true);
@@ -55,13 +55,13 @@ const StreakCard: React.FC<StreakCardProps> = ({
   };
 
   const handleDelete = () => {
-    hapticFeedback.error(); // Error vibration for delete
+    combinedFeedback.delete(); // Combined delete feedback
     onDelete(streak.id);
     setIsSwipedOpen(false);
   };
 
   const handleReset = () => {
-    hapticFeedback.medium(); // Medium vibration for reset
+    combinedFeedback.reset(); // Combined reset feedback
     onReset(streak.id);
     setIsSwipedOpen(false);
   };

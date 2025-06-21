@@ -1,4 +1,5 @@
-// Haptic feedback utility functions
+// Haptic and audio feedback utility functions
+import { audioFeedback } from './audio';
 
 // Haptic feedback functions
 export const hapticFeedback = {
@@ -35,5 +36,38 @@ export const hapticFeedback = {
         if ('vibrate' in navigator && navigator.vibrate) {
             navigator.vibrate([50, 50, 50]);
         }
+    }
+};
+
+// Combined feedback functions (haptic + audio)
+export const combinedFeedback = {
+    // Increment feedback
+    increment: () => {
+        hapticFeedback.light();
+        audioFeedback.increment();
+    },
+
+    // Success feedback
+    success: () => {
+        hapticFeedback.success();
+        audioFeedback.success();
+    },
+
+    // Reset feedback
+    reset: () => {
+        hapticFeedback.medium();
+        audioFeedback.reset();
+    },
+
+    // Delete feedback
+    delete: () => {
+        hapticFeedback.error();
+        audioFeedback.delete();
+    },
+
+    // Error feedback
+    error: () => {
+        hapticFeedback.error();
+        audioFeedback.error();
     }
 };
