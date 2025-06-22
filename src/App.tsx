@@ -14,6 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import Settings from "./components/Settings";
+import SharedStreakViewer from "./components/SharedStreakViewer";
 import type { Streak, CreateStreakFormData } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
@@ -30,6 +31,11 @@ import {
   type ThemeMode,
   type ThemeColor,
 } from "./utils/theme";
+import {
+  isSharedStreakURL,
+  getSharedStreakFromURL,
+  type SharedStreakData,
+} from "./utils/sharing";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
@@ -39,10 +45,24 @@ function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
+  const [isSharedView, setIsSharedView] = useState(false);
+  const [sharedStreakData, setSharedStreakData] =
+    useState<SharedStreakData | null>(null);
 
   const t = useTranslations(currentLanguage);
-  const theme = createAppTheme(themeMode, themeColor); // Load streaks from localStorage on component mount
+  const theme = createAppTheme(themeMode, themeColor);
+
+  // Load streaks from localStorage on component mount
   useEffect(() => {
+    // Check if this is a shared streak URL
+    if (isSharedStreakURL()) {
+      const sharedData = getSharedStreakFromURL();
+      if (sharedData) {
+        setSharedStreakData(sharedData);
+        setIsSharedView(true);
+      }
+    }
+
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
     setIsLoaded(true);
@@ -198,6 +218,28 @@ function App() {
     }));
     setStreaks(updatedStreaks);
   };
+
+  const handleBackFromShared = () => {
+    setIsSharedView(false);
+    setSharedStreakData(null);
+    // Clear the hash from URL
+    if (typeof window !== "undefined") {
+      window.location.hash = "";
+    }
+  };
+
+  // If this is a shared view, render the SharedStreakViewer
+  if (isSharedView && sharedStreakData) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SharedStreakViewer
+          sharedData={sharedStreakData}
+          onBack={handleBackFromShared}
+        />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>

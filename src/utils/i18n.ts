@@ -72,6 +72,15 @@ export interface Translations {
     emoji: string;
     popularEmojis: string;
     suggestedEmojis: string;
+
+    // Sharing
+    share: string;
+    shareStreak: string;
+    copyLink: string;
+    linkCopied: string;
+    shareDescription: string;
+    sharedStreak: string;
+    viewOnly: string;
 }
 
 const englishTranslations: Translations = {
@@ -144,6 +153,15 @@ const englishTranslations: Translations = {
     emoji: "Emoji",
     popularEmojis: "Popular Emojis",
     suggestedEmojis: "Suggested for this category",
+
+    // Sharing
+    share: "Share",
+    shareStreak: "Share Streak",
+    copyLink: "Copy Link",
+    linkCopied: "Link copied to clipboard!",
+    shareDescription: "Share your streak progress with others. They'll be able to view your streak in read-only mode.",
+    sharedStreak: "Shared Streak",
+    viewOnly: "View Only",
 };
 
 const turkishTranslations: Translations = {
@@ -216,6 +234,15 @@ const turkishTranslations: Translations = {
     emoji: "Emoji",
     popularEmojis: "Popüler Emojiler",
     suggestedEmojis: "Bu kategori için önerililer",
+
+    // Sharing
+    share: "Paylaş",
+    shareStreak: "Alışkanlığı Paylaş",
+    copyLink: "Linki Kopyala",
+    linkCopied: "Link panoya kopyalandı!",
+    shareDescription: "Alışkanlık ilerlemeni başkalarıyla paylaş. Sadece görüntüleme modunda alışkanlığını görebilecekler.",
+    sharedStreak: "Paylaşılan Alışkanlık",
+    viewOnly: "Sadece Görüntüleme",
 };
 
 const translations: Record<Language, Translations> = {
