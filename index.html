@@ -1,13 +1,65 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- SEO Meta Tags -->
+    <title>Free Streak Tracker - Build Habits That Stick | Daily Habit Tracker App</title>
+    <meta name="description" content="Free online streak tracker to build lasting habits. Track daily, weekly, and monthly habits with beautiful progress visualization. Start your habit journey today!" />
+    <meta name="keywords" content="habit tracker, streak tracker, daily habits, habit building, productivity app, free habit tracker, goal tracking, routine tracker" />
+    <meta name="author" content="Streak Tracker App" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Free Streak Tracker - Build Habits That Stick" />
+    <meta property="og:description" content="Track your daily habits and build consistent routines with our free streak tracker. Support for daily, weekly, and monthly patterns." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://streaktracker.app" />
+    <meta property="og:image" content="/streak-social.png" />
+    <meta property="og:site_name" content="Streak Tracker" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Free Streak Tracker - Build Habits That Stick" />
+    <meta name="twitter:description" content="Track your daily habits and build consistent routines with our free streak tracker." />
+    <meta name="twitter:image" content="/streak-social.png" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/streak-icon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#7c3aed" />
-    <title>Streak Tracker</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://streaktracker.app/" />
+    
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Streak Tracker",
+      "description": "Free online habit and streak tracker to help you build lasting habits and routines",
+      "url": "https://streaktracker.app",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Streak Tracker Team"
+      }
+    }
+    </script>
     <style>
       * {
         box-sizing: border-box;
@@ -24,8 +76,21 @@
       
       #root {
         width: 100vw;
+        min-height: 100vh;
+        overflow: auto;
+      }
+      
+      /* App page - prevent scrolling */
+      body.app-page #root {
         height: 100vh;
         overflow: hidden;
+      }
+      
+      /* Landing page - allow scrolling */
+      body.landing-page #root {
+        min-height: 100vh;
+        height: auto;
+        overflow: auto;
       }
       
       /* Prevent iOS zoom on input focus */
