@@ -212,19 +212,18 @@ function App() {
           overflow: "hidden", // Prevent body scroll
         }}
       >
-        {/* Header with language switcher */}
+        {/* Header with settings button */}
         <AppBar
-          position="sticky"
+          position="fixed"
           sx={{
             color: "primary.main",
             backgroundColor: "background.paper",
-
             width: "100%",
             left: 0,
             right: 0,
+            top: 0,
             paddingTop: "env(safe-area-inset-top)",
-            zIndex: 1100, // Material UI'ın AppBar z-index'i
-            top: 0, // Sticky position için
+            zIndex: 1300, // Higher z-index to stay above everything
           }}
         >
           <Toolbar>
@@ -260,6 +259,8 @@ function App() {
             flexDirection: "column",
             minHeight: 0, // Important for flex shrinking
             overflow: "hidden",
+            mt: "64px", // Standard AppBar height
+            paddingTop: "env(safe-area-inset-top)", // Additional padding for notch
           }}
         >
           <StreakList
