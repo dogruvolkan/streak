@@ -1,137 +1,146 @@
 import type { Badge, BadgeType, UserBadges, Streak } from '../types';
+import type { Language } from './i18n';
+import { getTranslations } from './i18n';
 
-// Badge definitions with Turkish names and descriptions
-const BADGE_DEFINITIONS: Record<BadgeType, Omit<Badge, 'isUnlocked' | 'unlockedAt'>> = {
-    first_step: {
-        id: 'first_step',
-        name: 'İlk Adım',
-        description: 'İlk streak\'ini oluşturdun!',
-        emoji: '🌱',
-        rarity: 'common'
-    },
-    triple_threat: {
-        id: 'triple_threat',
-        name: 'Üçlü Güç',
-        description: '3 gün üst üste streak tamamladın!',
-        emoji: '🔥',
-        rarity: 'common'
-    },
-    weekly_warrior: {
-        id: 'weekly_warrior',
-        name: 'Haftalık Savaşçı',
-        description: '7 gün üst üste streak tamamladın!',
-        emoji: '⚡',
-        rarity: 'rare'
-    },
-    streak_master: {
-        id: 'streak_master',
-        name: 'Streak Ustası',
-        description: '30 gün üst üste streak tamamladın!',
-        emoji: '👑',
-        rarity: 'epic'
-    },
-    century_club: {
-        id: 'century_club',
-        name: 'Yüzler Kulübü',
-        description: '100 gün üst üste streak tamamladın!',
-        emoji: '💎',
-        rarity: 'legendary'
-    },
-    multi_tasker: {
-        id: 'multi_tasker',
-        name: 'Çok Görevli',
-        description: 'Aynı anda 5 aktif streak\'in var!',
-        emoji: '🎯',
-        rarity: 'rare'
-    },
-    persistence: {
-        id: 'persistence',
-        name: 'Azimli',
-        description: '10 farklı streak tamamladın!',
-        emoji: '🏆',
-        rarity: 'epic'
-    },
-    dedication: {
-        id: 'dedication',
-        name: 'Adanmış',
-        description: 'Toplam 365 gün streak tamamladın!',
-        emoji: '🌟',
-        rarity: 'legendary'
-    },
-    perfectionist: {
-        id: 'perfectionist',
-        name: 'Mükemmeliyetçi',
-        description: '15 gün boyunca hiç kaçırmadan streak yaptın!',
-        emoji: '💯',
-        rarity: 'epic'
-    },
-    fire_starter: {
-        id: 'fire_starter',
-        name: 'Ateş Başlatıcı',
-        description: 'Aynı gün 3 farklı streak tamamladın!',
-        emoji: '🚀',
-        rarity: 'common'
-    },
-    consistency_master: {
-        id: 'consistency_master',
-        name: 'Tutarlılık Ustası',
-        description: '21 gün boyunca düzenli streak yaptın!',
-        emoji: '🎯',
-        rarity: 'epic'
-    },
-    unstoppable: {
-        id: 'unstoppable',
-        name: 'Durdurulamaz',
-        description: '50 gün üst üste streak tamamladın!',
-        emoji: '🌪️',
-        rarity: 'epic'
-    },
-    legend: {
-        id: 'legend',
-        name: 'Efsane',
-        description: '200 gün üst üste streak tamamladın!',
-        emoji: '🏅',
-        rarity: 'legendary'
-    },
-    explorer: {
-        id: 'explorer',
-        name: 'Kaşif',
-        description: '7 farklı kategoride streak oluşturdun!',
-        emoji: '🗺️',
-        rarity: 'rare'
-    },
-    speed_demon: {
-        id: 'speed_demon',
-        name: 'Hız Şeytanı',
-        description: 'Bir günde 5 streak tamamladın!',
-        emoji: '💨',
-        rarity: 'common'
-    },
-    marathon_runner: {
-        id: 'marathon_runner',
-        name: 'Maraton Koşucusu',
-        description: 'Toplam 1000 gün streak tamamladın!',
-        emoji: '🏃',
-        rarity: 'legendary'
-    },
-    habit_architect: {
-        id: 'habit_architect',
-        name: 'Alışkanlık Mimarı',
-        description: '10 farklı streak oluşturdun!',
-        emoji: '🏗️',
-        rarity: 'rare'
-    }
+// Badge definitions with localized names and descriptions
+const getBadgeDefinitions = (language: Language): Record<BadgeType, Omit<Badge, 'isUnlocked' | 'unlockedAt'>> => {
+    const t = getTranslations(language);
+
+    return {
+        first_step: {
+            id: 'first_step',
+            name: t.badgeFirstStep,
+            description: t.badgeFirstStepDesc,
+            emoji: '🌱',
+            rarity: 'common'
+        },
+        triple_threat: {
+            id: 'triple_threat',
+            name: t.badgeTripleThreat,
+            description: t.badgeTripleThreatDesc,
+            emoji: '🔥',
+            rarity: 'common'
+        },
+        weekly_warrior: {
+            id: 'weekly_warrior',
+            name: t.badgeWeeklyWarrior,
+            description: t.badgeWeeklyWarriorDesc,
+            emoji: '⚡',
+            rarity: 'rare'
+        },
+        streak_master: {
+            id: 'streak_master',
+            name: t.badgeStreakMaster,
+            description: t.badgeStreakMasterDesc,
+            emoji: '👑',
+            rarity: 'epic'
+        },
+        century_club: {
+            id: 'century_club',
+            name: t.badgeCenturyClub,
+            description: t.badgeCenturyClubDesc,
+            emoji: '💎',
+            rarity: 'legendary'
+        },
+        multi_tasker: {
+            id: 'multi_tasker',
+            name: t.badgeMultiTasker,
+            description: t.badgeMultiTaskerDesc,
+            emoji: '🎯',
+            rarity: 'rare'
+        },
+        persistence: {
+            id: 'persistence',
+            name: t.badgePersistence,
+            description: t.badgePersistenceDesc,
+            emoji: '🏆',
+            rarity: 'epic'
+        },
+        dedication: {
+            id: 'dedication',
+            name: t.badgeDedication,
+            description: t.badgeDedicationDesc,
+            emoji: '🌟',
+            rarity: 'legendary'
+        },
+        perfectionist: {
+            id: 'perfectionist',
+            name: t.badgePerfectionist,
+            description: t.badgePerfectionistDesc,
+            emoji: '💯',
+            rarity: 'epic'
+        },
+        fire_starter: {
+            id: 'fire_starter',
+            name: t.badgeFireStarter,
+            description: t.badgeFireStarterDesc,
+            emoji: '🚀',
+            rarity: 'common'
+        },
+        consistency_master: {
+            id: 'consistency_master',
+            name: t.badgeConsistencyMaster,
+            description: t.badgeConsistencyMasterDesc,
+            emoji: '🎯',
+            rarity: 'epic'
+        },
+        unstoppable: {
+            id: 'unstoppable',
+            name: t.badgeUnstoppable,
+            description: t.badgeUnstoppableDesc,
+            emoji: '🌪️',
+            rarity: 'epic'
+        },
+        legend: {
+            id: 'legend',
+            name: t.badgeLegend,
+            description: t.badgeLegendDesc,
+            emoji: '🏅',
+            rarity: 'legendary'
+        },
+        explorer: {
+            id: 'explorer',
+            name: t.badgeExplorer,
+            description: t.badgeExplorerDesc,
+            emoji: '🗺️',
+            rarity: 'rare'
+        },
+        speed_demon: {
+            id: 'speed_demon',
+            name: t.badgeSpeedDemon,
+            description: t.badgeSpeedDemonDesc,
+            emoji: '💨',
+            rarity: 'common'
+        },
+        marathon_runner: {
+            id: 'marathon_runner',
+            name: t.badgeMarathonRunner,
+            description: t.badgeMarathonRunnerDesc,
+            emoji: '🏃',
+            rarity: 'legendary'
+        },
+        habit_architect: {
+            id: 'habit_architect',
+            name: t.badgeHabitArchitect,
+            description: t.badgeHabitArchitectDesc,
+            emoji: '🏗️',
+            rarity: 'rare'
+        }
+    };
 };
 
 // Load user badges from localStorage
-export const loadUserBadges = (): UserBadges => {
+export const loadUserBadges = (language: Language = 'en'): UserBadges => {
     try {
         const stored = localStorage.getItem('userBadges');
         if (stored) {
             const parsed = JSON.parse(stored);
-            // Convert date strings back to Date objects
+            // Convert date strings back to Date objects and update translations
+            const badgeDefinitions = getBadgeDefinitions(language);
             parsed.badges = parsed.badges.map((badge: Badge & { unlockedAt?: string }) => ({
                 ...badge,
+                name: badgeDefinitions[badge.id as BadgeType]?.name || badge.name,
+                description: badgeDefinitions[badge.id as BadgeType]?.description || badge.description,
                 unlockedAt: badge.unlockedAt ? new Date(badge.unlockedAt) : undefined
             }));
             return parsed;
@@ -141,7 +150,8 @@ export const loadUserBadges = (): UserBadges => {
     }
 
     // Initialize with all badges locked
-    const initialBadges: Badge[] = Object.values(BADGE_DEFINITIONS).map(def => ({
+    const badgeDefinitions = getBadgeDefinitions(language);
+    const initialBadges: Badge[] = Object.values(badgeDefinitions).map(def => ({
         ...def,
         isUnlocked: false
     }));
@@ -302,12 +312,13 @@ export const getBadgeRarityColor = (rarity: Badge['rarity']): string => {
 };
 
 // Get badge rarity text
-export const getBadgeRarityText = (rarity: Badge['rarity']): string => {
+export const getBadgeRarityText = (rarity: Badge['rarity'], language: Language = 'en'): string => {
+    const t = getTranslations(language);
     switch (rarity) {
-        case 'common': return 'Yaygın';
-        case 'rare': return 'Nadir';
-        case 'epic': return 'Epik';
-        case 'legendary': return 'Efsanevi';
-        default: return 'Yaygın';
+        case 'common': return t.common;
+        case 'rare': return t.rare;
+        case 'epic': return t.epic;
+        case 'legendary': return t.legendary;
+        default: return t.common;
     }
 };

@@ -81,6 +81,58 @@ export interface Translations {
     shareDescription: string;
     sharedStreak: string;
     viewOnly: string;
+
+    // Badges
+    badges: string;
+    badgesEarned: string;
+    earnedBadges: string;
+    lockedBadges: string;
+    noBadgesYet: string;
+    completeBadgesMessage: string;
+
+    // Badge rarities
+    common: string;
+    rare: string;
+    epic: string;
+    legendary: string;
+
+    // Badge names
+    badgeFirstStep: string;
+    badgeTripleThreat: string;
+    badgeWeeklyWarrior: string;
+    badgeStreakMaster: string;
+    badgeCenturyClub: string;
+    badgeMultiTasker: string;
+    badgePersistence: string;
+    badgeDedication: string;
+    badgePerfectionist: string;
+    badgeFireStarter: string;
+    badgeConsistencyMaster: string;
+    badgeUnstoppable: string;
+    badgeLegend: string;
+    badgeExplorer: string;
+    badgeSpeedDemon: string;
+    badgeMarathonRunner: string;
+    badgeHabitArchitect: string;
+
+    // Badge descriptions
+    badgeFirstStepDesc: string;
+    badgeTripleThreatDesc: string;
+    badgeWeeklyWarriorDesc: string;
+    badgeStreakMasterDesc: string;
+    badgeCenturyClubDesc: string;
+    badgeMultiTaskerDesc: string;
+    badgePersistenceDesc: string;
+    badgeDedicationDesc: string;
+    badgePerfectionistDesc: string;
+    badgeFireStarterDesc: string;
+    badgeConsistencyMasterDesc: string;
+    badgeUnstoppableDesc: string;
+    badgeLegendDesc: string;
+    badgeExplorerDesc: string;
+    badgeSpeedDemonDesc: string;
+    badgeMarathonRunnerDesc: string;
+    badgeHabitArchitectDesc: string;
 }
 
 const englishTranslations: Translations = {
@@ -162,6 +214,58 @@ const englishTranslations: Translations = {
     shareDescription: "Share your streak progress with others. They'll be able to view your streak in read-only mode.",
     sharedStreak: "Shared Streak",
     viewOnly: "View Only",
+
+    // Badges
+    badges: "Badges",
+    badgesEarned: "badges earned",
+    earnedBadges: "✨ Earned Badges",
+    lockedBadges: "🔒 Locked Badges",
+    noBadgesYet: "No badges yet!",
+    completeBadgesMessage: "Complete your streaks to earn badges",
+
+    // Badge rarities
+    common: "Common",
+    rare: "Rare",
+    epic: "Epic",
+    legendary: "Legendary",
+
+    // Badge names
+    badgeFirstStep: "First Step",
+    badgeTripleThreat: "Triple Threat",
+    badgeWeeklyWarrior: "Weekly Warrior",
+    badgeStreakMaster: "Streak Master",
+    badgeCenturyClub: "Century Club",
+    badgeMultiTasker: "Multi Tasker",
+    badgePersistence: "Persistent",
+    badgeDedication: "Dedicated",
+    badgePerfectionist: "Perfectionist",
+    badgeFireStarter: "Fire Starter",
+    badgeConsistencyMaster: "Consistency Master",
+    badgeUnstoppable: "Unstoppable",
+    badgeLegend: "Legend",
+    badgeExplorer: "Explorer",
+    badgeSpeedDemon: "Speed Demon",
+    badgeMarathonRunner: "Marathon Runner",
+    badgeHabitArchitect: "Habit Architect",
+
+    // Badge descriptions
+    badgeFirstStepDesc: "Created your first streak!",
+    badgeTripleThreatDesc: "Completed 3 consecutive days!",
+    badgeWeeklyWarriorDesc: "Completed 7 consecutive days!",
+    badgeStreakMasterDesc: "Completed 30 consecutive days!",
+    badgeCenturyClubDesc: "Completed 100 consecutive days!",
+    badgeMultiTaskerDesc: "Have 5 active streaks simultaneously!",
+    badgePersistenceDesc: "Completed 10 different streaks!",
+    badgeDedicationDesc: "Completed a total of 365 days!",
+    badgePerfectionistDesc: "15 days without missing any!",
+    badgeFireStarterDesc: "Completed 3 different streaks on the same day!",
+    badgeConsistencyMasterDesc: "21 days of consistent streaks!",
+    badgeUnstoppableDesc: "Completed 50 consecutive days!",
+    badgeLegendDesc: "Completed 200 consecutive days!",
+    badgeExplorerDesc: "Created streaks in 7 different categories!",
+    badgeSpeedDemonDesc: "Completed 5 streaks in one day!",
+    badgeMarathonRunnerDesc: "Completed a total of 1000 days!",
+    badgeHabitArchitectDesc: "Created 10 different streaks!",
 };
 
 const turkishTranslations: Translations = {
@@ -243,6 +347,58 @@ const turkishTranslations: Translations = {
     shareDescription: "Alışkanlık ilerlemeni başkalarıyla paylaş. Sadece görüntüleme modunda alışkanlığını görebilecekler.",
     sharedStreak: "Paylaşılan Alışkanlık",
     viewOnly: "Sadece Görüntüleme",
+
+    // Badges
+    badges: "Rozetler",
+    badgesEarned: "rozet kazanıldı",
+    earnedBadges: "✨ Kazanılan Rozetler",
+    lockedBadges: "🔒 Henüz Kazanılmayan Rozetler",
+    noBadgesYet: "Henüz rozet yok!",
+    completeBadgesMessage: "Streak'lerinizi tamamlayarak rozetler kazanın",
+
+    // Badge rarities
+    common: "Yaygın",
+    rare: "Nadir",
+    epic: "Epik",
+    legendary: "Efsanevi",
+
+    // Badge names
+    badgeFirstStep: "İlk Adım",
+    badgeTripleThreat: "Üçlü Güç",
+    badgeWeeklyWarrior: "Haftalık Savaşçı",
+    badgeStreakMaster: "Streak Ustası",
+    badgeCenturyClub: "Yüzler Kulübü",
+    badgeMultiTasker: "Çok Görevli",
+    badgePersistence: "Azimli",
+    badgeDedication: "Adanmış",
+    badgePerfectionist: "Mükemmeliyetçi",
+    badgeFireStarter: "Ateş Başlatıcı",
+    badgeConsistencyMaster: "Tutarlılık Ustası",
+    badgeUnstoppable: "Durdurulamaz",
+    badgeLegend: "Efsane",
+    badgeExplorer: "Kaşif",
+    badgeSpeedDemon: "Hız Şeytanı",
+    badgeMarathonRunner: "Maraton Koşucusu",
+    badgeHabitArchitect: "Alışkanlık Mimarı",
+
+    // Badge descriptions
+    badgeFirstStepDesc: "İlk streak'ini oluşturdun!",
+    badgeTripleThreatDesc: "3 gün üst üste streak tamamladın!",
+    badgeWeeklyWarriorDesc: "7 gün üst üste streak tamamladın!",
+    badgeStreakMasterDesc: "30 gün üst üste streak tamamladın!",
+    badgeCenturyClubDesc: "100 gün üst üste streak tamamladın!",
+    badgeMultiTaskerDesc: "Aynı anda 5 aktif streak'in var!",
+    badgePersistenceDesc: "10 farklı streak tamamladın!",
+    badgeDedicationDesc: "Toplam 365 gün streak tamamladın!",
+    badgePerfectionistDesc: "15 gün boyunca hiç kaçırmadan streak yaptın!",
+    badgeFireStarterDesc: "Aynı gün 3 farklı streak tamamladın!",
+    badgeConsistencyMasterDesc: "21 gün boyunca düzenli streak yaptın!",
+    badgeUnstoppableDesc: "50 gün üst üste streak tamamladın!",
+    badgeLegendDesc: "200 gün üst üste streak tamamladın!",
+    badgeExplorerDesc: "7 farklı kategoride streak oluşturdun!",
+    badgeSpeedDemonDesc: "Bir günde 5 streak tamamladın!",
+    badgeMarathonRunnerDesc: "Toplam 1000 gün streak tamamladın!",
+    badgeHabitArchitectDesc: "10 farklı streak oluşturdun!",
 };
 
 const translations: Record<Language, Translations> = {

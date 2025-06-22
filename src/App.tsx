@@ -107,9 +107,9 @@ function App() {
     getAudioEnabled(); // This loads the preference from localStorage
 
     // Load user badges
-    const badges = loadUserBadges();
+    const badges = loadUserBadges(currentLanguage);
     setUserBadges(badges);
-  }, []);
+  }, [currentLanguage]);
 
   // Save streaks to localStorage whenever streaks state changes (but not on initial load)
   useEffect(() => {
@@ -117,6 +117,15 @@ function App() {
       saveStreaks(streaks);
     }
   }, [streaks, isLoaded]);
+
+  // Update badge translations when language changes
+  useEffect(() => {
+    if (userBadges) {
+      const updatedBadges = loadUserBadges(currentLanguage);
+      setUserBadges(updatedBadges);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLanguage]);
 
   const handleAddStreak = (formData: CreateStreakFormData) => {
     const newStreak: Streak = {
@@ -478,6 +487,7 @@ function App() {
             open={isBadgeViewerOpen}
             onClose={() => setIsBadgeViewerOpen(false)}
             userBadges={userBadges}
+            language={currentLanguage}
           />
         )}
 

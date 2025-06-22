@@ -17,6 +17,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import LockIcon from "@mui/icons-material/Lock";
 import type { UserBadges } from "../types";
 import { getBadgeRarityColor, getBadgeRarityText } from "../utils/badges";
+import type { Language } from "../utils/i18n";
+import { useTranslations } from "../utils/i18n";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -31,13 +33,16 @@ interface BadgeViewerProps {
   open: boolean;
   onClose: () => void;
   userBadges: UserBadges;
+  language: Language;
 }
 
 const BadgeViewer: React.FC<BadgeViewerProps> = ({
   open,
   onClose,
   userBadges,
+  language,
 }) => {
+  const t = useTranslations(language);
   const unlockedBadges = userBadges.badges.filter((badge) => badge.isUnlocked);
   const lockedBadges = userBadges.badges.filter((badge) => !badge.isUnlocked);
   const completionPercentage =
@@ -90,7 +95,7 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          🏆 Rozetler
+          🏆 {t.badges}
         </Typography>
         <IconButton
           onClick={onClose}
@@ -110,8 +115,8 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
 
       <Box px={3} pb={2}>
         <Typography variant="body2" color="text.secondary" mb={1}>
-          {userBadges.totalUnlocked} / {userBadges.badges.length} rozet
-          kazanıldı
+          {userBadges.totalUnlocked} / {userBadges.badges.length}{" "}
+          {t.badgesEarned}
         </Typography>
         <LinearProgress
           variant="determinate"
@@ -125,7 +130,7 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
         {unlockedBadges.length > 0 && (
           <Box mb={4}>
             <Typography variant="h6" fontWeight="bold" mb={2} color="primary">
-              ✨ Kazanılan Rozetler
+              {t.earnedBadges}
             </Typography>
             <Box
               display="flex"
@@ -182,7 +187,7 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
                       {badge.description}
                     </Typography>
                     <Chip
-                      label={getBadgeRarityText(badge.rarity)}
+                      label={getBadgeRarityText(badge.rarity, language)}
                       size="small"
                       sx={{
                         backgroundColor: getBadgeRarityColor(badge.rarity),
@@ -219,7 +224,7 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
               mb={2}
               color="text.secondary"
             >
-              🔒 Henüz Kazanılmayan Rozetler
+              {t.lockedBadges}
             </Typography>
             <Box
               display="flex"
@@ -290,7 +295,7 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
                       {badge.description}
                     </Typography>
                     <Chip
-                      label={getBadgeRarityText(badge.rarity)}
+                      label={getBadgeRarityText(badge.rarity, language)}
                       size="small"
                       variant="outlined"
                       sx={{
@@ -313,10 +318,10 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
               🎯
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" mb={1}>
-              Henüz rozet yok!
+              {t.noBadgesYet}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Streak'lerinizi tamamlayarak rozetler kazanın
+              {t.completeBadgesMessage}
             </Typography>
           </Box>
         )}
