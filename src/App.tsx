@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import Statistics from "./components/Statistics";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
@@ -62,6 +64,7 @@ function App() {
   // Badge system state
   const [userBadges, setUserBadges] = useState<UserBadges | null>(null);
   const [isBadgeViewerOpen, setIsBadgeViewerOpen] = useState(false);
+  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const t = useTranslations(currentLanguage);
@@ -431,6 +434,17 @@ function App() {
               </Badge>
             </IconButton>
 
+            {/* Statistics button */}
+            <IconButton
+              onClick={() => setIsStatisticsOpen(true)}
+              sx={{
+                color: "primary.main",
+                mr: 1,
+              }}
+            >
+              <BarChartIcon />
+            </IconButton>
+
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
@@ -510,6 +524,14 @@ function App() {
             language={currentLanguage}
           />
         )}
+
+        {/* Statistics Dialog */}
+        <Statistics
+          open={isStatisticsOpen}
+          onClose={() => setIsStatisticsOpen(false)}
+          streaks={streaks}
+          language={currentLanguage}
+        />
 
         {/* Confetti Component */}
         <ConfettiComponent

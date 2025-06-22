@@ -70,6 +70,22 @@ export interface Translations {
     clearDataWarning: string;
     dataCleared: string;
 
+    // Statistics
+    statistics: string;
+    overview: string;
+    totalStreaks: string;
+    activeStreaks: string;
+    completedDays: string;
+    todayCompleted: string;
+    longestStreak: string;
+    currentStreak: string;
+    averagePerWeek: string;
+    thisWeek: string;
+    thisMonth: string;
+    categoryBreakdown: string;
+    noDataAvailable: string;
+    days: string;
+
     // Category and emoji selection
     selectCategory: string;
     selectEmoji: string;
@@ -208,6 +224,22 @@ const englishTranslations: Translations = {
     clearDataWarning: "This will delete all your streaks, badges, and settings.",
     dataCleared: "All data has been cleared successfully!",
 
+    // Statistics
+    statistics: "Statistics",
+    overview: "Overview",
+    totalStreaks: "Total Streaks",
+    activeStreaks: "Active Streaks",
+    completedDays: "Completed Days",
+    todayCompleted: "Completed Today",
+    longestStreak: "Longest Streak",
+    currentStreak: "Current Streak",
+    averagePerWeek: "Average per Week",
+    thisWeek: "This Week",
+    thisMonth: "This Month",
+    categoryBreakdown: "Category Breakdown",
+    noDataAvailable: "No data available",
+    days: "days",
+
     // Category and emoji selection
     selectCategory: "Select Category",
     selectEmoji: "Select Emoji",
@@ -345,6 +377,22 @@ const turkishTranslations: Translations = {
     clearDataConfirm: "Tüm verileri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     clearDataWarning: "Bu işlem tüm alışkanlıklarınızı, rozetlerinizi ve ayarlarınızı silecektir.",
     dataCleared: "Tüm veriler başarıyla temizlendi!",
+
+    // Statistics
+    statistics: "İstatistikler",
+    overview: "Genel Bakış",
+    totalStreaks: "Toplam Alışkanlık",
+    activeStreaks: "Aktif Alışkanlık",
+    completedDays: "Tamamlanan Gün",
+    todayCompleted: "Bugün Tamamlanan",
+    longestStreak: "En Uzun Seri",
+    currentStreak: "Mevcut Seri",
+    averagePerWeek: "Haftalık Ortalama",
+    thisWeek: "Bu Hafta",
+    thisMonth: "Bu Ay",
+    categoryBreakdown: "Kategori Dağılımı",
+    noDataAvailable: "Veri bulunamadı",
+    days: "gün",
 
     // Category and emoji selection
     selectCategory: "Kategori Seç",
