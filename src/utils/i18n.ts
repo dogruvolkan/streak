@@ -55,6 +55,15 @@ export interface Translations {
     // Additional translations
     back: string;
     next: string;
+
+    // Settings
+    settings: string;
+    language: string;
+    appearance: string;
+    themeColor: string;
+    lightMode: string;
+    darkMode: string;
+    done: string;
 }
 
 const englishTranslations: Translations = {
@@ -110,6 +119,15 @@ const englishTranslations: Translations = {
     // Additional translations
     back: "Back",
     next: "Next",
+
+    // Settings
+    settings: "Settings",
+    language: "Language",
+    appearance: "Appearance",
+    themeColor: "Theme Color",
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+    done: "Done",
 };
 
 const turkishTranslations: Translations = {
@@ -165,6 +183,15 @@ const turkishTranslations: Translations = {
     // Additional translations
     back: "Geri",
     next: "İleri",
+
+    // Settings
+    settings: "Ayarlar",
+    language: "Dil",
+    appearance: "Görünüm",
+    themeColor: "Renk Teması",
+    lightMode: "Açık Tema",
+    darkMode: "Koyu Tema",
+    done: "Tamam",
 };
 
 const translations: Record<Language, Translations> = {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   ThemeProvider,
-  createTheme,
   CssBaseline,
   AppBar,
   Toolbar,
@@ -9,15 +8,12 @@ import {
   Fab,
   Box,
   IconButton,
-  Menu,
-  MenuItem,
-  ListItemText,
-  ListItemIcon,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import LanguageIcon from "@mui/icons-material/Language";
+import SettingsIcon from "@mui/icons-material/Settings";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
+import Settings from "./components/Settings";
 import type { Streak, CreateStreakFormData } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
@@ -27,55 +23,25 @@ import {
   useTranslations,
   type Language,
 } from "./utils/i18n";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#7c3aed", // Mor
-      light: "#a855f7",
-      dark: "#5b21b6",
-    },
-    secondary: {
-      main: "#10b981", // Yeşil
-      light: "#34d399",
-      dark: "#059669",
-    },
-    background: {
-      default: "#f1f5f9",
-      paper: "#ffffff",
-    },
-  },
-  typography: {
-    fontFamily:
-      '"Inter", "SF Pro Display", "Roboto", "Helvetica", "Arial", sans-serif',
-    h6: {
-      fontWeight: 600,
-    },
-  },
-  shape: {
-    borderRadius: 16,
-  },
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          boxShadow: "none",
-          borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
-        },
-      },
-    },
-  },
-});
+import {
+  getThemeSettings,
+  saveThemeSettings,
+  createAppTheme,
+  type ThemeMode,
+  type ThemeColor,
+} from "./utils/theme";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
-  const [languageMenuAnchor, setLanguageMenuAnchor] =
-    useState<null | HTMLElement>(null);
+  const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+  const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
 
-  const t = useTranslations(currentLanguage); // Load streaks from localStorage on component mount
+  const t = useTranslations(currentLanguage);
+  const theme = createAppTheme(themeMode, themeColor); // Load streaks from localStorage on component mount
   useEffect(() => {
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
@@ -84,6 +50,11 @@ function App() {
     // Load language preference
     const savedLanguage = getCurrentLanguage();
     setCurrentLanguage(savedLanguage);
+
+    // Load theme settings
+    const themeSettings = getThemeSettings();
+    setThemeMode(themeSettings.mode);
+    setThemeColor(themeSettings.color);
 
     // Initialize audio context and load audio preference
     initAudio();
@@ -201,18 +172,20 @@ function App() {
   };
 
   // Language switching functions
-  const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setLanguageMenuAnchor(event.currentTarget);
-  };
-
-  const handleLanguageMenuClose = () => {
-    setLanguageMenuAnchor(null);
-  };
-
   const handleLanguageChange = (language: Language) => {
     setCurrentLanguage(language);
     setLanguage(language);
-    setLanguageMenuAnchor(null);
+  };
+
+  // Theme switching functions
+  const handleThemeModeChange = (mode: ThemeMode) => {
+    setThemeMode(mode);
+    saveThemeSettings({ mode, color: themeColor });
+  };
+
+  const handleThemeColorChange = (color: ThemeColor) => {
+    setThemeColor(color);
+    saveThemeSettings({ mode: themeMode, color });
   };
 
   const handleReorderStreaks = (reorderedStreaks: Streak[]) => {
@@ -267,42 +240,15 @@ function App() {
               {t.appTitle}
             </Typography>
 
-            {/* Language switcher */}
+            {/* Settings button */}
             <IconButton
-              onClick={handleLanguageMenuOpen}
+              onClick={() => setIsSettingsOpen(true)}
               sx={{
                 color: "primary.main",
               }}
             >
-              <LanguageIcon />
+              <SettingsIcon />
             </IconButton>
-
-            <Menu
-              anchorEl={languageMenuAnchor}
-              open={Boolean(languageMenuAnchor)}
-              onClose={handleLanguageMenuClose}
-              sx={{
-                "& .MuiPaper-root": {
-                  mt: 1.5,
-                  minWidth: 120,
-                },
-              }}
-            >
-              <MenuItem
-                onClick={() => handleLanguageChange("en")}
-                selected={currentLanguage === "en"}
-              >
-                <ListItemIcon>🇺🇸</ListItemIcon>
-                <ListItemText>English</ListItemText>
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleLanguageChange("tr")}
-                selected={currentLanguage === "tr"}
-              >
-                <ListItemIcon>🇹🇷</ListItemIcon>
-                <ListItemText>Türkçe</ListItemText>
-              </MenuItem>
-            </Menu>
           </Toolbar>
         </AppBar>
 
@@ -347,6 +293,18 @@ function App() {
           onClose={() => setIsBottomSheetOpen(false)}
           onSubmit={handleAddStreak}
           language={currentLanguage}
+        />
+
+        {/* Settings Dialog */}
+        <Settings
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          language={currentLanguage}
+          onLanguageChange={handleLanguageChange}
+          themeMode={themeMode}
+          onThemeModeChange={handleThemeModeChange}
+          themeColor={themeColor}
+          onThemeColorChange={handleThemeColorChange}
         />
       </Box>
     </ThemeProvider>

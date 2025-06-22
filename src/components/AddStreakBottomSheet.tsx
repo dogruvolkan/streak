@@ -150,7 +150,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           borderRadius: "20px 20px 0 0",
           maxHeight: "85vh",
           paddingBottom: "env(safe-area-inset-bottom)",
-          background: "linear-gradient(to bottom, #ffffff 0%, #fafafa 100%)",
+          background:
+            "linear-gradient(to bottom, background.paper 0%, background.default 100%)",
         },
       }}
     >
@@ -159,7 +160,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
         sx={{
           width: 40,
           height: 4,
-          backgroundColor: "grey.300",
+          backgroundColor: "text.secondary",
+          opacity: 0.3,
           borderRadius: 2,
           mx: "auto",
           mt: 1.5,
@@ -186,11 +188,11 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           onClick={handleClose}
           edge="end"
           sx={{
-            backgroundColor: "grey.100",
+            backgroundColor: "action.hover",
             width: 32,
             height: 32,
             "&:hover": {
-              backgroundColor: "grey.200",
+              backgroundColor: "action.selected",
             },
           }}
         >
@@ -212,12 +214,12 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               mt: 2,
               "& .MuiFilledInput-root": {
                 border: "none",
-                backgroundColor: "grey.100",
+                backgroundColor: "action.hover",
                 "&:hover": {
-                  backgroundColor: "grey.200",
+                  backgroundColor: "action.selected",
                 },
                 "&.Mui-focused": {
-                  backgroundColor: "grey.100",
+                  backgroundColor: "action.hover",
                   border: "none",
                 },
                 "&:before": {
@@ -295,9 +297,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           p: 3,
           pt: 2,
           gap: 1.5,
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          backgroundColor: "background.paper",
           backdropFilter: "blur(10px)",
-          borderTop: "1px solid rgba(0, 0, 0, 0.06)",
+          borderTop: "1px solid",
+          borderTopColor: "divider",
         }}
       >
         {step !== "name" && (
@@ -310,11 +313,11 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               px: 3,
               minWidth: 100,
               border: "2px solid",
-              borderColor: "grey.300",
+              borderColor: "divider",
               color: "text.secondary",
               "&:hover": {
-                borderColor: "grey.400",
-                backgroundColor: "grey.50",
+                borderColor: "text.secondary",
+                backgroundColor: "action.hover",
               },
             }}
           >
@@ -341,7 +344,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               boxShadow: "0 6px 16px rgba(124, 58, 237, 0.4)",
             },
             "&:disabled": {
-              backgroundColor: "grey.300",
+              backgroundColor: "action.disabledBackground",
+              color: "action.disabled",
               boxShadow: "none",
             },
           }}

@@ -316,14 +316,16 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   borderRadius: "50%",
                   minWidth: 0,
                   p: 0,
-                  backgroundColor: clickedToday ? "primary.main" : "white",
+                  backgroundColor: clickedToday
+                    ? "primary.main"
+                    : "background.paper",
                   border: "2px dashed",
-                  borderColor: canClick ? "primary.main" : "grey.300",
+                  borderColor: canClick ? "primary.main" : "action.disabled",
                   color: clickedToday
-                    ? "white"
+                    ? "primary.contrastText"
                     : canClick
                     ? "primary.main"
-                    : "grey.400",
+                    : "action.disabled",
                   transition: "all 0.2s ease-in-out",
                   // Shake animation for button
                   animation: isShaking
@@ -341,17 +343,17 @@ const StreakCard: React.FC<StreakCardProps> = ({
                       ? "primary.dark"
                       : canClick
                       ? "primary.50"
-                      : "white",
+                      : "background.paper",
                     transform: canClick ? "scale(1.05)" : "none",
-                    borderColor: canClick ? "primary.dark" : "grey.300",
+                    borderColor: canClick ? "primary.dark" : "action.disabled",
                   },
                   "&:active": {
                     transform: canClick ? "scale(0.95)" : "none",
                   },
                   "&:disabled": {
-                    backgroundColor: "grey.50",
-                    borderColor: "grey.200",
-                    color: "grey.300",
+                    backgroundColor: "action.disabledBackground",
+                    borderColor: "action.disabled",
+                    color: "action.disabled",
                   },
                 }}
               >
@@ -367,9 +369,14 @@ const StreakCard: React.FC<StreakCardProps> = ({
                 sx={{
                   position: "absolute",
                   bottom: -18,
-                  backgroundColor: canClick ? "primary.main" : "grey.400",
-                  color: "white",
+                  backgroundColor: canClick
+                    ? "primary.main"
+                    : "action.disabled",
+                  color: canClick
+                    ? "primary.contrastText"
+                    : "action.disabledBackground",
                   borderRadius: "50%",
+                  zIndex:1000,
                   width: 32,
                   height: 32,
                   display: "flex",
@@ -377,7 +384,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   justifyContent: "center",
                   fontSize: "0.75rem",
                   fontWeight: 700,
-                  border: "2px solid white",
+                  border: "2px solid",
+                  borderColor: "background.paper",
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   // Shake animation
                   animation: isShaking ? "shake 0.3s ease-in-out" : "none",
