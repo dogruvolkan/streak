@@ -49,14 +49,31 @@ export const getRepeatTypeDisplayText = (repeatType: string, selectedDays?: numb
         : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const translations = language === 'tr'
-        ? { daily: 'Her gün', weekly: 'Haftalık', monthly: 'Aylık', unknown: 'Bilinmiyor' }
-        : { daily: 'Every day', weekly: 'Weekly', monthly: 'Monthly', unknown: 'Unknown' };
+        ? {
+            daily: 'Her gün',
+            weekly: 'Haftalık',
+            monthly: 'Aylık',
+            unknown: 'Bilinmiyor',
+            allDays: 'Her gün'
+        }
+        : {
+            daily: 'Every day',
+            weekly: 'Weekly',
+            monthly: 'Monthly',
+            unknown: 'Unknown',
+            allDays: 'Every day'
+        };
 
     switch (repeatType) {
         case 'day':
             return translations.daily;
         case 'week':
             if (selectedDays && selectedDays.length > 0) {
+                // Eğer 7 gün seçilmişse "Her gün" göster
+                if (selectedDays.length === 7) {
+                    return translations.allDays;
+                }
+                // 7 günden az seçilmişse gün isimlerini göster
                 const selectedDayNames = selectedDays.map(day => dayNames[day]);
                 return selectedDayNames.join(', ');
             }

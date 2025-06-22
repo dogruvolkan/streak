@@ -299,6 +299,25 @@ function App() {
     );
   };
 
+  const handleClearData = () => {
+    // Clear all localStorage data
+    localStorage.removeItem("streakApp_streaks");
+    localStorage.removeItem("userBadges");
+    localStorage.removeItem("streakApp_language");
+    localStorage.removeItem("streakApp_themeMode");
+    localStorage.removeItem("streakApp_themeColor");
+    localStorage.removeItem("streakApp_audioEnabled");
+
+    // Reset all state to initial values
+    setStreaks([]);
+    setUserBadges(null);
+
+    // Show success message (you could add a toast notification here)
+    setTimeout(() => {
+      window.location.reload(); // Reload to reset everything
+    }, 100);
+  };
+
   // Language switching functions
   const handleLanguageChange = (language: Language) => {
     setCurrentLanguage(language);
@@ -479,6 +498,7 @@ function App() {
           onThemeModeChange={handleThemeModeChange}
           themeColor={themeColor}
           onThemeColorChange={handleThemeColorChange}
+          onClearData={handleClearData}
         />
 
         {/* Badge Viewer Dialog */}

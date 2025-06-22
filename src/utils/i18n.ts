@@ -64,6 +64,11 @@ export interface Translations {
     lightMode: string;
     darkMode: string;
     done: string;
+    clearData: string;
+    clearAllData: string;
+    clearDataConfirm: string;
+    clearDataWarning: string;
+    dataCleared: string;
 
     // Category and emoji selection
     selectCategory: string;
@@ -197,6 +202,11 @@ const englishTranslations: Translations = {
     lightMode: "Light Mode",
     darkMode: "Dark Mode",
     done: "Done",
+    clearData: "Clear Data",
+    clearAllData: "Clear All Data",
+    clearDataConfirm: "Are you sure you want to clear all data? This action cannot be undone.",
+    clearDataWarning: "This will delete all your streaks, badges, and settings.",
+    dataCleared: "All data has been cleared successfully!",
 
     // Category and emoji selection
     selectCategory: "Select Category",
@@ -330,6 +340,11 @@ const turkishTranslations: Translations = {
     lightMode: "Açık Tema",
     darkMode: "Koyu Tema",
     done: "Tamam",
+    clearData: "Verileri Temizle",
+    clearAllData: "Tüm Verileri Temizle",
+    clearDataConfirm: "Tüm verileri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    clearDataWarning: "Bu işlem tüm alışkanlıklarınızı, rozetlerinizi ve ayarlarınızı silecektir.",
+    dataCleared: "Tüm veriler başarıyla temizlendi!",
 
     // Category and emoji selection
     selectCategory: "Kategori Seç",

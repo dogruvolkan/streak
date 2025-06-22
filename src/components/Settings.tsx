@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -14,6 +14,8 @@ import {
   Divider,
   IconButton,
   Slide,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,6 +23,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import PaletteIcon from "@mui/icons-material/Palette";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
 
@@ -45,6 +48,7 @@ interface SettingsProps {
   onThemeModeChange: (mode: ThemeMode) => void;
   themeColor: ThemeColor;
   onThemeColorChange: (color: ThemeColor) => void;
+  onClearData: () => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({
@@ -56,8 +60,10 @@ const Settings: React.FC<SettingsProps> = ({
   onThemeModeChange,
   themeColor,
   onThemeColorChange,
+  onClearData,
 }) => {
   const t = useTranslations(language);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const themeColors = [
     {
@@ -279,6 +285,63 @@ const Settings: React.FC<SettingsProps> = ({
               </RadioGroup>
             </FormControl>
           </Box>
+        </Box>
+
+        {/* Clear Data Section */}
+        <Box sx={{ mt: 3 }}>
+          <Divider sx={{ mb: 3 }} />
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <DeleteIcon sx={{ mr: 1, color: "error.main" }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {t.clearData}
+            </Typography>
+          </Box>
+
+          {showClearConfirm ? (
+            <Box>
+              <Alert severity="warning" sx={{ mb: 2 }}>
+                <AlertTitle>{t.clearDataWarning}</AlertTitle>
+                {t.clearDataConfirm}
+              </Alert>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowClearConfirm(false)}
+                  sx={{ flex: 1 }}
+                >
+                  {t.cancel}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => {
+                    onClearData();
+                    setShowClearConfirm(false);
+                    onClose();
+                  }}
+                  sx={{ flex: 1 }}
+                >
+                  {t.clearAllData}
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => setShowClearConfirm(true)}
+              fullWidth
+              sx={{
+                borderRadius: 2,
+                py: 1.5,
+                textTransform: "none",
+                fontWeight: 500,
+              }}
+            >
+              {t.clearAllData}
+            </Button>
+          )}
         </Box>
       </DialogContent>
 

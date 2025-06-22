@@ -300,10 +300,11 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   backgroundColor: categoryColors[streak.category],
                   color: "white",
                   fontWeight: 500,
-                  fontSize: "0.75rem",
-                  height: 24,
+                  fontSize: "0.65rem",
+                  height: 20,
+
                   "& .MuiChip-label": {
-                    px: 1.5,
+                    px: 1,
                   },
                 }}
               />
@@ -318,10 +319,11 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   backgroundColor: "primary.main",
                   color: "white",
                   fontWeight: 500,
-                  fontSize: "0.75rem",
-                  height: 24,
+                  fontSize: "0.65rem",
+                  height: 20,
+
                   "& .MuiChip-label": {
-                    px: 1.5,
+                    px: 1,
                   },
                 }}
               />
