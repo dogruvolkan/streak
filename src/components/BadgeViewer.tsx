@@ -1,6 +1,8 @@
 import React from "react";
 import {
-  Drawer,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   IconButton,
   Typography,
   Card,
@@ -8,13 +10,22 @@ import {
   Box,
   Chip,
   LinearProgress,
-  AppBar,
-  Toolbar,
+  Slide,
 } from "@mui/material";
+import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import LockIcon from "@mui/icons-material/Lock";
 import type { UserBadges } from "../types";
 import { getBadgeRarityColor, getBadgeRarityText } from "../utils/badges";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 interface BadgeViewerProps {
   open: boolean;
@@ -33,61 +44,83 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
     (userBadges.totalUnlocked / userBadges.badges.length) * 100;
 
   return (
-    <Drawer
-      anchor="bottom"
+    <Dialog
       open={open}
       onClose={onClose}
+      TransitionComponent={Transition}
+      maxWidth={false}
+      fullWidth
       PaperProps={{
         sx: {
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          m: 0,
+          width: "100%",
+          maxWidth: "100vw",
+          borderRadius: "20px 20px 0 0",
           maxHeight: "90vh",
-          overflow: "hidden",
+          paddingBottom: "env(safe-area-inset-bottom)",
+          background:
+            "linear-gradient(to bottom, background.paper 0%, background.default 100%)",
         },
       }}
     >
-      {/* Header */}
-      <AppBar
-        position="sticky"
-        elevation={0}
+      {/* Handle Bar */}
+      <Box
         sx={{
-          backgroundColor: "background.paper",
-          color: "text.primary",
-          borderBottom: 1,
-          borderColor: "divider",
+          width: 40,
+          height: 4,
+          backgroundColor: "text.secondary",
+          opacity: 0.3,
+          borderRadius: 2,
+          mx: "auto",
+          mt: 1.5,
+          mb: 2,
+        }}
+      />
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pb: 1,
+          px: 3,
         }}
       >
-        <Toolbar>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <Typography variant="h5" component="h2" fontWeight="bold">
-              🏆 Rozetler
-            </Typography>
-            <IconButton onClick={onClose} size="small">
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          🏆 Rozetler
+        </Typography>
+        <IconButton
+          onClick={onClose}
+          edge="end"
+          sx={{
+            backgroundColor: "action.hover",
+            width: 32,
+            height: 32,
+            "&:hover": {
+              backgroundColor: "action.selected",
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        <Box px={2} pb={2}>
-          <Typography variant="body2" color="text.secondary" mb={1}>
-            {userBadges.totalUnlocked} / {userBadges.badges.length} rozet
-            kazanıldı
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={completionPercentage}
-            sx={{ height: 8, borderRadius: 4 }}
-          />
-        </Box>
-      </AppBar>
+      <Box px={3} pb={2}>
+        <Typography variant="body2" color="text.secondary" mb={1}>
+          {userBadges.totalUnlocked} / {userBadges.badges.length} rozet
+          kazanıldı
+        </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={completionPercentage}
+          sx={{ height: 8, borderRadius: 4 }}
+        />
+      </Box>
 
-      {/* Content */}
-      <Box sx={{ p: 2, overflow: "auto", maxHeight: "calc(90vh - 120px)" }}>
+      <DialogContent sx={{ px: 3, py: 0, overflow: "auto" }}>
         {/* Unlocked Badges */}
         {unlockedBadges.length > 0 && (
           <Box mb={4}>
@@ -287,8 +320,8 @@ const BadgeViewer: React.FC<BadgeViewerProps> = ({
             </Typography>
           </Box>
         )}
-      </Box>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 };
 
