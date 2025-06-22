@@ -154,6 +154,20 @@ export interface Translations {
     badgeSpeedDemonDesc: string;
     badgeMarathonRunnerDesc: string;
     badgeHabitArchitectDesc: string;
+
+    // Quantity-based streaks
+    streakType: string;
+    simpleStreak: string;
+    quantityBasedStreak: string;
+    simpleStreakDesc: string;
+    quantityBasedStreakDesc: string;
+    dailyGoalSettings: string;
+    targetAmount: string;
+    unit: string;
+    dailyProgress: string;
+    currentProgress: string;
+    addQuantity: string;
+    goalCompleted: string;
 }
 
 const englishTranslations: Translations = {
@@ -308,6 +322,20 @@ const englishTranslations: Translations = {
     badgeSpeedDemonDesc: "Completed 5 streaks in one day!",
     badgeMarathonRunnerDesc: "Completed a total of 1000 days!",
     badgeHabitArchitectDesc: "Created 10 different streaks!",
+
+    // Quantity-based streaks
+    streakType: "Streak Type",
+    simpleStreak: "Simple Streak",
+    quantityBasedStreak: "Quantity-Based Streak",
+    simpleStreakDesc: "Track whether you do it daily",
+    quantityBasedStreakDesc: "Track daily target amounts (water, pages, etc.)",
+    dailyGoalSettings: "Daily Goal Settings",
+    targetAmount: "Target Amount",
+    unit: "Unit",
+    dailyProgress: "Daily Progress",
+    currentProgress: "Current Progress",
+    addQuantity: "Add Quantity",
+    goalCompleted: "Goal Completed",
 };
 
 const turkishTranslations: Translations = {
@@ -462,6 +490,20 @@ const turkishTranslations: Translations = {
     badgeSpeedDemonDesc: "Bir günde 5 streak tamamladın!",
     badgeMarathonRunnerDesc: "Toplam 1000 gün streak tamamladın!",
     badgeHabitArchitectDesc: "10 farklı streak oluşturdun!",
+
+    // Quantity-based streaks
+    streakType: "Streak Türü",
+    simpleStreak: "Basit Streak",
+    quantityBasedStreak: "Miktar Bazlı Streak",
+    simpleStreakDesc: "Günlük yapıp yapmadığınızı takip edin",
+    quantityBasedStreakDesc: "Günlük hedef miktarı takip edin (su, sayfa, vb.)",
+    dailyGoalSettings: "Günlük Hedef Ayarları",
+    targetAmount: "Hedef Miktar",
+    unit: "Birim",
+    dailyProgress: "Günlük İlerleme",
+    currentProgress: "Mevcut İlerleme",
+    addQuantity: "Miktar Ekle",
+    goalCompleted: "Hedef Tamamlandı",
 };
 
 const translations: Record<Language, Translations> = {

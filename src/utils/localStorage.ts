@@ -11,13 +11,19 @@ export const loadStreaks = (): Streak[] => {
 
         const streaks = JSON.parse(data);
         // Convert date strings back to Date objects and add default values for new fields
-        const convertedStreaks = streaks.map((streak: Partial<Streak> & { createdAt: string; lastUpdated: string }, index: number) => ({
+        const convertedStreaks = streaks.map((streak: Partial<Streak> & { createdAt: string; lastUpdated: string; lastProgressDate?: string }, index: number) => ({
             ...streak,
             createdAt: new Date(streak.createdAt),
             lastUpdated: new Date(streak.lastUpdated),
+            lastProgressDate: streak.lastProgressDate ? new Date(streak.lastProgressDate) : undefined,
             order: streak.order !== undefined ? streak.order : index, // Eski streakler için order ekle
             category: streak.category || 'other', // Default category for existing streaks
             emoji: streak.emoji || '📋', // Default emoji for existing streaks
+            // Quantity-based fields with defaults
+            isQuantityBased: streak.isQuantityBased || false,
+            dailyGoal: streak.dailyGoal || 1,
+            unit: streak.unit || '',
+            dailyProgress: streak.dailyProgress || 0,
         }));
 
         // Order'a göre sırala

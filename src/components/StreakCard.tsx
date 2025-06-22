@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Card, Typography, Button, Box, Chip, IconButton } from "@mui/material";
+import {
+  Card,
+  Typography,
+  Button,
+  Box,
+  Chip,
+  IconButton,
+  LinearProgress,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -13,11 +21,12 @@ import { getRepeatTypeDisplayText } from "../utils/localStorage";
 import { combinedFeedback } from "../utils/haptic";
 import { getCategoryName, categoryColors } from "../utils/categories";
 import type { Language } from "../utils/i18n";
+import { useTranslations } from "../utils/i18n";
 import ShareModal from "./ShareModal";
 
 interface StreakCardProps {
   streak: Streak;
-  onIncrement: (streakId: string) => void;
+  onIncrement: (streakId: string, quantity?: number) => void;
   onDelete: (streakId: string) => void;
   onReset: (streakId: string) => void;
   language: Language;
@@ -33,6 +42,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
   const [isShaking, setIsShaking] = useState(false); // Titreşim state'i
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const t = useTranslations(language); // Çeviri hook'u
 
   // Drag and drop için sortable hook
   const {
@@ -58,7 +69,12 @@ const StreakCard: React.FC<StreakCardProps> = ({
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 300); // 300ms sonra animasyonu bitir
 
-    onIncrement(streak.id);
+    // Miktar bazlı streakler için her tıklamada 1 birim ekle
+    if (streak.isQuantityBased) {
+      onIncrement(streak.id, 1);
+    } else {
+      onIncrement(streak.id);
+    }
   };
 
   const handleDelete = () => {
@@ -135,6 +151,36 @@ const StreakCard: React.FC<StreakCardProps> = ({
 
   const clickedToday = isClickedToday();
   const canClick = canClickToday();
+
+  // Miktar bazlı streakler için progress hesaplaması
+  const getTodayProgress = () => {
+    if (!streak.isQuantityBased)
+      return { current: 0, target: 1, percentage: 0 };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const lastProgressDate = streak.lastProgressDate
+      ? new Date(streak.lastProgressDate)
+      : null;
+    lastProgressDate?.setHours(0, 0, 0, 0);
+
+    // Eğer bugün progress kaydedilmişse mevcut progress'i göster
+    const isToday = lastProgressDate?.getTime() === today.getTime();
+    const current = isToday ? streak.dailyProgress || 0 : 0;
+    const target = streak.dailyGoal || 1;
+    const percentage = Math.min((current / target) * 100, 100);
+
+    return { current, target, percentage };
+  };
+
+  const todayProgress = getTodayProgress();
+
+  // Miktar bazlı streakler için hedef tamamlandı mı kontrol et
+  const isGoalCompleted = () => {
+    if (!streak.isQuantityBased) return false;
+    return todayProgress.current >= todayProgress.target;
+  };
 
   return (
     <Box
@@ -292,6 +338,43 @@ const StreakCard: React.FC<StreakCardProps> = ({
               </Typography>
             </Box>
 
+            {/* Miktar bazlı streakler için progress bar */}
+            {streak.isQuantityBased && (
+              <Box sx={{ mb: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 0.5,
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    {t.dailyProgress}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {todayProgress.current}/{todayProgress.target} {streak.unit}
+                  </Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={todayProgress.percentage}
+                  sx={{
+                    height: 6,
+                    borderRadius: 3,
+                    backgroundColor: "action.hover",
+                    "& .MuiLinearProgress-bar": {
+                      borderRadius: 3,
+                      backgroundColor:
+                        todayProgress.percentage >= 100
+                          ? "success.main"
+                          : "primary.main",
+                    },
+                  }}
+                />
+              </Box>
+            )}
+
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
               <Chip
                 label={getCategoryName(streak.category, language)}
@@ -361,7 +444,15 @@ const StreakCard: React.FC<StreakCardProps> = ({
               }}
             >
               <Button
-                variant={clickedToday ? "contained" : "outlined"}
+                variant={
+                  streak.isQuantityBased
+                    ? isGoalCompleted()
+                      ? "contained"
+                      : "outlined"
+                    : clickedToday
+                    ? "contained"
+                    : "outlined"
+                }
                 onClick={handleIncrement}
                 disabled={!canClick}
                 sx={{
@@ -453,7 +544,9 @@ const StreakCard: React.FC<StreakCardProps> = ({
                   transition: "all 0.2s ease-in-out",
                 }}
               >
-                {streak.count}
+                {streak.isQuantityBased
+                  ? `${todayProgress.current}/${todayProgress.target}`
+                  : streak.count}
               </Box>
             </Box>
           </Box>

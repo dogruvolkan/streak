@@ -23,7 +23,7 @@ import { useTranslations } from "../utils/i18n";
 
 interface StreakListProps {
   streaks: Streak[];
-  onIncrement: (streakId: string) => void;
+  onIncrement: (streakId: string, quantity?: number) => void;
   onDelete: (streakId: string) => void;
   onReset: (streakId: string) => void;
   onReorder: (streaks: Streak[]) => void;

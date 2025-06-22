@@ -142,6 +142,12 @@ function App() {
       order: streaks.length, // Yeni streak en sona eklenir
       category: formData.category,
       emoji: formData.emoji,
+      // Quantity-based fields
+      isQuantityBased: formData.isQuantityBased,
+      dailyGoal: formData.dailyGoal,
+      unit: formData.unit,
+      dailyProgress: 0,
+      lastProgressDate: undefined,
     };
 
     setStreaks((prevStreaks) => {
@@ -175,7 +181,7 @@ function App() {
     });
   };
 
-  const handleIncrementStreak = (streakId: string) => {
+  const handleIncrementStreak = (streakId: string, quantity: number = 1) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -186,7 +192,32 @@ function App() {
         const lastUpdateDate = new Date(streak.lastUpdated);
         lastUpdateDate.setHours(0, 0, 0, 0);
 
-        // Bugün tıklandı mı kontrol et
+        // Miktar bazlı streakler için özel logic
+        if (streak.isQuantityBased) {
+          const lastProgressDate = streak.lastProgressDate
+            ? new Date(streak.lastProgressDate)
+            : null;
+          lastProgressDate?.setHours(0, 0, 0, 0);
+
+          const isToday = lastProgressDate?.getTime() === today.getTime();
+          const currentProgress = isToday ? streak.dailyProgress || 0 : 0;
+          const newProgress = currentProgress + quantity;
+          const dailyGoal = streak.dailyGoal || 1;
+
+          // Eğer günlük hedefi aştıysa count'u artır
+          const shouldIncrementCount =
+            currentProgress < dailyGoal && newProgress >= dailyGoal;
+
+          return {
+            ...streak,
+            dailyProgress: newProgress,
+            lastProgressDate: today,
+            lastUpdated: new Date(),
+            count: shouldIncrementCount ? streak.count + 1 : streak.count,
+          };
+        }
+
+        // Normal streakler için existing logic
         const isClickedToday = () => {
           if (streak.repeatType === "day") {
             return (

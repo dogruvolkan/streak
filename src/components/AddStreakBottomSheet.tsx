@@ -69,7 +69,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     t.saturday,
   ];
   const [step, setStep] = useState<
-    "category" | "emoji" | "name" | "repeat" | "days"
+    "category" | "emoji" | "name" | "type" | "repeat" | "days"
   >("category");
   const [formData, setFormData] = useState<CreateStreakFormData>({
     name: "",
@@ -77,6 +77,9 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     selectedDays: [],
     category: "other",
     emoji: "📋",
+    isQuantityBased: false,
+    dailyGoal: 1,
+    unit: "",
   });
 
   const handleClose = () => {
@@ -87,6 +90,9 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
       selectedDays: [],
       category: "other",
       emoji: "📋",
+      isQuantityBased: false,
+      dailyGoal: 1,
+      unit: "",
     });
     onClose();
   };
@@ -97,6 +103,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     } else if (step === "emoji") {
       setStep("name");
     } else if (step === "name") {
+      setStep("type");
+    } else if (step === "type") {
       setStep("repeat");
     } else if (step === "repeat") {
       if (formData.repeatType === "week") {
@@ -112,8 +120,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
       setStep("category");
     } else if (step === "name") {
       setStep("emoji");
-    } else if (step === "repeat") {
+    } else if (step === "type") {
       setStep("name");
+    } else if (step === "repeat") {
+      setStep("type");
     } else if (step === "days") {
       setStep("repeat");
     }
@@ -140,6 +150,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     if (step === "category") return true; // Her zaman bir kategori seçili
     if (step === "emoji") return formData.emoji !== "";
     if (step === "name") return formData.name.trim().length > 0;
+    if (step === "type") return true;
     if (step === "repeat") return true;
     if (step === "days") return (formData.selectedDays?.length || 0) > 0;
     return true;
@@ -153,6 +164,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
         return t.selectEmoji;
       case "name":
         return t.addStreak;
+      case "type":
+        return t.streakType;
       case "repeat":
         return t.repeatPattern;
       case "days":
@@ -395,6 +408,134 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               },
             }}
           />
+        )}
+
+        {step === "type" && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1" gutterBottom>
+              {t.streakType}
+            </Typography>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
+            >
+              <Chip
+                label={
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      py: 1,
+                    }}
+                  >
+                    <Box sx={{ fontSize: "1.2em" }}>✅</Box>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {t.simpleStreak}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {t.simpleStreakDesc}
+                      </Typography>
+                    </Box>
+                  </Box>
+                }
+                onClick={() =>
+                  setFormData({ ...formData, isQuantityBased: false })
+                }
+                color={!formData.isQuantityBased ? "primary" : "default"}
+                variant={!formData.isQuantityBased ? "filled" : "outlined"}
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                  minHeight: 64,
+                  fontSize: "0.9rem",
+                  backgroundColor: !formData.isQuantityBased
+                    ? "primary.50"
+                    : "transparent",
+                  "&:hover": {
+                    backgroundColor: !formData.isQuantityBased
+                      ? "primary.100"
+                      : "action.hover",
+                  },
+                }}
+              />
+              <Chip
+                label={
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      py: 1,
+                    }}
+                  >
+                    <Box sx={{ fontSize: "1.2em" }}>📊</Box>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {t.quantityBasedStreak}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {t.quantityBasedStreakDesc}
+                      </Typography>
+                    </Box>
+                  </Box>
+                }
+                onClick={() =>
+                  setFormData({ ...formData, isQuantityBased: true })
+                }
+                color={formData.isQuantityBased ? "primary" : "default"}
+                variant={formData.isQuantityBased ? "filled" : "outlined"}
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                  minHeight: 64,
+                  fontSize: "0.9rem",
+                  backgroundColor: formData.isQuantityBased
+                    ? "primary.50"
+                    : "transparent",
+                  "&:hover": {
+                    backgroundColor: formData.isQuantityBased
+                      ? "primary.100"
+                      : "action.hover",
+                  },
+                }}
+              />
+            </Box>
+
+            {formData.isQuantityBased && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {t.dailyGoalSettings}
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+                  <TextField
+                    label={t.targetAmount}
+                    type="number"
+                    value={formData.dailyGoal}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        dailyGoal: Number(e.target.value),
+                      })
+                    }
+                    variant="filled"
+                    sx={{ flex: 1 }}
+                    inputProps={{ min: 1 }}
+                  />
+                  <TextField
+                    label={t.unit}
+                    value={formData.unit}
+                    onChange={(e) =>
+                      setFormData({ ...formData, unit: e.target.value })
+                    }
+                    placeholder="bardak, sayfa, dakika..."
+                    variant="filled"
+                    sx={{ flex: 1 }}
+                  />
+                </Box>
+              </Box>
+            )}
+          </Box>
         )}
 
         {step === "repeat" && (
