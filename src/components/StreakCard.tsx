@@ -10,6 +10,7 @@ import { CSS } from "@dnd-kit/utilities";
 import type { Streak } from "../types";
 import { getRepeatTypeDisplayText } from "../utils/localStorage";
 import { combinedFeedback } from "../utils/haptic";
+import { getCategoryName, categoryColors } from "../utils/categories";
 import type { Language } from "../utils/i18n";
 
 interface StreakCardProps {
@@ -191,6 +192,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
           transform: isSwipedOpen ? "translateX(-140px)" : "translateX(0)",
           transition: "transform 0.3s ease-out",
           borderRadius: isSwipedOpen ? "12px 0px 0px 12px" : 1.5, // Sağ radius swipe'da sıfır
+          borderLeft: `4px solid ${categoryColors[streak.category]}`,
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
           border: "1px solid rgba(0, 0, 0, 0.06)",
           backgroundColor: "background.paper",
@@ -240,21 +242,48 @@ const StreakCard: React.FC<StreakCardProps> = ({
 
           {/* Sol taraf - Streak bilgileri */}
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
-              variant="h6"
-              component="h3"
-              sx={{
-                fontWeight: 600,
-                mb: 1.5,
-                color: "text.primary",
-                fontSize: "1.1rem",
-                lineHeight: 1.2,
-              }}
+            <Box
+              sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}
             >
-              {streak.name}
-            </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "1.5em",
+                  lineHeight: 1,
+                }}
+              >
+                {streak.emoji}
+              </Typography>
+              <Typography
+                variant="h6"
+                component="h3"
+                sx={{
+                  fontWeight: 600,
+                  color: "text.primary",
+                  fontSize: "1.1rem",
+                  lineHeight: 1.2,
+                  flex: 1,
+                }}
+              >
+                {streak.name}
+              </Typography>
+            </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+              <Chip
+                label={getCategoryName(streak.category, language)}
+                size="small"
+                sx={{
+                  backgroundColor: categoryColors[streak.category],
+                  color: "white",
+                  fontWeight: 500,
+                  fontSize: "0.75rem",
+                  height: 24,
+                  "& .MuiChip-label": {
+                    px: 1.5,
+                  },
+                }}
+              />
               <Chip
                 label={getRepeatTypeDisplayText(
                   streak.repeatType,
@@ -376,7 +405,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
                     ? "primary.contrastText"
                     : "action.disabledBackground",
                   borderRadius: "50%",
-                  zIndex:1000,
+                  zIndex: 1000,
                   width: 32,
                   height: 32,
                   display: "flex",

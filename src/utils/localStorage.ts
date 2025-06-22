@@ -10,12 +10,14 @@ export const loadStreaks = (): Streak[] => {
         if (!data) return [];
 
         const streaks = JSON.parse(data);
-        // Convert date strings back to Date objects
+        // Convert date strings back to Date objects and add default values for new fields
         const convertedStreaks = streaks.map((streak: Partial<Streak> & { createdAt: string; lastUpdated: string }, index: number) => ({
             ...streak,
             createdAt: new Date(streak.createdAt),
             lastUpdated: new Date(streak.lastUpdated),
             order: streak.order !== undefined ? streak.order : index, // Eski streakler için order ekle
+            category: streak.category || 'other', // Default category for existing streaks
+            emoji: streak.emoji || '📋', // Default emoji for existing streaks
         }));
 
         // Order'a göre sırala

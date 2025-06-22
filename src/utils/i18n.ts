@@ -64,6 +64,14 @@ export interface Translations {
     lightMode: string;
     darkMode: string;
     done: string;
+
+    // Category and emoji selection
+    selectCategory: string;
+    selectEmoji: string;
+    category: string;
+    emoji: string;
+    popularEmojis: string;
+    suggestedEmojis: string;
 }
 
 const englishTranslations: Translations = {
@@ -128,6 +136,14 @@ const englishTranslations: Translations = {
     lightMode: "Light Mode",
     darkMode: "Dark Mode",
     done: "Done",
+
+    // Category and emoji selection
+    selectCategory: "Select Category",
+    selectEmoji: "Select Emoji",
+    category: "Category",
+    emoji: "Emoji",
+    popularEmojis: "Popular Emojis",
+    suggestedEmojis: "Suggested for this category",
 };
 
 const turkishTranslations: Translations = {
@@ -192,6 +208,14 @@ const turkishTranslations: Translations = {
     lightMode: "Açık Tema",
     darkMode: "Koyu Tema",
     done: "Tamam",
+
+    // Category and emoji selection
+    selectCategory: "Kategori Seç",
+    selectEmoji: "Emoji Seç",
+    category: "Kategori",
+    emoji: "Emoji",
+    popularEmojis: "Popüler Emojiler",
+    suggestedEmojis: "Bu kategori için önerililer",
 };
 
 const translations: Record<Language, Translations> = {

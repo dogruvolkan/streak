@@ -19,9 +19,20 @@ import {
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
-import type { CreateStreakFormData, RepeatType } from "../types";
+import type {
+  CreateStreakFormData,
+  RepeatType,
+  StreakCategory,
+} from "../types";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
+import {
+  getCategoryName,
+  categoryColors,
+  categoryEmojis,
+  getSuggestedEmojis,
+  popularEmojis,
+} from "../utils/categories";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -57,25 +68,35 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     t.friday,
     t.saturday,
   ];
-  const [step, setStep] = useState<"name" | "repeat" | "days">("name");
+  const [step, setStep] = useState<
+    "category" | "emoji" | "name" | "repeat" | "days"
+  >("category");
   const [formData, setFormData] = useState<CreateStreakFormData>({
     name: "",
     repeatType: "day",
     selectedDays: [],
+    category: "other",
+    emoji: "📋",
   });
 
   const handleClose = () => {
-    setStep("name");
+    setStep("category");
     setFormData({
       name: "",
       repeatType: "day",
       selectedDays: [],
+      category: "other",
+      emoji: "📋",
     });
     onClose();
   };
 
   const handleNext = () => {
-    if (step === "name") {
+    if (step === "category") {
+      setStep("emoji");
+    } else if (step === "emoji") {
+      setStep("name");
+    } else if (step === "name") {
       setStep("repeat");
     } else if (step === "repeat") {
       if (formData.repeatType === "week") {
@@ -87,7 +108,11 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   };
 
   const handleBack = () => {
-    if (step === "repeat") {
+    if (step === "emoji") {
+      setStep("category");
+    } else if (step === "name") {
+      setStep("emoji");
+    } else if (step === "repeat") {
       setStep("name");
     } else if (step === "days") {
       setStep("repeat");
@@ -112,6 +137,8 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   };
 
   const isValid = () => {
+    if (step === "category") return true; // Her zaman bir kategori seçili
+    if (step === "emoji") return formData.emoji !== "";
     if (step === "name") return formData.name.trim().length > 0;
     if (step === "repeat") return true;
     if (step === "days") return (formData.selectedDays?.length || 0) > 0;
@@ -120,6 +147,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
 
   const getTitle = () => {
     switch (step) {
+      case "category":
+        return t.selectCategory;
+      case "emoji":
+        return t.selectEmoji;
       case "name":
         return t.addStreak;
       case "repeat":
@@ -201,6 +232,139 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ px: 3, pb: 2 }}>
+        {step === "category" && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1" gutterBottom>
+              {t.selectCategory}
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 2,
+                mt: 1,
+              }}
+            >
+              {(Object.keys(categoryColors) as StreakCategory[]).map(
+                (category) => (
+                  <Chip
+                    key={category}
+                    label={
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Box sx={{ fontSize: "1.2em" }}>
+                          {categoryEmojis[category]}
+                        </Box>
+                        {getCategoryName(category, language)}
+                      </Box>
+                    }
+                    onClick={() => setFormData({ ...formData, category })}
+                    color={
+                      formData.category === category ? "primary" : "default"
+                    }
+                    variant={
+                      formData.category === category ? "filled" : "outlined"
+                    }
+                    sx={{
+                      width: "100%",
+                      height: 48,
+                      fontSize: "0.9rem",
+                      borderColor:
+                        formData.category === category
+                          ? categoryColors[category]
+                          : "divider",
+                      backgroundColor:
+                        formData.category === category
+                          ? `${categoryColors[category]}20`
+                          : "transparent",
+                      "&:hover": {
+                        backgroundColor: `${categoryColors[category]}30`,
+                      },
+                    }}
+                  />
+                )
+              )}
+            </Box>
+          </Box>
+        )}
+
+        {step === "emoji" && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1" gutterBottom>
+              {t.selectEmoji}
+            </Typography>
+
+            {/* Suggested emojis for selected category */}
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: 2, mb: 1 }}
+            >
+              {t.suggestedEmojis}
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}>
+              {getSuggestedEmojis(formData.category).map((emoji, index) => (
+                <IconButton
+                  key={index}
+                  onClick={() => setFormData({ ...formData, emoji })}
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    fontSize: "1.5rem",
+                    border: "2px solid",
+                    borderColor:
+                      formData.emoji === emoji ? "primary.main" : "divider",
+                    backgroundColor:
+                      formData.emoji === emoji ? "primary.50" : "transparent",
+                    "&:hover": {
+                      backgroundColor: "action.hover",
+                    },
+                  }}
+                >
+                  {emoji}
+                </IconButton>
+              ))}
+            </Box>
+
+            {/* Popular emojis */}
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              {t.popularEmojis}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+                maxHeight: 200,
+                overflowY: "auto",
+              }}
+            >
+              {popularEmojis.map((emoji, index) => (
+                <IconButton
+                  key={index}
+                  onClick={() => setFormData({ ...formData, emoji })}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    fontSize: "1.3rem",
+                    border: "1px solid",
+                    borderColor:
+                      formData.emoji === emoji ? "primary.main" : "divider",
+                    backgroundColor:
+                      formData.emoji === emoji ? "primary.50" : "transparent",
+                    "&:hover": {
+                      backgroundColor: "action.hover",
+                    },
+                  }}
+                >
+                  {emoji}
+                </IconButton>
+              ))}
+            </Box>
+          </Box>
+        )}
+
         {step === "name" && (
           <TextField
             autoFocus
@@ -303,7 +467,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           borderTopColor: "divider",
         }}
       >
-        {step !== "name" && (
+        {step !== "category" && (
           <Button
             onClick={handleBack}
             variant="outlined"

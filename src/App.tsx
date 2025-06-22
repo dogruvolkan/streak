@@ -78,6 +78,8 @@ function App() {
       createdAt: new Date(),
       lastUpdated: new Date(),
       order: streaks.length, // Yeni streak en sona eklenir
+      category: formData.category,
+      emoji: formData.emoji,
     };
 
     setStreaks((prevStreaks) => [...prevStreaks, newStreak]);

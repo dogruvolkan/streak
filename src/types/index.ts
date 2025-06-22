@@ -1,3 +1,5 @@
+export type StreakCategory = 'health' | 'fitness' | 'nutrition' | 'productivity' | 'learning' | 'hobby' | 'personal' | 'social' | 'finance' | 'other';
+
 export interface Streak {
     id: string;
     name: string;
@@ -7,6 +9,8 @@ export interface Streak {
     createdAt: Date;
     lastUpdated: Date;
     order: number; // Drag and drop sıralaması için
+    category: StreakCategory; // Kategori
+    emoji: string; // Emoji/ikon
 }
 
 export type RepeatType = 'day' | 'week' | 'month';
@@ -15,4 +19,6 @@ export interface CreateStreakFormData {
     name: string;
     repeatType: RepeatType;
     selectedDays?: number[];
+    category: StreakCategory;
+    emoji: string;
 }
