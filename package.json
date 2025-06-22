@@ -20,6 +20,7 @@
     "@mui/material": "^7.1.2",
     "@mui/system": "^7.1.1",
     "react": "^19.1.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-swipeable": "^7.0.2"
   },

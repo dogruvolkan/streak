@@ -8,14 +8,18 @@ import {
   Fab,
   Box,
   IconButton,
+  Badge,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import Settings from "./components/Settings";
 import SharedStreakViewer from "./components/SharedStreakViewer";
-import type { Streak, CreateStreakFormData } from "./types";
+import BadgeViewer from "./components/BadgeViewer";
+import ConfettiComponent from "./components/ConfettiComponent";
+import type { Streak, CreateStreakFormData, UserBadges } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
 import {
@@ -36,6 +40,12 @@ import {
   getSharedStreakFromURL,
   type SharedStreakData,
 } from "./utils/sharing";
+import {
+  loadUserBadges,
+  saveUserBadges,
+  checkBadgeUnlocks,
+} from "./utils/badges";
+import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
@@ -49,8 +59,24 @@ function App() {
   const [sharedStreakData, setSharedStreakData] =
     useState<SharedStreakData | null>(null);
 
+  // Badge system state
+  const [userBadges, setUserBadges] = useState<UserBadges | null>(null);
+  const [isBadgeViewerOpen, setIsBadgeViewerOpen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
+
+  // Set up confetti callback
+  useEffect(() => {
+    setConfettiCallback(() => {
+      setShowConfetti(true);
+    });
+
+    return () => {
+      setConfettiCallback(null);
+    };
+  }, []);
 
   // Load streaks from localStorage on component mount
   useEffect(() => {
@@ -79,6 +105,10 @@ function App() {
     // Initialize audio context and load audio preference
     initAudio();
     getAudioEnabled(); // This loads the preference from localStorage
+
+    // Load user badges
+    const badges = loadUserBadges();
+    setUserBadges(badges);
   }, []);
 
   // Save streaks to localStorage whenever streaks state changes (but not on initial load)
@@ -102,15 +132,43 @@ function App() {
       emoji: formData.emoji,
     };
 
-    setStreaks((prevStreaks) => [...prevStreaks, newStreak]);
+    setStreaks((prevStreaks) => {
+      const updatedStreaks = [...prevStreaks, newStreak];
+
+      // Check for badge unlocks after adding new streak
+      if (userBadges) {
+        const { newBadges, updatedBadges } = checkBadgeUnlocks(
+          updatedStreaks,
+          userBadges
+        );
+
+        if (newBadges.length > 0) {
+          setUserBadges(updatedBadges);
+          saveUserBadges(updatedBadges);
+
+          // Show notification for the first new badge
+          const newBadge = updatedBadges.badges.find(
+            (b) => b.id === newBadges[0]
+          );
+          if (newBadge) {
+            // Celebrate with confetti for the first streak badge
+            if (newBadge.id === "first_step") {
+              celebrateAchievement();
+            }
+          }
+        }
+      }
+
+      return updatedStreaks;
+    });
   };
 
   const handleIncrementStreak = (streakId: string) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    setStreaks((prevStreaks) =>
-      prevStreaks.map((streak) => {
+    setStreaks((prevStreaks) => {
+      const updatedStreaks = prevStreaks.map((streak) => {
         if (streak.id !== streakId) return streak;
 
         const lastUpdateDate = new Date(streak.lastUpdated);
@@ -173,8 +231,47 @@ function App() {
             lastUpdated: new Date(),
           };
         }
-      })
-    );
+      });
+
+      // Check for badge unlocks after streak update
+      if (userBadges) {
+        const { newBadges, updatedBadges } = checkBadgeUnlocks(
+          updatedStreaks,
+          userBadges
+        );
+
+        if (newBadges.length > 0) {
+          setUserBadges(updatedBadges);
+          saveUserBadges(updatedBadges);
+
+          // Show notification for the first new badge
+          const newBadge = updatedBadges.badges.find(
+            (b) => b.id === newBadges[0]
+          );
+          if (newBadge) {
+            // Celebrate with confetti for special badges
+            if (
+              [
+                "first_step",
+                "triple_threat",
+                "weekly_warrior",
+                "streak_master",
+                "century_club",
+                "perfectionist",
+                "consistency_master",
+                "unstoppable",
+                "legend",
+                "marathon_runner",
+              ].includes(newBadge.id)
+            ) {
+              celebrateAchievement();
+            }
+          }
+        }
+      }
+
+      return updatedStreaks;
+    });
   };
 
   const handleDeleteStreak = (streakId: string) => {
@@ -283,6 +380,29 @@ function App() {
               {t.appTitle}
             </Typography>
 
+            {/* Badge button */}
+            <IconButton
+              onClick={() => setIsBadgeViewerOpen(true)}
+              sx={{
+                color: "primary.main",
+                mr: 1,
+              }}
+            >
+              <Badge
+                badgeContent={userBadges?.totalUnlocked || 0}
+                color="secondary"
+                sx={{
+                  "& .MuiBadge-badge": {
+                    fontSize: "0.7rem",
+                    minWidth: "18px",
+                    height: "18px",
+                  },
+                }}
+              >
+                <EmojiEventsIcon />
+              </Badge>
+            </IconButton>
+
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
@@ -350,6 +470,21 @@ function App() {
           onThemeModeChange={handleThemeModeChange}
           themeColor={themeColor}
           onThemeColorChange={handleThemeColorChange}
+        />
+
+        {/* Badge Viewer Dialog */}
+        {userBadges && (
+          <BadgeViewer
+            open={isBadgeViewerOpen}
+            onClose={() => setIsBadgeViewerOpen(false)}
+            userBadges={userBadges}
+          />
+        )}
+
+        {/* Confetti Component */}
+        <ConfettiComponent
+          active={showConfetti}
+          onComplete={() => setShowConfetti(false)}
         />
       </Box>
     </ThemeProvider>
