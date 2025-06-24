@@ -26,6 +26,7 @@ interface StreakListProps {
   onIncrement: (streakId: string, quantity?: number) => void;
   onDelete: (streakId: string) => void;
   onReset: (streakId: string) => void;
+  onEdit: (streakId: string) => void;
   onReorder: (streaks: Streak[]) => void;
   language: Language;
 }
@@ -35,6 +36,7 @@ const StreakList: React.FC<StreakListProps> = ({
   onIncrement,
   onDelete,
   onReset,
+  onEdit,
   onReorder,
   language,
 }) => {
@@ -174,6 +176,7 @@ const StreakList: React.FC<StreakListProps> = ({
                 onIncrement={onIncrement}
                 onDelete={onDelete}
                 onReset={onReset}
+                onEdit={onEdit}
                 language={language}
               />
             ))}

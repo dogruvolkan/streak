@@ -15,6 +15,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import Statistics from "./components/Statistics";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
+import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import type { Streak, CreateStreakFormData } from "./types";
@@ -38,6 +39,8 @@ import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isEditBottomSheetOpen, setIsEditBottomSheetOpen] = useState(false);
+  const [editingStreak, setEditingStreak] = useState<Streak | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
@@ -241,6 +244,29 @@ function App() {
     setStreaks(updatedStreaks);
   };
 
+  const handleEditStreak = (streakId: string) => {
+    const streak = streaks.find((s) => s.id === streakId);
+    if (streak) {
+      setEditingStreak(streak);
+      setIsEditBottomSheetOpen(true);
+    }
+  };
+
+  const handleSaveEditedStreak = (
+    streakId: string,
+    updates: Partial<Streak>
+  ) => {
+    setStreaks((prevStreaks) =>
+      prevStreaks.map((streak) =>
+        streak.id === streakId
+          ? { ...streak, ...updates, lastUpdated: new Date() }
+          : streak
+      )
+    );
+    setIsEditBottomSheetOpen(false);
+    setEditingStreak(null);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -323,6 +349,7 @@ function App() {
             onIncrement={handleIncrementStreak}
             onDelete={handleDeleteStreak}
             onReset={handleResetStreak}
+            onEdit={handleEditStreak}
             onReorder={handleReorderStreaks}
             language={currentLanguage}
           />
@@ -362,6 +389,18 @@ function App() {
           themeColor={themeColor}
           onThemeColorChange={handleThemeColorChange}
           onClearData={handleClearData}
+        />
+
+        {/* Edit Streak Bottom Sheet */}
+        <EditStreakBottomSheet
+          open={isEditBottomSheetOpen}
+          onClose={() => {
+            setIsEditBottomSheetOpen(false);
+            setEditingStreak(null);
+          }}
+          streak={editingStreak}
+          onSave={handleSaveEditedStreak}
+          language={currentLanguage}
         />
 
         {/* Statistics Dialog */}

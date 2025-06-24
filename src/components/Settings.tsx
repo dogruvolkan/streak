@@ -139,7 +139,10 @@ const Settings: React.FC<SettingsProps> = ({
           px: 3,
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600, color: "text.primary" }}
+        >
           {t.settings}
         </Typography>
         <IconButton
@@ -166,7 +169,10 @@ const Settings: React.FC<SettingsProps> = ({
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <LanguageIcon sx={{ mr: 1, color: "primary.main" }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "text.primary" }}
+              >
                 {t.language}
               </Typography>
             </Box>
@@ -174,12 +180,30 @@ const Settings: React.FC<SettingsProps> = ({
               <RadioGroup
                 value={language}
                 onChange={(e) => onLanguageChange(e.target.value as Language)}
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    color: "text.primary",
+                  },
+                }}
               >
                 <FormControlLabel
                   value="en"
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      sx={{
+                        color: "text.secondary",
+                        "&.Mui-checked": { color: "primary.main" },
+                      }}
+                    />
+                  }
                   label={
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "text.primary",
+                      }}
+                    >
                       <Box sx={{ mr: 1 }}>🇺🇸</Box>
                       English
                     </Box>
@@ -187,9 +211,22 @@ const Settings: React.FC<SettingsProps> = ({
                 />
                 <FormControlLabel
                   value="tr"
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      sx={{
+                        color: "text.secondary",
+                        "&.Mui-checked": { color: "primary.main" },
+                      }}
+                    />
+                  }
                   label={
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "text.primary",
+                      }}
+                    >
                       <Box sx={{ mr: 1 }}>🇹🇷</Box>
                       Türkçe
                     </Box>
@@ -209,7 +246,10 @@ const Settings: React.FC<SettingsProps> = ({
               ) : (
                 <LightModeIcon sx={{ mr: 1, color: "primary.main" }} />
               )}
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "text.primary" }}
+              >
                 {t.appearance}
               </Typography>
             </Box>
@@ -217,23 +257,58 @@ const Settings: React.FC<SettingsProps> = ({
               <RadioGroup
                 value={themeMode}
                 onChange={(e) => onThemeModeChange(e.target.value as ThemeMode)}
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    color: "text.primary",
+                  },
+                }}
               >
                 <FormControlLabel
                   value="light"
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      sx={{
+                        color: "text.secondary",
+                        "&.Mui-checked": { color: "primary.main" },
+                      }}
+                    />
+                  }
                   label={
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <LightModeIcon sx={{ mr: 1, fontSize: 20 }} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "text.primary",
+                      }}
+                    >
+                      <LightModeIcon
+                        sx={{ mr: 1, fontSize: 20, color: "text.secondary" }}
+                      />
                       {t.lightMode}
                     </Box>
                   }
                 />
                 <FormControlLabel
                   value="dark"
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      sx={{
+                        color: "text.secondary",
+                        "&.Mui-checked": { color: "primary.main" },
+                      }}
+                    />
+                  }
                   label={
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <DarkModeIcon sx={{ mr: 1, fontSize: 20 }} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "text.primary",
+                      }}
+                    >
+                      <DarkModeIcon
+                        sx={{ mr: 1, fontSize: 20, color: "text.secondary" }}
+                      />
                       {t.darkMode}
                     </Box>
                   }
@@ -248,7 +323,10 @@ const Settings: React.FC<SettingsProps> = ({
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <PaletteIcon sx={{ mr: 1, color: "primary.main" }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "text.primary" }}
+              >
                 {t.themeColor}
               </Typography>
             </Box>
@@ -258,14 +336,32 @@ const Settings: React.FC<SettingsProps> = ({
                 onChange={(e) =>
                   onThemeColorChange(e.target.value as ThemeColor)
                 }
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    color: "text.primary",
+                  },
+                }}
               >
                 {themeColors.map((color) => (
                   <FormControlLabel
                     key={color.key}
                     value={color.key}
-                    control={<Radio />}
+                    control={
+                      <Radio
+                        sx={{
+                          color: "text.secondary",
+                          "&.Mui-checked": { color: "primary.main" },
+                        }}
+                      />
+                    }
                     label={
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: "text.primary",
+                        }}
+                      >
                         <Box
                           sx={{
                             width: 20,
@@ -292,7 +388,10 @@ const Settings: React.FC<SettingsProps> = ({
           <Divider sx={{ mb: 3 }} />
           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
             <DeleteIcon sx={{ mr: 1, color: "error.main" }} />
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 600, color: "text.primary" }}
+            >
               {t.clearData}
             </Typography>
           </Box>
@@ -307,7 +406,15 @@ const Settings: React.FC<SettingsProps> = ({
                 <Button
                   variant="outlined"
                   onClick={() => setShowClearConfirm(false)}
-                  sx={{ flex: 1 }}
+                  sx={{
+                    flex: 1,
+                    borderColor: "text.primary",
+                    color: "text.primary",
+                    "&:hover": {
+                      borderColor: "primary.main",
+                      backgroundColor: "action.hover",
+                    },
+                  }}
                 >
                   {t.cancel}
                 </Button>
@@ -319,7 +426,14 @@ const Settings: React.FC<SettingsProps> = ({
                     setShowClearConfirm(false);
                     onClose();
                   }}
-                  sx={{ flex: 1 }}
+                  sx={{
+                    flex: 1,
+                    backgroundColor: "error.main",
+                    color: "error.contrastText",
+                    "&:hover": {
+                      backgroundColor: "error.dark",
+                    },
+                  }}
                 >
                   {t.clearAllData}
                 </Button>
@@ -337,6 +451,12 @@ const Settings: React.FC<SettingsProps> = ({
                 py: 1.5,
                 textTransform: "none",
                 fontWeight: 500,
+                borderColor: "error.main",
+                color: "error.main",
+                "&:hover": {
+                  borderColor: "error.dark",
+                  backgroundColor: "error.50",
+                },
               }}
             >
               {t.clearAllData}
@@ -364,9 +484,22 @@ const Settings: React.FC<SettingsProps> = ({
             py: 1.5,
             fontSize: "1rem",
             fontWeight: 600,
-            boxShadow: "0 4px 12px rgba(124, 58, 237, 0.3)",
+            backgroundColor: "primary.main",
+            color: "primary.contrastText",
+            boxShadow: (theme) =>
+              `0 4px 12px ${
+                theme.palette.mode === "dark"
+                  ? "rgba(124, 58, 237, 0.4)"
+                  : "rgba(124, 58, 237, 0.3)"
+              }`,
             "&:hover": {
-              boxShadow: "0 6px 16px rgba(124, 58, 237, 0.4)",
+              backgroundColor: "primary.dark",
+              boxShadow: (theme) =>
+                `0 6px 16px ${
+                  theme.palette.mode === "dark"
+                    ? "rgba(124, 58, 237, 0.5)"
+                    : "rgba(124, 58, 237, 0.4)"
+                }`,
             },
           }}
         >

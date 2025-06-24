@@ -103,10 +103,19 @@ export interface Translations {
     dailyGoalSettings: string;
     targetAmount: string;
     unit: string;
+    dailyGoal: string;
     dailyProgress: string;
     currentProgress: string;
     addQuantity: string;
     goalCompleted: string;
+
+    // Edit streak
+    editStreak: string;
+    totalCount: string;
+    save: string;
+    quantityBased: string;
+    enterStreakName: string;
+    todayProgress: string;
 }
 
 const englishTranslations: Translations = {
@@ -210,10 +219,19 @@ const englishTranslations: Translations = {
     dailyGoalSettings: "Daily Goal Settings",
     targetAmount: "Target Amount",
     unit: "Unit",
+    dailyGoal: "Daily Goal",
     dailyProgress: "Daily Progress",
     currentProgress: "Current Progress",
     addQuantity: "Add Quantity",
     goalCompleted: "Goal Completed",
+
+    // Edit streak
+    editStreak: "Edit Streak",
+    totalCount: "Total Count",
+    save: "Save",
+    quantityBased: "Quantity-Based",
+    enterStreakName: "Enter streak name...",
+    todayProgress: "Today's Progress",
 };
 
 const turkishTranslations: Translations = {
@@ -317,10 +335,19 @@ const turkishTranslations: Translations = {
     dailyGoalSettings: "Günlük Hedef Ayarları",
     targetAmount: "Hedef Miktar",
     unit: "Birim",
+    dailyGoal: "Günlük Hedef",
     dailyProgress: "Günlük İlerleme",
     currentProgress: "Mevcut İlerleme",
     addQuantity: "Miktar Ekle",
     goalCompleted: "Hedef Tamamlandı",
+
+    // Edit streak
+    editStreak: "Alışkanlığı Düzenle",
+    totalCount: "Toplam Sayaç",
+    save: "Kaydet",
+    quantityBased: "Miktar Bazlı",
+    enterStreakName: "Alışkanlık adını girin...",
+    todayProgress: "Bugünün İlerlemesi",
 };
 
 const translations: Record<Language, Translations> = {
