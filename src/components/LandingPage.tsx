@@ -41,7 +41,8 @@ const LandingPage: React.FC = () => {
     {
       icon: <EmojiEvents />,
       title: "Achievement System",
-      description: "Earn badges and rewards as you build consistent habits",
+      description:
+        "Celebrate every milestone with confetti and visual feedback",
     },
     {
       icon: <Analytics />,
@@ -85,7 +86,7 @@ const LandingPage: React.FC = () => {
     },
     {
       name: "Maria K.",
-      text: "The badge system is genius! Makes building habits feel like a game.",
+      text: "The confetti celebration system is genius! Makes building habits feel like a game.",
       rating: 5,
     },
   ];

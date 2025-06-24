@@ -8,7 +8,7 @@
 
 - **📱 Smart Habit Tracking** - Track daily, weekly, and monthly habits with intelligent progress visualization
 - **⏰ Flexible Scheduling** - Set custom repeat patterns and choose specific days for your habits
-- **🏆 Achievement System** - Earn badges and rewards as you build consistent habits
+- **🏆 Achievement System** - Celebrate every milestone with confetti and visual feedback
 - **📊 Detailed Statistics** - Comprehensive analytics to track your progress and identify patterns
 - **📱 Mobile Optimized** - Perfect experience on all devices - phone, tablet, and desktop
 - **🔒 Privacy First** - All data stored locally on your device - no cloud, no tracking
@@ -23,12 +23,15 @@
 ## 🎯 Why Use Streak Tracker?
 
 ### Build Lasting Habits
+
 Research shows that 40% of our daily actions are habits, not decisions. By tracking and building positive habits, you're investing in your future self.
 
 ### Streak Psychology
+
 The streak system leverages loss aversion - you don't want to break your streak! This psychological approach keeps you motivated and consistent.
 
 ### Completely Free
+
 No subscriptions, no premium features, no hidden costs. We believe everyone deserves access to tools that help them improve their lives.
 
 ## 🔧 Technology Stack
@@ -58,20 +61,23 @@ npm run preview
 ## 🌟 Key Features Explained
 
 ### Habit Types
+
 - **Daily**: Perfect for habits like drinking water, exercise, or meditation
 - **Weekly**: Great for habits like grocery shopping or cleaning
 - **Monthly**: Ideal for habits like reading a book or financial reviews
 
-### Badge System
-Earn badges for various achievements:
-- 🏆 First Step - Create your first habit
-- 💪 Triple Threat - Complete a 3-day streak
-- 🗓️ Weekly Warrior - Complete a 7-day streak
-- 🎯 Streak Master - Complete a 30-day streak
-- And many more...
+### Celebration System
+
+Celebrate every achievement with:
+
+- � Confetti animations on every milestone
+- 🎊 Visual feedback for completed streaks
+- � Motivational celebrations to keep you going
 
 ### Statistics Dashboard
+
 Track your progress with detailed analytics:
+
 - Total streaks created
 - Active streaks
 - Completed days
@@ -82,6 +88,7 @@ Track your progress with detailed analytics:
 ## 🔒 Privacy & Security
 
 Your privacy is our priority:
+
 - ✅ All data stored locally on your device
 - ✅ No user accounts required
 - ✅ No personal information collected
@@ -91,6 +98,7 @@ Your privacy is our priority:
 ## 📱 Mobile App Experience
 
 Streak Tracker is optimized for mobile devices:
+
 - 📱 Responsive design that works on all screen sizes
 - 🎨 Touch-friendly interface
 - ⚡ Fast loading and smooth animations
@@ -108,6 +116,7 @@ Streak Tracker is optimized for mobile devices:
 ## 🤝 Contributing
 
 We welcome contributions! Whether it's:
+
 - 🐛 Bug reports
 - 💡 Feature suggestions
 - 🔧 Code improvements
@@ -127,6 +136,7 @@ habit tracker, streak tracker, daily habits, habit building, productivity app, f
 ## 📞 Support
 
 Need help? Have questions?
+
 - 📧 Email: support@streaktracker.app
 - 💬 GitHub Issues: Report bugs or request features
 - 🌐 Website: [streaktracker.app](https://streaktracker.app)
@@ -141,4 +151,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/your-username/streak-tracker)
 
-*Made with ❤️ for habit builders worldwide*
+_Made with ❤️ for habit builders worldwide_

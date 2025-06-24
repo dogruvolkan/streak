@@ -93,7 +93,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
     preventScrollOnSwipe: true, // Scroll ile çakışmayı önle
   });
 
-  // Bugün tıklandı mı kontrol et
+  // Bugün tıklandı mı kontrol et - sadece tarih bazlı kontrol
   const isClickedToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -101,32 +101,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
     const lastUpdateDate = new Date(streak.lastUpdated);
     lastUpdateDate.setHours(0, 0, 0, 0);
 
-    if (streak.repeatType === "day") {
-      return lastUpdateDate.getTime() === today.getTime() && streak.count > 0;
-    }
-
-    if (streak.repeatType === "week" && streak.selectedDays) {
-      const todayDayOfWeek = today.getDay();
-      if (!streak.selectedDays.includes(todayDayOfWeek)) {
-        return false;
-      }
-      return lastUpdateDate.getTime() === today.getTime() && streak.count > 0;
-    }
-
-    if (streak.repeatType === "month") {
-      const todayMonth = today.getMonth();
-      const todayYear = today.getFullYear();
-      const lastUpdateMonth = lastUpdateDate.getMonth();
-      const lastUpdateYear = lastUpdateDate.getFullYear();
-
-      return (
-        todayMonth === lastUpdateMonth &&
-        todayYear === lastUpdateYear &&
-        streak.count > 0
-      );
-    }
-
-    return false;
+    // Sadece tarihleri karşılaştır, count'a bakma
+    return lastUpdateDate.getTime() === today.getTime();
   };
 
   // Bu streak için tıklanabilir mi kontrol et

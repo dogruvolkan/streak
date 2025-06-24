@@ -8,19 +8,16 @@ import {
   Fab,
   Box,
   IconButton,
-  Badge,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import Statistics from "./components/Statistics";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import Settings from "./components/Settings";
-import BadgeViewer from "./components/BadgeViewer";
 import ConfettiComponent from "./components/ConfettiComponent";
-import type { Streak, CreateStreakFormData, UserBadges } from "./types";
+import type { Streak, CreateStreakFormData } from "./types";
 import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
 import {
@@ -36,11 +33,6 @@ import {
   type ThemeMode,
   type ThemeColor,
 } from "./utils/theme";
-import {
-  loadUserBadges,
-  saveUserBadges,
-  checkBadgeUnlocks,
-} from "./utils/badges";
 import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 
 function App() {
@@ -52,9 +44,6 @@ function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
 
-  // Badge system state
-  const [userBadges, setUserBadges] = useState<UserBadges | null>(null);
-  const [isBadgeViewerOpen, setIsBadgeViewerOpen] = useState(false);
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -90,11 +79,7 @@ function App() {
     // Initialize audio context and load audio preference
     initAudio();
     getAudioEnabled(); // This loads the preference from localStorage
-
-    // Load user badges
-    const badges = loadUserBadges(currentLanguage);
-    setUserBadges(badges);
-  }, [currentLanguage]);
+  }, []);
 
   // Save streaks to localStorage whenever streaks state changes (but not on initial load)
   useEffect(() => {
@@ -102,15 +87,6 @@ function App() {
       saveStreaks(streaks);
     }
   }, [streaks, isLoaded]);
-
-  // Update badge translations when language changes
-  useEffect(() => {
-    if (userBadges) {
-      const updatedBadges = loadUserBadges(currentLanguage);
-      setUserBadges(updatedBadges);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLanguage]);
 
   const handleAddStreak = (formData: CreateStreakFormData) => {
     const newStreak: Streak = {
@@ -135,29 +111,8 @@ function App() {
     setStreaks((prevStreaks) => {
       const updatedStreaks = [...prevStreaks, newStreak];
 
-      // Check for badge unlocks after adding new streak
-      if (userBadges) {
-        const { newBadges, updatedBadges } = checkBadgeUnlocks(
-          updatedStreaks,
-          userBadges
-        );
-
-        if (newBadges.length > 0) {
-          setUserBadges(updatedBadges);
-          saveUserBadges(updatedBadges);
-
-          // Show notification for the first new badge
-          const newBadge = updatedBadges.badges.find(
-            (b) => b.id === newBadges[0]
-          );
-          if (newBadge) {
-            // Celebrate with confetti for the first streak badge
-            if (newBadge.id === "first_step") {
-              celebrateAchievement();
-            }
-          }
-        }
-      }
+      // Her yeni streak eklendiğinde confetti çıkar
+      celebrateAchievement();
 
       return updatedStreaks;
     });
@@ -199,34 +154,6 @@ function App() {
           };
         }
 
-        // Normal streakler için existing logic
-        const isClickedToday = () => {
-          if (streak.repeatType === "day") {
-            return (
-              lastUpdateDate.getTime() === today.getTime() && streak.count > 0
-            );
-          }
-          if (streak.repeatType === "week" && streak.selectedDays) {
-            const todayDayOfWeek = today.getDay();
-            if (!streak.selectedDays.includes(todayDayOfWeek)) return false;
-            return (
-              lastUpdateDate.getTime() === today.getTime() && streak.count > 0
-            );
-          }
-          if (streak.repeatType === "month") {
-            const todayMonth = today.getMonth();
-            const todayYear = today.getFullYear();
-            const lastUpdateMonth = lastUpdateDate.getMonth();
-            const lastUpdateYear = lastUpdateDate.getFullYear();
-            return (
-              todayMonth === lastUpdateMonth &&
-              todayYear === lastUpdateYear &&
-              streak.count > 0
-            );
-          }
-          return false;
-        };
-
         // Tıklanabilir mi kontrol et
         const canClickToday = () => {
           if (streak.repeatType === "week" && streak.selectedDays) {
@@ -240,60 +167,16 @@ function App() {
           return streak; // Tıklama günü değilse hiçbir şey yapma
         }
 
-        // Toggle mantığı: Bugün tıklanmışsa azalt, tıklanmamışsa artır
-        if (isClickedToday()) {
-          // Azalt (undo)
-          return {
-            ...streak,
-            count: Math.max(0, streak.count - 1),
-            lastUpdated: streak.count === 1 ? streak.createdAt : new Date(),
-          };
-        } else {
-          // Artır
-          return {
-            ...streak,
-            count: streak.count + 1,
-            lastUpdated: new Date(),
-          };
-        }
+        // Her zaman artır (toggle mantığını kaldır)
+        return {
+          ...streak,
+          count: streak.count + 1,
+          lastUpdated: new Date(),
+        };
       });
 
-      // Check for badge unlocks after streak update
-      if (userBadges) {
-        const { newBadges, updatedBadges } = checkBadgeUnlocks(
-          updatedStreaks,
-          userBadges
-        );
-
-        if (newBadges.length > 0) {
-          setUserBadges(updatedBadges);
-          saveUserBadges(updatedBadges);
-
-          // Show notification for the first new badge
-          const newBadge = updatedBadges.badges.find(
-            (b) => b.id === newBadges[0]
-          );
-          if (newBadge) {
-            // Celebrate with confetti for special badges
-            if (
-              [
-                "first_step",
-                "triple_threat",
-                "weekly_warrior",
-                "streak_master",
-                "century_club",
-                "perfectionist",
-                "consistency_master",
-                "unstoppable",
-                "legend",
-                "marathon_runner",
-              ].includes(newBadge.id)
-            ) {
-              celebrateAchievement();
-            }
-          }
-        }
-      }
+      // Her count artışında confetti çıkar
+      celebrateAchievement();
 
       return updatedStreaks;
     });
@@ -318,7 +201,6 @@ function App() {
   const handleClearData = () => {
     // Clear all localStorage data
     localStorage.removeItem("streakApp_streaks");
-    localStorage.removeItem("userBadges");
     localStorage.removeItem("streakApp_language");
     localStorage.removeItem("streakApp_themeMode");
     localStorage.removeItem("streakApp_themeColor");
@@ -326,7 +208,6 @@ function App() {
 
     // Reset all state to initial values
     setStreaks([]);
-    setUserBadges(null);
 
     // Show success message (you could add a toast notification here)
     setTimeout(() => {
@@ -401,29 +282,6 @@ function App() {
             >
               {t.appTitle}
             </Typography>
-
-            {/* Badge button */}
-            <IconButton
-              onClick={() => setIsBadgeViewerOpen(true)}
-              sx={{
-                color: "primary.main",
-                mr: 1,
-              }}
-            >
-              <Badge
-                badgeContent={userBadges?.totalUnlocked || 0}
-                color="secondary"
-                sx={{
-                  "& .MuiBadge-badge": {
-                    fontSize: "0.7rem",
-                    minWidth: "18px",
-                    height: "18px",
-                  },
-                }}
-              >
-                <EmojiEventsIcon />
-              </Badge>
-            </IconButton>
 
             {/* Statistics button */}
             <IconButton
@@ -505,16 +363,6 @@ function App() {
           onThemeColorChange={handleThemeColorChange}
           onClearData={handleClearData}
         />
-
-        {/* Badge Viewer Dialog */}
-        {userBadges && (
-          <BadgeViewer
-            open={isBadgeViewerOpen}
-            onClose={() => setIsBadgeViewerOpen(false)}
-            userBadges={userBadges}
-            language={currentLanguage}
-          />
-        )}
 
         {/* Statistics Dialog */}
         <Statistics
