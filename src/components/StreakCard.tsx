@@ -11,7 +11,6 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import ShareIcon from "@mui/icons-material/Share";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { useSwipeable } from "react-swipeable";
 import { useSortable } from "@dnd-kit/sortable";
@@ -22,7 +21,6 @@ import { combinedFeedback } from "../utils/haptic";
 import { getCategoryName, categoryColors } from "../utils/categories";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
-import ShareModal from "./ShareModal";
 
 interface StreakCardProps {
   streak: Streak;
@@ -41,7 +39,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
 }) => {
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
   const [isShaking, setIsShaking] = useState(false); // Titreşim state'i
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const t = useTranslations(language); // Çeviri hook'u
 
@@ -86,11 +83,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
   const handleReset = () => {
     combinedFeedback.reset(); // Combined reset feedback
     onReset(streak.id);
-    setIsSwipedOpen(false);
-  };
-
-  const handleShare = () => {
-    setIsShareModalOpen(true);
     setIsSwipedOpen(false);
   };
 
@@ -200,27 +192,12 @@ const StreakCard: React.FC<StreakCardProps> = ({
           right: 0,
           top: 0,
           bottom: 0,
-          width: 180, // Increased width for 3 buttons
+          width: 120, // Reduced width for 2 buttons
           display: "flex",
-          transform: isSwipedOpen ? "translateX(0)" : "translateX(180px)",
+          transform: isSwipedOpen ? "translateX(0)" : "translateX(120px)",
           transition: "transform 0.3s ease-out",
         }}
       >
-        <IconButton
-          onClick={handleShare}
-          sx={{
-            flex: 1,
-            borderRadius: 0,
-            backgroundColor: "info.main",
-            color: "white",
-            height: "100%",
-            "&:hover": {
-              backgroundColor: "info.dark",
-            },
-          }}
-        >
-          <ShareIcon />
-        </IconButton>
         <IconButton
           onClick={handleReset}
           sx={{
@@ -258,7 +235,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
         {...swipeHandlers}
         sx={{
           position: "relative",
-          transform: isSwipedOpen ? "translateX(-180px)" : "translateX(0)",
+          transform: isSwipedOpen ? "translateX(-120px)" : "translateX(0)",
           transition: "transform 0.3s ease-out",
           borderRadius: isSwipedOpen ? "12px 0px 0px 12px" : 1.5, // Sağ radius swipe'da sıfır
           borderLeft: `4px solid ${categoryColors[streak.category]}`,
@@ -552,14 +529,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
           </Box>
         </Box>
       </Card>
-
-      {/* Share Modal */}
-      <ShareModal
-        open={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        streak={streak}
-        language={language}
-      />
     </Box>
   );
 };

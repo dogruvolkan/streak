@@ -18,7 +18,6 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import Settings from "./components/Settings";
-import SharedStreakViewer from "./components/SharedStreakViewer";
 import BadgeViewer from "./components/BadgeViewer";
 import ConfettiComponent from "./components/ConfettiComponent";
 import type { Streak, CreateStreakFormData, UserBadges } from "./types";
@@ -38,11 +37,6 @@ import {
   type ThemeColor,
 } from "./utils/theme";
 import {
-  isSharedStreakURL,
-  getSharedStreakFromURL,
-  type SharedStreakData,
-} from "./utils/sharing";
-import {
   loadUserBadges,
   saveUserBadges,
   checkBadgeUnlocks,
@@ -57,9 +51,6 @@ function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
-  const [isSharedView, setIsSharedView] = useState(false);
-  const [sharedStreakData, setSharedStreakData] =
-    useState<SharedStreakData | null>(null);
 
   // Badge system state
   const [userBadges, setUserBadges] = useState<UserBadges | null>(null);
@@ -83,15 +74,6 @@ function App() {
 
   // Load streaks from localStorage on component mount
   useEffect(() => {
-    // Check if this is a shared streak URL
-    if (isSharedStreakURL()) {
-      const sharedData = getSharedStreakFromURL();
-      if (sharedData) {
-        setSharedStreakData(sharedData);
-        setIsSharedView(true);
-      }
-    }
-
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
     setIsLoaded(true);
@@ -377,28 +359,6 @@ function App() {
     }));
     setStreaks(updatedStreaks);
   };
-
-  const handleBackFromShared = () => {
-    setIsSharedView(false);
-    setSharedStreakData(null);
-    // Clear the hash from URL
-    if (typeof window !== "undefined") {
-      window.location.hash = "";
-    }
-  };
-
-  // If this is a shared view, render the SharedStreakViewer
-  if (isSharedView && sharedStreakData) {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <SharedStreakViewer
-          sharedData={sharedStreakData}
-          onBack={handleBackFromShared}
-        />
-      </ThemeProvider>
-    );
-  }
 
   return (
     <ThemeProvider theme={theme}>
