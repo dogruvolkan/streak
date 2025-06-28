@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -44,6 +44,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   const t = useTranslations(language);
   const theme = useTheme();
 
+  // State for keyboard handling
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
   // Get day names based on current language
   const dayNames = [
     t.sunday,
@@ -54,6 +58,49 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     t.friday,
     t.saturday,
   ];
+
+  // Handle keyboard appearance/disappearance
+  useEffect(() => {
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const heightDifference = viewportHeight - currentHeight;
+
+      // If height decreased by more than 150px, keyboard is probably open
+      setIsKeyboardOpen(heightDifference > 150);
+
+      // Update viewport height
+      setViewportHeight(currentHeight);
+    };
+
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport) {
+        const keyboardHeight =
+          window.innerHeight - window.visualViewport.height;
+        setIsKeyboardOpen(keyboardHeight > 100);
+      }
+    };
+
+    // Listen for viewport changes
+    window.addEventListener("resize", handleResize);
+
+    // Use visual viewport API if available (better for mobile)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener(
+        "resize",
+        handleVisualViewportChange
+      );
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleVisualViewportChange
+        );
+      }
+    };
+  }, [viewportHeight]);
   const [step, setStep] = useState<
     "category" | "emoji" | "name" | "type" | "repeat" | "days"
   >("category");
@@ -165,14 +212,17 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     <Sheet
       isOpen={open}
       onClose={handleClose}
-      snapPoints={[0.95, 0.8, 0.6]}
+      snapPoints={isKeyboardOpen ? [0.95] : [0.95, 0.8, 0.6]}
       initialSnap={0}
       detent="content-height"
+      disableDrag={isKeyboardOpen}
     >
       <Sheet.Container
         style={{
           backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
+          maxHeight: isKeyboardOpen ? "95vh" : "auto",
+          overflow: "hidden",
         }}
       >
         <Sheet.Header>
@@ -225,9 +275,18 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
         <Sheet.Content
           style={{
             backgroundColor: theme.palette.background.default,
+            overflowY: isKeyboardOpen ? "auto" : "visible",
+            maxHeight: isKeyboardOpen ? "80vh" : "auto",
           }}
         >
-          <Box sx={{ px: 3, pb: 2 }}>
+          <Box
+            sx={{
+              px: 3,
+              pb: isKeyboardOpen
+                ? "calc(80px + env(keyboard-inset-height, 0px))"
+                : 2,
+            }}
+          >
             {/* Content */}
             {step === "category" && (
               <Box sx={{ mt: 2 }}>
@@ -510,9 +569,14 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                       <TextField
                         label={t.targetAmount}
                         type="number"
-                        value={formData.dailyGoal === 1 ? "" : formData.dailyGoal}
+                        value={
+                          formData.dailyGoal === 1 ? "" : formData.dailyGoal
+                        }
                         onChange={(e) => {
-                          const value = e.target.value === "" ? 1 : parseInt(e.target.value) || 1;
+                          const value =
+                            e.target.value === ""
+                              ? 1
+                              : parseInt(e.target.value) || 1;
                           setFormData({
                             ...formData,
                             dailyGoal: value,
@@ -608,8 +672,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                 borderTop: "1px solid",
                 borderTopColor: "divider",
                 position: "sticky",
-                bottom: 0,
+                bottom: isKeyboardOpen ? "env(keyboard-inset-height, 0px)" : 0,
                 mt: 3,
+                backgroundColor: theme.palette.background.default,
+                zIndex: 1000,
               }}
             >
               {step !== "category" && (

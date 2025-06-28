@@ -28,6 +28,33 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* iOS Safari viewport fix */
+  min-height: -webkit-fill-available;
+}
+
+/* Mobile viewport and keyboard handling */
+html {
+  /* Fix for iOS Safari viewport */
+  height: -webkit-fill-available;
+}
+
+/* Prevent zoom on input focus in iOS */
+input[type="text"],
+input[type="number"],
+textarea {
+  font-size: 16px !important;
+  transform-origin: left top;
+  zoom: 1;
+}
+
+/* Handle keyboard appearance on mobile */
+@supports (height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+  html {
+    height: 100dvh;
+  }
 }
 
 h1 {
