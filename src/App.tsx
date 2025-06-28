@@ -130,7 +130,7 @@ function App() {
 
     setStreaks((prevStreaks) => {
       let hasChanges = false;
-      
+
       const updatedStreaks = prevStreaks.map((streak) => {
         if (streak.id !== streakId) return streak;
 
@@ -169,7 +169,7 @@ function App() {
             currentProgress < dailyGoal && newProgress >= dailyGoal;
 
           hasChanges = true; // Miktar bazlı streakler için her zaman değişiklik var
-          
+
           return {
             ...streak,
             dailyProgress: newProgress,
@@ -213,6 +213,11 @@ function App() {
 
           // Aylık repeat için - bu ay tıklanmış mı kontrol et
           if (streak.repeatType === "month") {
+            // History array'ini kontrol et
+            if (!streak.history || streak.history.length === 0) {
+              return true; // Hiç tıklanmamış, tıklanabilir
+            }
+
             const startOfMonth = new Date(
               today.getFullYear(),
               today.getMonth(),
@@ -225,9 +230,13 @@ function App() {
             );
             endOfMonth.setHours(23, 59, 59, 999);
 
-            return !(
-              lastUpdateDate >= startOfMonth && lastUpdateDate <= endOfMonth
-            );
+            // Bu ay içinde herhangi bir tıklama var mı?
+            const hasClickThisMonth = streak.history.some((entry) => {
+              const entryDate = new Date(entry.date);
+              return entryDate >= startOfMonth && entryDate <= endOfMonth;
+            });
+
+            return !hasClickThisMonth; // Bu ay tıklanmamışsa tıklanabilir
           }
 
           return true;
@@ -238,7 +247,7 @@ function App() {
         }
 
         hasChanges = true; // Normal streakler için değişiklik var
-        
+
         // Normal streakler için count artır
         return {
           ...streak,

@@ -157,12 +157,20 @@ const StreakCard: React.FC<StreakCardProps> = ({
     }
 
     if (streak.repeatType === "month") {
-      // Aylık: bu ay tıklanmış mı
+      // Aylık: bu ay tıklanmış mı - history'yi kontrol et
+      if (!streak.history || streak.history.length === 0) {
+        return false; // Hiç tıklanmamış
+      }
+
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
       endOfMonth.setHours(23, 59, 59, 999);
 
-      return lastUpdateDate >= startOfMonth && lastUpdateDate <= endOfMonth;
+      // Bu ay içinde herhangi bir tıklama var mı?
+      return streak.history.some((entry) => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= startOfMonth && entryDate <= endOfMonth;
+      });
     }
 
     return false;
