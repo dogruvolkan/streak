@@ -257,7 +257,7 @@ function App() {
           ? {
               ...streak,
               count: 0,
-              lastUpdated: new Date(),
+              lastUpdated: new Date(0), // Epoch time to ensure it's not clicked today
               dailyProgress: 0,
               lastProgressDate: undefined,
               history: [], // History'yi temizle
