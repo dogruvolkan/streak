@@ -177,13 +177,14 @@ function App() {
 
         // Miktar bazlı streakler için özel logic
         if (streak.isQuantityBased) {
-          // Haftalık repeat type için gün kontrolü (miktar bazlı streakler için de)
-          if (streak.repeatType === "week" && streak.selectedDays) {
+          // Haftalık repeat type için gün kontrolü (sadece selectedDays varsa)
+          if (streak.repeatType === "week" && streak.selectedDays && streak.selectedDays.length > 0) {
             const todayDayOfWeek = today.getDay();
             if (!streak.selectedDays.includes(todayDayOfWeek)) {
               return streak; // Bu gün seçili değil, değişiklik yapma
             }
           }
+          // Weekly streak selectedDays yoksa veya boşsa, haftada bir kere her gün tıklanabilir
 
           const lastProgressDate = streak.lastProgressDate
             ? new Date(streak.lastProgressDate)
@@ -213,21 +214,35 @@ function App() {
 
         // Normal streakler için limit kontrolleri
         const canClickBasedOnRepeatType = () => {
-          // Haftalık repeat type için gün kontrolü
-          if (streak.repeatType === "week" && streak.selectedDays) {
+          // Haftalık repeat type için gün kontrolü (sadece selectedDays varsa)
+          if (streak.repeatType === "week" && streak.selectedDays && streak.selectedDays.length > 0) {
             const todayDayOfWeek = today.getDay();
             if (!streak.selectedDays.includes(todayDayOfWeek)) {
               return false; // Bu gün seçili değil
             }
           }
+          // Weekly streak selectedDays yoksa veya boşsa, haftada bir kere her gün tıklanabilir
 
-          // Zaten bugün tıklanmış mı kontrol et
+          // Zaten bugün/bu periyotta tıklanmış mı kontrol et - history array kullan
           if (streak.repeatType === "day") {
-            return lastUpdateDate.getTime() !== today.getTime();
+            // Bugün history'de var mı?
+            if (!streak.history || streak.history.length === 0) {
+              return true; // Hiç tıklanmamış, tıklanabilir
+            }
+            
+            return !streak.history.some((entry) => {
+              const entryDate = new Date(entry.date);
+              entryDate.setHours(0, 0, 0, 0);
+              return entryDate.getTime() === today.getTime();
+            });
           }
 
           // Haftalık repeat için - bu hafta tıklanmış mı kontrol et
           if (streak.repeatType === "week") {
+            if (!streak.history || streak.history.length === 0) {
+              return true; // Hiç tıklanmamış, tıklanabilir
+            }
+            
             const startOfWeek = new Date(today);
             const dayOfWeek = today.getDay();
             startOfWeek.setDate(today.getDate() - dayOfWeek);
@@ -237,9 +252,13 @@ function App() {
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             endOfWeek.setHours(23, 59, 59, 999);
 
-            return !(
-              lastUpdateDate >= startOfWeek && lastUpdateDate <= endOfWeek
-            );
+            // Bu hafta içinde herhangi bir tıklama var mı?
+            const hasClickThisWeek = streak.history.some((entry) => {
+              const entryDate = new Date(entry.date);
+              return entryDate >= startOfWeek && entryDate <= endOfWeek;
+            });
+
+            return !hasClickThisWeek; // Bu hafta tıklanmamışsa tıklanabilir
           }
 
           // Aylık repeat için - bu ay tıklanmış mı kontrol et

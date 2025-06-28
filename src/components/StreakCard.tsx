@@ -136,16 +136,26 @@ const StreakCard: React.FC<StreakCardProps> = ({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const lastUpdateDate = new Date(streak.lastUpdated);
-    lastUpdateDate.setHours(0, 0, 0, 0);
-
     if (streak.repeatType === "day") {
-      // Günlük: bugün tıklanmış mı
-      return lastUpdateDate.getTime() === today.getTime();
+      // Günlük: bugün tıklanmış mı - history'yi kontrol et
+      if (!streak.history || streak.history.length === 0) {
+        return false; // Hiç tıklanmamış
+      }
+
+      // Bugün history'de var mı?
+      return streak.history.some((entry) => {
+        const entryDate = new Date(entry.date);
+        entryDate.setHours(0, 0, 0, 0);
+        return entryDate.getTime() === today.getTime();
+      });
     }
 
     if (streak.repeatType === "week") {
-      // Haftalık: bu hafta tıklanmış mı
+      // Haftalık: bu hafta tıklanmış mı - history'yi kontrol et
+      if (!streak.history || streak.history.length === 0) {
+        return false; // Hiç tıklanmamış
+      }
+
       const startOfWeek = new Date(today);
       const dayOfWeek = today.getDay();
       startOfWeek.setDate(today.getDate() - dayOfWeek);
@@ -155,7 +165,11 @@ const StreakCard: React.FC<StreakCardProps> = ({
       endOfWeek.setDate(startOfWeek.getDate() + 6);
       endOfWeek.setHours(23, 59, 59, 999);
 
-      return lastUpdateDate >= startOfWeek && lastUpdateDate <= endOfWeek;
+      // Bu hafta içinde herhangi bir tıklama var mı?
+      return streak.history.some((entry) => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= startOfWeek && entryDate <= endOfWeek;
+      });
     }
 
     if (streak.repeatType === "month") {
@@ -184,11 +198,12 @@ const StreakCard: React.FC<StreakCardProps> = ({
     const todayDayOfWeek = today.getDay();
 
     // Haftalık repeat type için seçili günleri kontrol et
-    if (streak.repeatType === "week" && streak.selectedDays) {
+    if (streak.repeatType === "week" && streak.selectedDays && streak.selectedDays.length > 0) {
       if (!streak.selectedDays.includes(todayDayOfWeek)) {
         return false; // Bu gün seçili değil
       }
     }
+    // Weekly streak selectedDays yoksa veya boşsa, haftada bir kere her gün tıklanabilir
 
     // Zaten tıklanmış mı kontrol et (repeat type'a göre)
     if (isClickedToday()) {

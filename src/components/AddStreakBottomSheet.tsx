@@ -187,7 +187,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     if (step === "name") return formData.name.trim().length > 0;
     if (step === "type") return true;
     if (step === "repeat") return true;
-    if (step === "days") return (formData.selectedDays?.length || 0) > 0;
+    if (step === "days") return true; // Artık hiç gün seçmemek de geçerli (haftada bir kere için)
     return true;
   };
 
@@ -661,25 +661,77 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                 <Typography variant="body1" gutterBottom>
                   {t.selectDays}
                 </Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
-                  {dayNames.map((dayName, index) => (
-                    <Chip
-                      key={index}
-                      label={dayName}
-                      onClick={() => handleDayToggle(index)}
-                      color={
-                        formData.selectedDays?.includes(index)
-                          ? "primary"
-                          : "default"
+                
+                {/* Weekly frequency options */}
+                <Box sx={{ mb: 3 }}>
+                  <Button
+                    onClick={() => setFormData({ ...formData, selectedDays: [] })}
+                    variant={(!formData.selectedDays || formData.selectedDays.length === 0) ? "contained" : "outlined"}
+                    sx={{
+                      width: "100%",
+                      mb: 1,
+                      justifyContent: "flex-start",
+                      p: 2,
+                    }}
+                  >
+                    <Box sx={{ textAlign: "left" }}>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        📅 {t.weeklyOnce}
+                      </Typography>
+                      <Typography variant="caption" >
+                        {t.weeklyOnceDesc}
+                      </Typography>
+                    </Box>
+                  </Button>
+                  
+                  <Button
+                    onClick={() => {
+                      // If no days selected, default to today
+                      if (!formData.selectedDays || formData.selectedDays.length === 0) {
+                        const today = new Date().getDay();
+                        setFormData({ ...formData, selectedDays: [today] });
                       }
-                      variant={
-                        formData.selectedDays?.includes(index)
-                          ? "filled"
-                          : "outlined"
-                      }
-                    />
-                  ))}
+                    }}
+                    variant={(formData.selectedDays && formData.selectedDays.length > 0) ? "contained" : "outlined"}
+                    sx={{
+                      width: "100%",
+                      justifyContent: "flex-start",
+                      p: 2,
+                    }}
+                  >
+                    <Box sx={{ textAlign: "left" }}>
+                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                        🗓️ {t.specificDays}
+                      </Typography>
+                      <Typography variant="caption" >
+                        {t.specificDaysDesc}
+                      </Typography>
+                    </Box>
+                  </Button>
                 </Box>
+
+                {/* Day selection chips - only show if specific days mode is selected */}
+                {formData.selectedDays && formData.selectedDays.length > 0 && (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
+                    {dayNames.map((dayName, index) => (
+                      <Chip
+                        key={index}
+                        label={dayName}
+                        onClick={() => handleDayToggle(index)}
+                        color={
+                          formData.selectedDays?.includes(index)
+                            ? "primary"
+                            : "default"
+                        }
+                        variant={
+                          formData.selectedDays?.includes(index)
+                            ? "filled"
+                            : "outlined"
+                        }
+                      />
+                    ))}
+                  </Box>
+                )}
               </Box>
             )}
           </Box>

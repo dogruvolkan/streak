@@ -132,6 +132,12 @@ export interface Translations {
     todayIsFreeDay: string;
     freeDayMessage: string;
     celebrateAndRelax: string;
+
+    // Weekly frequency options
+    weeklyOnce: string;
+    weeklyOnceDesc: string;
+    specificDays: string;
+    specificDaysDesc: string;
 }
 
 const englishTranslations: Translations = {
@@ -264,6 +270,12 @@ const englishTranslations: Translations = {
     todayIsFreeDay: "Today is Free Day!",
     freeDayMessage: "Relax and Enjoy! 🎉",
     celebrateAndRelax: "No pressure today - celebrate and relax!",
+
+    // Weekly frequency options
+    weeklyOnce: "Once a Week",
+    weeklyOnceDesc: "You can click on any day",
+    specificDays: "Specific Days",
+    specificDaysDesc: "You can only click on selected days",
 };
 
 const turkishTranslations: Translations = {
@@ -396,6 +408,12 @@ const turkishTranslations: Translations = {
     todayIsFreeDay: "Bugün Serbest Gün!",
     freeDayMessage: "Coş ve Eğlen! 🎉",
     celebrateAndRelax: "Bugün baskı yok - kutla ve dinlen!",
+
+    // Weekly frequency options
+    weeklyOnce: "Haftada Bir Kere",
+    weeklyOnceDesc: "Herhangi bir gün tıklayabilirsin",
+    specificDays: "Belirli Günlerde",
+    specificDaysDesc: "Sadece seçilen günlerde tıklayabilirsin",
 };
 
 const translations: Record<Language, Translations> = {
