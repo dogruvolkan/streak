@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Sheet } from "react-modal-sheet";
+import "react-modal-sheet/dist/styles.css";
 import {
   Button,
   Box,
@@ -12,7 +13,6 @@ import {
   IconButton,
   Alert,
   AlertTitle,
-  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -50,7 +50,6 @@ const Settings: React.FC<SettingsProps> = ({
   onClearData,
 }) => {
   const t = useTranslations(language);
-  const theme = useTheme();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const themeColors = [
@@ -83,12 +82,7 @@ const Settings: React.FC<SettingsProps> = ({
 
   return (
     <Sheet isOpen={open} onClose={onClose} snapPoints={[0.9]} initialSnap={0}>
-      <Sheet.Container
-        style={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }}
-      >
+      <Sheet.Container>
         <Sheet.Header>
           {/* Handle Bar */}
           <Box
@@ -136,11 +130,7 @@ const Settings: React.FC<SettingsProps> = ({
           </Box>
         </Sheet.Header>
 
-        <Sheet.Content
-          style={{
-            backgroundColor: theme.palette.background.default,
-          }}
-        >
+        <Sheet.Content>
           <Box sx={{ px: 3, pb: 2, maxHeight: "70vh", overflowY: "auto" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {/* Language Selection */}

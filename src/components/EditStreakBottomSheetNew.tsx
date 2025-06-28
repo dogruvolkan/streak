@@ -7,9 +7,9 @@ import {
   IconButton,
   Divider,
   Chip,
-  useTheme,
 } from "@mui/material";
 import { Sheet } from "react-modal-sheet";
+import "react-modal-sheet/dist/styles.css";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -39,7 +39,6 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
   const [dailyProgress, setDailyProgress] = useState(0);
 
   const t = useTranslations(language);
-  const theme = useTheme();
 
   useEffect(() => {
     if (streak) {
@@ -92,12 +91,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
       snapPoints={[0.9, 0.6, 0.4]}
       initialSnap={1}
     >
-      <Sheet.Container
-        style={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }}
-      >
+      <Sheet.Container>
         <Sheet.Header>
           {/* Handle Bar */}
           <Box
@@ -113,11 +107,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
           />
         </Sheet.Header>
 
-        <Sheet.Content
-          style={{
-            backgroundColor: theme.palette.background.default,
-          }}
-        >
+        <Sheet.Content>
           <Box sx={{ px: 3, pb: 2 }}>
             {/* Title */}
             <Box

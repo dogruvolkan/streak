@@ -11,9 +11,9 @@ import {
   Chip,
   Typography,
   IconButton,
-  useTheme,
 } from "@mui/material";
 import { Sheet } from "react-modal-sheet";
+import "react-modal-sheet/dist/styles.css";
 import CloseIcon from "@mui/icons-material/Close";
 import type {
   CreateStreakFormData,
@@ -44,7 +44,6 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   language,
 }) => {
   const t = useTranslations(language);
-  const theme = useTheme();
 
   // Get day names based on current language
   const dayNames = [
@@ -170,12 +169,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
       snapPoints={[0.85, 0.6, 0.4]}
       initialSnap={1}
     >
-      <Sheet.Container
-        style={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }}
-      >
+      <Sheet.Container>
         <Sheet.Header>
           {/* Handle Bar */}
           <Box
@@ -191,11 +185,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           />
         </Sheet.Header>
 
-        <Sheet.Content
-          style={{
-            backgroundColor: theme.palette.background.default,
-          }}
-        >
+        <Sheet.Content>
           <Box sx={{ px: 3, pb: 2 }}>
             {/* Title */}
             <Box

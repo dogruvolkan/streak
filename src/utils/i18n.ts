@@ -116,6 +116,12 @@ export interface Translations {
     quantityBased: string;
     enterStreakName: string;
     todayProgress: string;
+
+    // Settings
+    light: string;
+    dark: string;
+    dangerZone: string;
+    confirmClearData: string;
 }
 
 const englishTranslations: Translations = {
@@ -232,6 +238,12 @@ const englishTranslations: Translations = {
     quantityBased: "Quantity-Based",
     enterStreakName: "Enter streak name...",
     todayProgress: "Today's Progress",
+
+    // Settings
+    light: "Light",
+    dark: "Dark",
+    dangerZone: "Danger Zone",
+    confirmClearData: "Confirm Clear Data",
 };
 
 const turkishTranslations: Translations = {
@@ -348,6 +360,12 @@ const turkishTranslations: Translations = {
     quantityBased: "Miktar Bazlı",
     enterStreakName: "Alışkanlık adını girin...",
     todayProgress: "Bugünün İlerlemesi",
+
+    // Settings
+    light: "Açık",
+    dark: "Koyu",
+    dangerZone: "Tehlike Bölgesi",
+    confirmClearData: "Veri Silmeyi Onayla",
 };
 
 const translations: Record<Language, Translations> = {

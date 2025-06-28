@@ -1,18 +1,15 @@
 import React from "react";
+import { Sheet } from "react-modal-sheet";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
   IconButton,
   Typography,
   Box,
   Card,
   CardContent,
   Chip,
-  Slide,
   LinearProgress,
+  useTheme,
 } from "@mui/material";
-import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -21,15 +18,6 @@ import type { Streak, StreakCategory } from "../types";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
 import { getCategoryName, categoryColors } from "../utils/categories";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 interface StatisticsProps {
   open: boolean;
@@ -81,6 +69,7 @@ const Statistics: React.FC<StatisticsProps> = ({
   language,
 }) => {
   const t = useTranslations(language);
+  const theme = useTheme();
 
   // İstatistikleri hesapla
   const calculateStats = () => {
@@ -141,198 +130,195 @@ const Statistics: React.FC<StatisticsProps> = ({
   const stats = calculateStats();
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      TransitionComponent={Transition}
-      maxWidth={false}
-      fullWidth
-      PaperProps={{
-        sx: {
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          m: 0,
-          width: "100%",
-          maxWidth: "100vw",
-          borderRadius: "20px 20px 0 0",
-          maxHeight: "90vh",
-          paddingBottom: "env(safe-area-inset-bottom)",
-          background:
-            "linear-gradient(to bottom, background.paper 0%, background.default 100%)",
-        },
-      }}
-    >
-      {/* Handle Bar */}
-      <Box
-        sx={{
-          width: 40,
-          height: 4,
-          backgroundColor: "text.secondary",
-          opacity: 0.3,
-          borderRadius: 2,
-          mx: "auto",
-          mt: 1.5,
-          mb: 2,
-        }}
-      />
-      <DialogTitle
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          pb: 1,
-          px: 3,
+    <Sheet isOpen={open} onClose={onClose} snapPoints={[0.9]} initialSnap={0}>
+      <Sheet.Container
+        style={{
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          📊 {t.statistics}
-        </Typography>
-        <IconButton
-          onClick={onClose}
-          edge="end"
-          sx={{
-            backgroundColor: "action.hover",
-            width: 32,
-            height: 32,
-            "&:hover": {
-              backgroundColor: "action.selected",
-            },
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent sx={{ px: 3, py: 0, overflow: "auto" }}>
-        {/* Genel Bakış */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            {t.overview}
-          </Typography>
+        <Sheet.Header>
+          {/* Handle Bar */}
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "repeat(2, 1fr)",
-                sm: "repeat(4, 1fr)",
-              },
-              gap: 2,
+              width: 40,
+              height: 4,
+              backgroundColor: "text.secondary",
+              opacity: 0.3,
+              borderRadius: 2,
+              mx: "auto",
+              mb: 2,
+            }}
+          />
+
+          {/* Title */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              px: 3,
+              pb: 2,
             }}
           >
-            <StatCard
-              title={t.totalStreaks}
-              value={stats.totalStreaks}
-              icon={<CalendarTodayIcon />}
-              color="primary.main"
-            />
-            <StatCard
-              title={t.activeStreaks}
-              value={stats.activeStreaks}
-              icon={<TrendingUpIcon />}
-              color="success.main"
-            />
-
-            <StatCard
-              title={t.longestStreak}
-              value={`${stats.longestStreak} ${t.days}`}
-              icon={<ShowChartIcon />}
-              color="error.main"
-            />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              📊 {t.statistics}
+            </Typography>
+            <IconButton
+              onClick={onClose}
+              edge="end"
+              sx={{
+                backgroundColor: "action.hover",
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "action.selected",
+                },
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
           </Box>
-        </Box>
+        </Sheet.Header>
 
-        {/* Bu Hafta */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            {t.thisWeek}
-          </Typography>
-          <Card>
-            <CardContent>
+        <Sheet.Content
+          style={{
+            backgroundColor: theme.palette.background.default,
+          }}
+        >
+          <Box sx={{ px: 3, py: 0, overflow: "auto" }}>
+            {/* Genel Bakış */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                {t.overview}
+              </Typography>
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 1,
+                  display: "grid",
+                  gridTemplateColumns: {
+                    xs: "repeat(2, 1fr)",
+                    sm: "repeat(4, 1fr)",
+                  },
+                  gap: 2,
                 }}
               >
-                <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                  {t.activeStreaks}
+                <StatCard
+                  title={t.totalStreaks}
+                  value={stats.totalStreaks}
+                  icon={<CalendarTodayIcon />}
+                  color="primary.main"
+                />
+                <StatCard
+                  title={t.activeStreaks}
+                  value={stats.activeStreaks}
+                  icon={<TrendingUpIcon />}
+                  color="success.main"
+                />
+
+                <StatCard
+                  title={t.longestStreak}
+                  value={`${stats.longestStreak} ${t.days}`}
+                  icon={<ShowChartIcon />}
+                  color="error.main"
+                />
+              </Box>
+            </Box>
+
+            {/* Bu Hafta */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                {t.thisWeek}
+              </Typography>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1,
+                    }}
+                  >
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {t.activeStreaks}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 700, color: "primary.main" }}
+                    >
+                      {stats.thisWeekActivity}
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant="determinate"
+                    value={
+                      stats.totalStreaks > 0
+                        ? (stats.thisWeekActivity / stats.totalStreaks) * 100
+                        : 0
+                    }
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 1, display: "block" }}
+                  >
+                    {stats.totalStreaks > 0
+                      ? `${Math.round(
+                          (stats.thisWeekActivity / stats.totalStreaks) * 100
+                        )}% of your streaks are active`
+                      : t.noDataAvailable}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+
+            {/* Kategori Dağılımı */}
+            {Object.keys(stats.categoryStats).length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                  {t.categoryBreakdown}
                 </Typography>
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 700, color: "primary.main" }}
-                >
-                  {stats.thisWeekActivity}
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {Object.entries(stats.categoryStats).map(
+                    ([category, count]) => (
+                      <Chip
+                        key={category}
+                        label={`${getCategoryName(
+                          category as StreakCategory,
+                          language
+                        )} (${count})`}
+                        sx={{
+                          backgroundColor:
+                            categoryColors[category as StreakCategory],
+                          color: "white",
+                          fontWeight: 500,
+                        }}
+                      />
+                    )
+                  )}
+                </Box>
+              </Box>
+            )}
+
+            {/* Veri yoksa */}
+            {stats.totalStreaks === 0 && (
+              <Box sx={{ textAlign: "center", py: 6 }}>
+                <Typography variant="h4" sx={{ mb: 1 }}>
+                  📈
+                </Typography>
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                  {t.noDataAvailable}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t.startFirstStreak}
                 </Typography>
               </Box>
-              <LinearProgress
-                variant="determinate"
-                value={
-                  stats.totalStreaks > 0
-                    ? (stats.thisWeekActivity / stats.totalStreaks) * 100
-                    : 0
-                }
-                sx={{ height: 8, borderRadius: 4 }}
-              />
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mt: 1, display: "block" }}
-              >
-                {stats.totalStreaks > 0
-                  ? `${Math.round(
-                      (stats.thisWeekActivity / stats.totalStreaks) * 100
-                    )}% of your streaks are active`
-                  : t.noDataAvailable}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-
-        {/* Kategori Dağılımı */}
-        {Object.keys(stats.categoryStats).length > 0 && (
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-              {t.categoryBreakdown}
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {Object.entries(stats.categoryStats).map(([category, count]) => (
-                <Chip
-                  key={category}
-                  label={`${getCategoryName(
-                    category as StreakCategory,
-                    language
-                  )} (${count})`}
-                  sx={{
-                    backgroundColor: categoryColors[category as StreakCategory],
-                    color: "white",
-                    fontWeight: 500,
-                  }}
-                />
-              ))}
-            </Box>
+            )}
           </Box>
-        )}
-
-        {/* Veri yoksa */}
-        {stats.totalStreaks === 0 && (
-          <Box sx={{ textAlign: "center", py: 6 }}>
-            <Typography variant="h4" sx={{ mb: 1 }}>
-              📈
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-              {t.noDataAvailable}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {t.startFirstStreak}
-            </Typography>
-          </Box>
-        )}
-      </DialogContent>
-    </Dialog>
+        </Sheet.Content>
+      </Sheet.Container>
+    </Sheet>
   );
 };
 

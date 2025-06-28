@@ -1,5 +1,6 @@
 import React from "react";
 import { Sheet } from "react-modal-sheet";
+import "react-modal-sheet/dist/styles.css";
 import {
   Box,
   Typography,
@@ -9,7 +10,6 @@ import {
   List,
   ListItem,
   Paper,
-  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -33,8 +33,6 @@ const StreakDetailBottomSheet: React.FC<StreakDetailBottomSheetProps> = ({
   streak,
   language,
 }) => {
-  const theme = useTheme();
-
   if (!streak) return null;
 
   // History'yi tarihe göre ters sırala (en yeni önce)
@@ -77,12 +75,7 @@ const StreakDetailBottomSheet: React.FC<StreakDetailBottomSheetProps> = ({
 
   return (
     <Sheet isOpen={open} onClose={onClose} snapPoints={[1]} initialSnap={0}>
-      <Sheet.Container
-        style={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }}
-      >
+      <Sheet.Container>
         <Sheet.Header>
           {/* Handle Bar */}
           <Box
@@ -98,11 +91,7 @@ const StreakDetailBottomSheet: React.FC<StreakDetailBottomSheetProps> = ({
           />
         </Sheet.Header>
 
-        <Sheet.Content
-          style={{
-            backgroundColor: theme.palette.background.default,
-          }}
-        >
+        <Sheet.Content>
           <Box sx={{ px: 2, pb: 2 }}>
             {/* Title */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, pb: 2 }}>
