@@ -16,6 +16,7 @@ import Statistics from "./components/Statistics";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
+import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import type { Streak, CreateStreakFormData } from "./types";
@@ -40,7 +41,9 @@ function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isEditBottomSheetOpen, setIsEditBottomSheetOpen] = useState(false);
+  const [isDetailBottomSheetOpen, setIsDetailBottomSheetOpen] = useState(false);
   const [editingStreak, setEditingStreak] = useState<Streak | null>(null);
+  const [detailStreak, setDetailStreak] = useState<Streak | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
@@ -109,6 +112,8 @@ function App() {
       unit: formData.unit,
       dailyProgress: 0,
       lastProgressDate: undefined,
+      // History field
+      history: [],
     };
 
     setStreaks((prevStreaks) => {
@@ -124,6 +129,7 @@ function App() {
   const handleIncrementStreak = (streakId: string, quantity: number = 1) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const now = new Date(); // Current timestamp
 
     setStreaks((prevStreaks) => {
       const updatedStreaks = prevStreaks.map((streak) => {
@@ -131,6 +137,13 @@ function App() {
 
         const lastUpdateDate = new Date(streak.lastUpdated);
         lastUpdateDate.setHours(0, 0, 0, 0);
+
+        // History entry oluştur
+        const historyEntry = {
+          date: today,
+          timestamp: now,
+          quantity: streak.isQuantityBased ? quantity : undefined,
+        };
 
         // Miktar bazlı streakler için özel logic
         if (streak.isQuantityBased) {
@@ -152,8 +165,9 @@ function App() {
             ...streak,
             dailyProgress: newProgress,
             lastProgressDate: today,
-            lastUpdated: new Date(),
+            lastUpdated: now,
             count: shouldIncrementCount ? streak.count + 1 : streak.count,
+            history: [...(streak.history || []), historyEntry],
           };
         }
 
@@ -174,7 +188,8 @@ function App() {
         return {
           ...streak,
           count: streak.count + 1,
-          lastUpdated: new Date(),
+          lastUpdated: now,
+          history: [...(streak.history || []), historyEntry],
         };
       });
 
@@ -195,7 +210,14 @@ function App() {
     setStreaks((prevStreaks) =>
       prevStreaks.map((streak) =>
         streak.id === streakId
-          ? { ...streak, count: 0, lastUpdated: new Date() }
+          ? {
+              ...streak,
+              count: 0,
+              lastUpdated: new Date(),
+              dailyProgress: 0,
+              lastProgressDate: undefined,
+              history: [], // History'yi temizle
+            }
           : streak
       )
     );
@@ -249,6 +271,14 @@ function App() {
     if (streak) {
       setEditingStreak(streak);
       setIsEditBottomSheetOpen(true);
+    }
+  };
+
+  const handleDetailStreak = (streakId: string) => {
+    const streak = streaks.find((s) => s.id === streakId);
+    if (streak) {
+      setDetailStreak(streak);
+      setIsDetailBottomSheetOpen(true);
     }
   };
 
@@ -350,6 +380,7 @@ function App() {
             onDelete={handleDeleteStreak}
             onReset={handleResetStreak}
             onEdit={handleEditStreak}
+            onDetail={handleDetailStreak}
             onReorder={handleReorderStreaks}
             language={currentLanguage}
           />
@@ -408,6 +439,17 @@ function App() {
           open={isStatisticsOpen}
           onClose={() => setIsStatisticsOpen(false)}
           streaks={streaks}
+          language={currentLanguage}
+        />
+
+        {/* Streak Detail Bottom Sheet */}
+        <StreakDetailBottomSheet
+          open={isDetailBottomSheetOpen}
+          onClose={() => {
+            setIsDetailBottomSheetOpen(false);
+            setDetailStreak(null);
+          }}
+          streak={detailStreak}
           language={currentLanguage}
         />
 

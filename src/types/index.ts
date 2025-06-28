@@ -1,5 +1,11 @@
 export type StreakCategory = 'health' | 'fitness' | 'nutrition' | 'productivity' | 'learning' | 'hobby' | 'personal' | 'social' | 'finance' | 'other';
 
+export interface StreakHistoryEntry {
+    date: Date;
+    quantity?: number; // Miktar bazlı streakler için
+    timestamp: Date; // Tam tarih ve saat
+}
+
 export interface Streak {
     id: string;
     name: string;
@@ -17,6 +23,8 @@ export interface Streak {
     unit?: string; // Birim (bardak, sayfa, dakika vb.)
     dailyProgress?: number; // Günün mevcut ilerlemesi
     lastProgressDate?: Date; // Son ilerleme kaydedilen tarih
+    // History tracking
+    history?: StreakHistoryEntry[]; // Tıklama geçmişi
 }
 
 export type RepeatType = 'day' | 'week' | 'month';

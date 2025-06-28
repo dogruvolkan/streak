@@ -11,7 +11,12 @@ export const loadStreaks = (): Streak[] => {
 
         const streaks = JSON.parse(data);
         // Convert date strings back to Date objects and add default values for new fields
-        const convertedStreaks = streaks.map((streak: Partial<Streak> & { createdAt: string; lastUpdated: string; lastProgressDate?: string }, index: number) => ({
+        const convertedStreaks = streaks.map((streak: Partial<Streak> & {
+            createdAt: string;
+            lastUpdated: string;
+            lastProgressDate?: string;
+            history?: Array<{ date: string; timestamp: string; quantity?: number }>;
+        }, index: number) => ({
             ...streak,
             createdAt: new Date(streak.createdAt),
             lastUpdated: new Date(streak.lastUpdated),
@@ -24,6 +29,12 @@ export const loadStreaks = (): Streak[] => {
             dailyGoal: streak.dailyGoal || 1,
             unit: streak.unit || '',
             dailyProgress: streak.dailyProgress || 0,
+            // History field conversion
+            history: streak.history ? streak.history.map((entry: { date: string; timestamp: string; quantity?: number }) => ({
+                ...entry,
+                date: new Date(entry.date),
+                timestamp: new Date(entry.timestamp)
+            })) : [],
         }));
 
         // Order'a göre sırala

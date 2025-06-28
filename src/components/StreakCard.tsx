@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { useSwipeable } from "react-swipeable";
 import { useSortable } from "@dnd-kit/sortable";
@@ -29,6 +30,7 @@ interface StreakCardProps {
   onDelete: (streakId: string) => void;
   onReset: (streakId: string) => void;
   onEdit: (streakId: string) => void;
+  onDetail: (streakId: string) => void;
   language: Language;
 }
 
@@ -38,6 +40,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   onDelete,
   onReset,
   onEdit,
+  onDetail,
   language,
 }) => {
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
@@ -91,6 +94,11 @@ const StreakCard: React.FC<StreakCardProps> = ({
 
   const handleEdit = () => {
     onEdit(streak.id);
+    setIsSwipedOpen(false);
+  };
+
+  const handleDetail = () => {
+    onDetail(streak.id);
     setIsSwipedOpen(false);
   };
 
@@ -176,12 +184,27 @@ const StreakCard: React.FC<StreakCardProps> = ({
           right: 0,
           top: 0,
           bottom: 0,
-          width: 180, // Increased width for 3 buttons
+          width: 240, // Increased width for 4 buttons
           display: "flex",
-          transform: isSwipedOpen ? "translateX(0)" : "translateX(180px)",
+          transform: isSwipedOpen ? "translateX(0)" : "translateX(240px)",
           transition: "transform 0.3s ease-out",
         }}
       >
+        <IconButton
+          onClick={handleDetail}
+          sx={{
+            flex: 1,
+            borderRadius: 0, // Köşe radius yok
+            backgroundColor: "info.light",
+            color: "white",
+            height: "100%",
+            "&:hover": {
+              backgroundColor: "info.main",
+            },
+          }}
+        >
+          <VisibilityIcon />
+        </IconButton>
         <IconButton
           onClick={handleEdit}
           sx={{
@@ -234,7 +257,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
         {...swipeHandlers}
         sx={{
           position: "relative",
-          transform: isSwipedOpen ? "translateX(-180px)" : "translateX(0)",
+          transform: isSwipedOpen ? "translateX(-240px)" : "translateX(0)",
           transition: "transform 0.3s ease-out",
           borderRadius: isSwipedOpen ? "12px 0px 0px 12px" : 1.5, // Sağ radius swipe'da sıfır
           borderLeft: `4px solid ${categoryColors[streak.category]}`,
