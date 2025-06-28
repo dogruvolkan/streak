@@ -141,7 +141,7 @@ const Settings: React.FC<SettingsProps> = ({
             backgroundColor: theme.palette.background.default,
           }}
         >
-          <Box sx={{ px: 3, pb: 2, maxHeight: "70vh", overflowY: "auto" }}>
+          <Box sx={{ px: 3, pb: 2, pt:2, maxHeight: "70vh", overflowY: "auto" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {/* Language Selection */}
               <Box>

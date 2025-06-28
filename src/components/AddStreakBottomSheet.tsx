@@ -165,8 +165,9 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
     <Sheet
       isOpen={open}
       onClose={handleClose}
-      snapPoints={[0.85, 0.6, 0.4]}
-      initialSnap={1}
+      snapPoints={[0.95, 0.8, 0.6]}
+      initialSnap={0}
+      detent="content-height"
     >
       <Sheet.Container
         style={{
@@ -388,124 +389,112 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                     mt: 2,
                   }}
                 >
-                  <Chip
-                    label={
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          py: 1,
-                          width: "100%",
-                          textAlign: "left",
-                        }}
-                      >
-                        <Box sx={{ fontSize: "1.2em" }}>✅</Box>
-                        <Box sx={{ flex: 1, textAlign: "left" }}>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: 500,
-                              color: !formData.isQuantityBased
-                                ? "primary.contrastText"
-                                : "text.primary",
-                            }}
-                          >
-                            {t.simpleStreak}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: !formData.isQuantityBased
-                                ? "primary.contrastText"
-                                : "text.secondary",
-                              opacity: !formData.isQuantityBased ? 0.8 : 1,
-                            }}
-                          >
-                            {t.simpleStreakDesc}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    }
+                  <Button
                     onClick={() =>
                       setFormData({ ...formData, isQuantityBased: false })
                     }
-                    color={!formData.isQuantityBased ? "primary" : "default"}
-                    variant={!formData.isQuantityBased ? "filled" : "outlined"}
+                    variant={
+                      !formData.isQuantityBased ? "contained" : "outlined"
+                    }
                     sx={{
                       width: "100%",
-                      height: "auto",
                       minHeight: 64,
-                      fontSize: "0.9rem",
+                      justifyContent: "flex-start",
+                      textAlign: "left",
+                      p: 2,
+                      borderRadius: 1,
                       backgroundColor: !formData.isQuantityBased
-                        ? "primary.50"
+                        ? "primary.main"
                         : "transparent",
+                      borderColor: !formData.isQuantityBased
+                        ? "primary.main"
+                        : "divider",
                       "&:hover": {
                         backgroundColor: !formData.isQuantityBased
-                          ? "primary.100"
+                          ? "primary.dark"
                           : "action.hover",
                       },
                     }}
-                  />
-                  <Chip
-                    label={
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          py: 1,
-                          width: "100%",
-                          textAlign: "left",
-                        }}
-                      >
-                        <Box sx={{ fontSize: "1.2em" }}>📊</Box>
-                        <Box sx={{ flex: 1, textAlign: "left" }}>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: 500,
-                              color: formData.isQuantityBased
-                                ? "primary.contrastText"
-                                : "text.primary",
-                            }}
-                          >
-                            {t.quantityBasedStreak}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: formData.isQuantityBased
-                                ? "primary.contrastText"
-                                : "text.secondary",
-                              opacity: formData.isQuantityBased ? 0.8 : 1,
-                            }}
-                          >
-                            {t.quantityBasedStreakDesc}
-                          </Typography>
-                        </Box>
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        width: "100%",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Box sx={{ fontSize: "1.2em" }}>✅</Box>
+                      <Box sx={{ flex: 1, textAlign: "left" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: 500,
+                            color: !formData.isQuantityBased
+                              ? "primary.contrastText"
+                              : "text.primary",
+                            textAlign: "left",
+                          }}
+                        >
+                          {t.simpleStreak}
+                        </Typography>
                       </Box>
-                    }
+                    </Box>
+                  </Button>
+                  <Button
                     onClick={() =>
                       setFormData({ ...formData, isQuantityBased: true })
                     }
-                    color={formData.isQuantityBased ? "primary" : "default"}
-                    variant={formData.isQuantityBased ? "filled" : "outlined"}
+                    variant={
+                      formData.isQuantityBased ? "contained" : "outlined"
+                    }
                     sx={{
                       width: "100%",
-                      height: "auto",
                       minHeight: 64,
-                      fontSize: "0.9rem",
+                      justifyContent: "flex-start",
+                      textAlign: "left",
+                      p: 2,
+                      borderRadius: 1,
                       backgroundColor: formData.isQuantityBased
-                        ? "primary.50"
+                        ? "primary.main"
                         : "transparent",
+                      borderColor: formData.isQuantityBased
+                        ? "primary.main"
+                        : "divider",
                       "&:hover": {
                         backgroundColor: formData.isQuantityBased
-                          ? "primary.100"
+                          ? "primary.dark"
                           : "action.hover",
                       },
                     }}
-                  />
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        width: "100%",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Box sx={{ fontSize: "1.2em" }}>📊</Box>
+                      <Box sx={{ flex: 1, textAlign: "left" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: 500,
+                            color: formData.isQuantityBased
+                              ? "primary.contrastText"
+                              : "text.primary",
+                            textAlign: "left",
+                          }}
+                        >
+                          {t.quantityBasedStreak}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Button>
                 </Box>
 
                 {formData.isQuantityBased && (
@@ -521,14 +510,15 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                       <TextField
                         label={t.targetAmount}
                         type="number"
-                        value={formData.dailyGoal}
+                        value={formData.dailyGoal === 1 ? "" : formData.dailyGoal}
                         onChange={(e) => {
-                          const value = parseInt(e.target.value) || 1;
+                          const value = e.target.value === "" ? 1 : parseInt(e.target.value) || 1;
                           setFormData({
                             ...formData,
                             dailyGoal: value,
                           });
                         }}
+                        placeholder="1"
                         variant="filled"
                         sx={{ flex: 1 }}
                         inputProps={{ min: 1, pattern: "[0-9]*" }}

@@ -129,6 +129,8 @@ function App() {
     const now = new Date(); // Current timestamp
 
     setStreaks((prevStreaks) => {
+      let hasChanges = false;
+      
       const updatedStreaks = prevStreaks.map((streak) => {
         if (streak.id !== streakId) return streak;
 
@@ -144,6 +146,14 @@ function App() {
 
         // Miktar bazlı streakler için özel logic
         if (streak.isQuantityBased) {
+          // Haftalık repeat type için gün kontrolü (miktar bazlı streakler için de)
+          if (streak.repeatType === "week" && streak.selectedDays) {
+            const todayDayOfWeek = today.getDay();
+            if (!streak.selectedDays.includes(todayDayOfWeek)) {
+              return streak; // Bu gün seçili değil, değişiklik yapma
+            }
+          }
+
           const lastProgressDate = streak.lastProgressDate
             ? new Date(streak.lastProgressDate)
             : null;
@@ -158,6 +168,8 @@ function App() {
           const shouldIncrementCount =
             currentProgress < dailyGoal && newProgress >= dailyGoal;
 
+          hasChanges = true; // Miktar bazlı streakler için her zaman değişiklik var
+          
           return {
             ...streak,
             dailyProgress: newProgress,
@@ -225,6 +237,8 @@ function App() {
           return streak; // Tıklanamaz durumda
         }
 
+        hasChanges = true; // Normal streakler için değişiklik var
+        
         // Normal streakler için count artır
         return {
           ...streak,
@@ -234,8 +248,10 @@ function App() {
         };
       });
 
-      // Her count artışında confetti çıkar
-      celebrateAchievement();
+      // Sadece gerçekten değişiklik varsa confetti çıkar
+      if (hasChanges) {
+        celebrateAchievement();
+      }
 
       return updatedStreaks;
     });
