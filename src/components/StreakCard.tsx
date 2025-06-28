@@ -9,6 +9,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import EditIcon from "@mui/icons-material/Edit";
@@ -65,18 +66,37 @@ const StreakCard: React.FC<StreakCardProps> = ({
   };
 
   const handleIncrement = () => {
-    // Combined haptic and audio feedback
-    combinedFeedback.increment();
-
-    // Visual shake animation
-    setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 300); // 300ms sonra animasyonu bitir
-
-    // Miktar bazlı streakler için her tıklamada 1 birim ekle
+    // Miktar bazlı streakler için günlük hedef kontrolü
     if (streak.isQuantityBased) {
+      // Eğer günlük hedef zaten tamamlanmışsa sadece titreşim efekti
+      if (isGoalCompleted()) {
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 300);
+        return;
+      }
+
+      // Henüz hedef tamamlanmamışsa normal işlem
+      combinedFeedback.increment();
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 300);
       onIncrement(streak.id, 1);
-    } else {
+      return;
+    }
+
+    // Normal streakler için sadece tıklanabilir durumdaysa işlem yap
+    if (canClick) {
+      // Combined haptic and audio feedback
+      combinedFeedback.increment();
+
+      // Visual shake animation
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 300);
+
       onIncrement(streak.id);
+    } else {
+      // Zaten tıklanmışsa sadece titreşim efekti (ses yok)
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 300);
     }
   };
 
@@ -109,7 +129,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
     preventScrollOnSwipe: true, // Scroll ile çakışmayı önle
   });
 
-  // Bugün tıklandı mı kontrol et - sadece tarih bazlı kontrol
+  // Bugün tıklandı mı kontrol et - repeat type'a göre
   const isClickedToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -117,8 +137,35 @@ const StreakCard: React.FC<StreakCardProps> = ({
     const lastUpdateDate = new Date(streak.lastUpdated);
     lastUpdateDate.setHours(0, 0, 0, 0);
 
-    // Sadece tarihleri karşılaştır, count'a bakma
-    return lastUpdateDate.getTime() === today.getTime();
+    if (streak.repeatType === "day") {
+      // Günlük: bugün tıklanmış mı
+      return lastUpdateDate.getTime() === today.getTime();
+    }
+
+    if (streak.repeatType === "week") {
+      // Haftalık: bu hafta tıklanmış mı
+      const startOfWeek = new Date(today);
+      const dayOfWeek = today.getDay();
+      startOfWeek.setDate(today.getDate() - dayOfWeek);
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      return lastUpdateDate >= startOfWeek && lastUpdateDate <= endOfWeek;
+    }
+
+    if (streak.repeatType === "month") {
+      // Aylık: bu ay tıklanmış mı
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      endOfMonth.setHours(23, 59, 59, 999);
+
+      return lastUpdateDate >= startOfMonth && lastUpdateDate <= endOfMonth;
+    }
+
+    return false;
   };
 
   // Bu streak için tıklanabilir mi kontrol et
@@ -126,8 +173,16 @@ const StreakCard: React.FC<StreakCardProps> = ({
     const today = new Date();
     const todayDayOfWeek = today.getDay();
 
+    // Haftalık repeat type için seçili günleri kontrol et
     if (streak.repeatType === "week" && streak.selectedDays) {
-      return streak.selectedDays.includes(todayDayOfWeek);
+      if (!streak.selectedDays.includes(todayDayOfWeek)) {
+        return false; // Bu gün seçili değil
+      }
+    }
+
+    // Zaten tıklanmış mı kontrol et (repeat type'a göre)
+    if (isClickedToday()) {
+      return false; // Bu periyotta zaten tıklanmış
     }
 
     return true;
@@ -453,23 +508,24 @@ const StreakCard: React.FC<StreakCardProps> = ({
                     : "outlined"
                 }
                 onClick={handleIncrement}
-                disabled={!canClick}
                 sx={{
                   width: 56,
                   height: 56,
                   borderRadius: "50%",
                   minWidth: 0,
                   p: 0,
-                  backgroundColor: clickedToday
-                    ? "primary.main"
-                    : "background.paper",
+                  backgroundColor:
+                    (streak.isQuantityBased && isGoalCompleted()) ||
+                    (!streak.isQuantityBased && clickedToday)
+                      ? "primary.main"
+                      : "background.paper",
                   border: "2px dashed",
-                  borderColor: canClick ? "primary.main" : "action.disabled",
-                  color: clickedToday
-                    ? "primary.contrastText"
-                    : canClick
-                    ? "primary.main"
-                    : "action.disabled",
+                  borderColor: "primary.main", // Her zaman primary renk
+                  color:
+                    (streak.isQuantityBased && isGoalCompleted()) ||
+                    (!streak.isQuantityBased && clickedToday)
+                      ? "primary.contrastText"
+                      : "primary.main", // Her zaman primary renk
                   transition: "all 0.2s ease-in-out",
                   // Shake animation for button
                   animation: isShaking
@@ -483,26 +539,22 @@ const StreakCard: React.FC<StreakCardProps> = ({
                     "100%": { transform: "scale(1) rotate(0deg)" },
                   },
                   "&:hover": {
-                    backgroundColor: clickedToday
-                      ? "primary.dark"
-                      : canClick
-                      ? "primary.50"
-                      : "background.paper",
-                    transform: canClick ? "scale(1.05)" : "none",
-                    borderColor: canClick ? "primary.dark" : "action.disabled",
+                    backgroundColor:
+                      (streak.isQuantityBased && isGoalCompleted()) ||
+                      (!streak.isQuantityBased && clickedToday)
+                        ? "primary.dark"
+                        : "primary.50", // Her zaman hover efekti
+                    transform: "scale(1.05)", // Her zaman transform efekti
+                    borderColor: "primary.dark", // Her zaman primary dark
                   },
                   "&:active": {
-                    transform: canClick ? "scale(0.95)" : "none",
-                  },
-                  "&:disabled": {
-                    backgroundColor: "action.disabledBackground",
-                    borderColor: "action.disabled",
-                    color: "action.disabled",
+                    transform: "scale(0.95)", // Her zaman active efekti
                   },
                 }}
               >
-                {clickedToday ? (
-                  <Box sx={{ fontSize: 24 }}>✓</Box>
+                {(streak.isQuantityBased && isGoalCompleted()) ||
+                (!streak.isQuantityBased && clickedToday) ? (
+                  <CheckIcon sx={{ fontSize: 24 }} />
                 ) : (
                   <AddIcon sx={{ fontSize: 24 }} />
                 )}
@@ -513,12 +565,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
                 sx={{
                   position: "absolute",
                   bottom: -18,
-                  backgroundColor: canClick
-                    ? "primary.main"
-                    : "action.disabled",
-                  color: canClick
-                    ? "primary.contrastText"
-                    : "action.disabledBackground",
+                  backgroundColor: "primary.main", // Her zaman primary renk
+                  color: "primary.contrastText", // Her zaman contrast text
                   borderRadius: "50%",
                   zIndex: 1000,
                   width: 32,

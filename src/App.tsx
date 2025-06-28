@@ -102,7 +102,7 @@ function App() {
       selectedDays: formData.selectedDays,
       count: 0,
       createdAt: new Date(),
-      lastUpdated: new Date(),
+      lastUpdated: new Date(0), // Epoch time to ensure it's not clicked today
       order: streaks.length, // Yeni streak en sona eklenir
       category: formData.category,
       emoji: formData.emoji,
@@ -171,20 +171,64 @@ function App() {
           };
         }
 
-        // Tıklanabilir mi kontrol et
-        const canClickToday = () => {
+        // Normal streakler için limit kontrolleri
+        const canClickBasedOnRepeatType = () => {
+          // Haftalık repeat type için gün kontrolü
           if (streak.repeatType === "week" && streak.selectedDays) {
             const todayDayOfWeek = today.getDay();
-            return streak.selectedDays.includes(todayDayOfWeek);
+            if (!streak.selectedDays.includes(todayDayOfWeek)) {
+              return false; // Bu gün seçili değil
+            }
           }
+
+          // Zaten bugün tıklanmış mı kontrol et
+          if (streak.repeatType === "day") {
+            return lastUpdateDate.getTime() !== today.getTime();
+          }
+
+          // Haftalık repeat için - bu hafta tıklanmış mı kontrol et
+          if (streak.repeatType === "week") {
+            const startOfWeek = new Date(today);
+            const dayOfWeek = today.getDay();
+            startOfWeek.setDate(today.getDate() - dayOfWeek);
+            startOfWeek.setHours(0, 0, 0, 0);
+
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+
+            return !(
+              lastUpdateDate >= startOfWeek && lastUpdateDate <= endOfWeek
+            );
+          }
+
+          // Aylık repeat için - bu ay tıklanmış mı kontrol et
+          if (streak.repeatType === "month") {
+            const startOfMonth = new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              1
+            );
+            const endOfMonth = new Date(
+              today.getFullYear(),
+              today.getMonth() + 1,
+              0
+            );
+            endOfMonth.setHours(23, 59, 59, 999);
+
+            return !(
+              lastUpdateDate >= startOfMonth && lastUpdateDate <= endOfMonth
+            );
+          }
+
           return true;
         };
 
-        if (!canClickToday()) {
-          return streak; // Tıklama günü değilse hiçbir şey yapma
+        if (!canClickBasedOnRepeatType()) {
+          return streak; // Tıklanamaz durumda
         }
 
-        // Her zaman artır (toggle mantığını kaldır)
+        // Normal streakler için count artır
         return {
           ...streak,
           count: streak.count + 1,
