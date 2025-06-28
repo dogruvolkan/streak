@@ -12,8 +12,10 @@ import {
   Typography,
   IconButton,
   useTheme,
+  Modal,
+  Backdrop,
+  Slide,
 } from "@mui/material";
-import { Sheet } from "react-modal-sheet";
 import CloseIcon from "@mui/icons-material/Close";
 import type {
   CreateStreakFormData,
@@ -209,23 +211,45 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
   };
 
   return (
-    <Sheet
-      isOpen={open}
+    <Modal
+      open={open}
       onClose={handleClose}
-      snapPoints={isKeyboardOpen ? [0.95] : [0.95, 0.8, 0.6]}
-      initialSnap={0}
-      detent="content-height"
-      disableDrag={isKeyboardOpen}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+        },
+      }}
+      sx={{
+        zIndex: 1300,
+        "& .MuiBackdrop-root": {
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        },
+      }}
     >
-      <Sheet.Container
-        style={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-          maxHeight: isKeyboardOpen ? "95vh" : "auto",
-          overflow: "hidden",
-        }}
-      >
-        <Sheet.Header>
+      <Slide direction="up" in={open} mountOnEnter unmountOnExit>
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: theme.palette.background.paper,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            maxHeight: isKeyboardOpen ? "95vh" : "90vh",
+            height: isKeyboardOpen ? "95vh" : "auto",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            // iOS specific safe area handling
+            paddingBottom: "env(safe-area-inset-bottom)",
+            // Force the modal to be on top when keyboard is open
+            transform: isKeyboardOpen ? "translateY(-10px)" : "translateY(0)",
+            transition: "transform 0.3s ease-in-out",
+          }}
+        >
           {/* Handle Bar */}
           <Box
             sx={{
@@ -235,11 +259,12 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               opacity: 0.3,
               borderRadius: 2,
               mx: "auto",
-              mb: 2,
+              my: 2,
+              flexShrink: 0,
             }}
           />
 
-          {/* Title */}
+          {/* Header */}
           <Box
             sx={{
               display: "flex",
@@ -247,6 +272,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               justifyContent: "space-between",
               px: 3,
               pb: 2,
+              flexShrink: 0,
             }}
           >
             <Typography
@@ -256,7 +282,7 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               {getTitle()}
             </Typography>
             <IconButton
-              onClick={onClose}
+              onClick={handleClose}
               edge="end"
               sx={{
                 backgroundColor: "action.hover",
@@ -270,21 +296,17 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               <CloseIcon sx={{ fontSize: 20 }} />
             </IconButton>
           </Box>
-        </Sheet.Header>
 
-        <Sheet.Content
-          style={{
-            backgroundColor: theme.palette.background.default,
-            overflowY: isKeyboardOpen ? "auto" : "visible",
-            maxHeight: isKeyboardOpen ? "80vh" : "auto",
-          }}
-        >
+          {/* Scrollable Content */}
           <Box
             sx={{
+              flex: 1,
+              overflow: "auto",
+              backgroundColor: theme.palette.background.default,
               px: 3,
-              pb: isKeyboardOpen
-                ? "calc(80px + env(keyboard-inset-height, 0px))"
-                : 2,
+              pb: isKeyboardOpen ? 2 : 3,
+              // Add bottom padding to ensure content is not hidden behind keyboard
+              marginBottom: isKeyboardOpen ? "80px" : "0px",
             }}
           >
             {/* Content */}
@@ -660,81 +682,80 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                 </Box>
               </Box>
             )}
+          </Box>
 
-            {/* Action Buttons */}
-            <Box
-              sx={{
-                display: "flex",
-                gap: 1.5,
-                p: 3,
-                pt: 2,
-                backdropFilter: "blur(10px)",
-                borderTop: "1px solid",
-                borderTopColor: "divider",
-                position: "sticky",
-                bottom: isKeyboardOpen ? "env(keyboard-inset-height, 0px)" : 0,
-                mt: 3,
-                backgroundColor: theme.palette.background.default,
-                zIndex: 1000,
-              }}
-            >
-              {step !== "category" && (
-                <Button
-                  onClick={handleBack}
-                  variant="outlined"
-                  sx={{
-                    borderRadius: 3,
-                    py: 1.5,
-                    px: 3,
-                    minWidth: 100,
-                    border: "2px solid",
-                    borderColor: "divider",
-                    color: "text.secondary",
-                    "&:hover": {
-                      borderColor: "text.secondary",
-                      backgroundColor: "action.hover",
-                    },
-                  }}
-                >
-                  {t.back}
-                </Button>
-              )}
+          {/* Fixed Action Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1.5,
+              p: 3,
+              pt: 2,
+              backgroundColor: theme.palette.background.paper,
+              borderTop: "1px solid",
+              borderTopColor: "divider",
+              flexShrink: 0,
+              // Ensure buttons are always visible above keyboard
+              position: "relative",
+              zIndex: 10,
+            }}
+          >
+            {step !== "category" && (
               <Button
-                onClick={
-                  step === "days" ||
-                  (step === "repeat" && formData.repeatType !== "week")
-                    ? handleSubmit
-                    : handleNext
-                }
-                variant="contained"
-                disabled={!isValid()}
+                onClick={handleBack}
+                variant="outlined"
                 sx={{
-                  flex: 1,
                   borderRadius: 3,
                   py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  boxShadow: "0 4px 12px rgba(124, 58, 237, 0.3)",
+                  px: 3,
+                  minWidth: 100,
+                  border: "2px solid",
+                  borderColor: "divider",
+                  color: "text.secondary",
                   "&:hover": {
-                    boxShadow: "0 6px 16px rgba(124, 58, 237, 0.4)",
-                  },
-                  "&:disabled": {
-                    backgroundColor: "action.disabledBackground",
-                    color: "action.disabled",
-                    boxShadow: "none",
+                    borderColor: "text.secondary",
+                    backgroundColor: "action.hover",
                   },
                 }}
               >
-                {step === "days" ||
-                (step === "repeat" && formData.repeatType !== "week")
-                  ? t.create
-                  : t.next}
+                {t.back}
               </Button>
-            </Box>
+            )}
+            <Button
+              onClick={
+                step === "days" ||
+                (step === "repeat" && formData.repeatType !== "week")
+                  ? handleSubmit
+                  : handleNext
+              }
+              variant="contained"
+              disabled={!isValid()}
+              sx={{
+                flex: 1,
+                borderRadius: 3,
+                py: 1.5,
+                fontSize: "1rem",
+                fontWeight: 600,
+                boxShadow: "0 4px 12px rgba(124, 58, 237, 0.3)",
+                "&:hover": {
+                  boxShadow: "0 6px 16px rgba(124, 58, 237, 0.4)",
+                },
+                "&:disabled": {
+                  backgroundColor: "action.disabledBackground",
+                  color: "action.disabled",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              {step === "days" ||
+              (step === "repeat" && formData.repeatType !== "week")
+                ? t.create
+                : t.next}
+            </Button>
           </Box>
-        </Sheet.Content>
-      </Sheet.Container>
-    </Sheet>
+        </Box>
+      </Slide>
+    </Modal>
   );
 };
 
