@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import Statistics from "./components/Statistics";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
@@ -50,7 +48,6 @@ function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
 
-  const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const t = useTranslations(currentLanguage);
@@ -383,17 +380,6 @@ function App() {
               {t.appTitle}
             </Typography>
 
-            {/* Statistics button */}
-            <IconButton
-              onClick={() => setIsStatisticsOpen(true)}
-              sx={{
-                color: "primary.main",
-                mr: 1,
-              }}
-            >
-              <BarChartIcon />
-            </IconButton>
-
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
@@ -475,14 +461,6 @@ function App() {
           }}
           streak={editingStreak}
           onSave={handleSaveEditedStreak}
-          language={currentLanguage}
-        />
-
-        {/* Statistics Dialog */}
-        <Statistics
-          open={isStatisticsOpen}
-          onClose={() => setIsStatisticsOpen(false)}
-          streaks={streaks}
           language={currentLanguage}
         />
 

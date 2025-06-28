@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import App from "./App";
-import LandingPage from "./components/LandingPage";
 import { createAppTheme } from "./utils/theme";
 
 const Router: React.FC = () => {
@@ -31,7 +30,6 @@ const Router: React.FC = () => {
     return (
       <ThemeProvider theme={createAppTheme("light", "purple")}>
         <CssBaseline />
-        <LandingPage />
       </ThemeProvider>
     );
   }
