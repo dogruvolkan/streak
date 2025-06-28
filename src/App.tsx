@@ -13,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import StreakList from "./components/StreakList";
+import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
 import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
@@ -498,6 +499,9 @@ function App() {
             paddingTop: "env(safe-area-inset-top)", // Additional padding for notch
           }}
         >
+          {/* Weekly Calendar */}
+          <WeeklyCalendar language={currentLanguage} streaks={streaks} />
+          
           <StreakList
             streaks={streaks}
             onIncrement={handleIncrementStreak}

@@ -77,6 +77,7 @@ export interface Translations {
     activeStreaks: string;
     completedDays: string;
     todayCompleted: string;
+    today: string;
     longestStreak: string;
     currentStreak: string;
     averagePerWeek: string;
@@ -85,6 +86,12 @@ export interface Translations {
     categoryBreakdown: string;
     noDataAvailable: string;
     days: string;
+
+    // Week navigation
+    lastWeek: string;
+    nextWeek: string;
+    weeksAgo: string;
+    weeksAhead: string;
 
     // Category and emoji selection
     selectCategory: string;
@@ -251,6 +258,7 @@ const englishTranslations: Translations = {
     activeStreaks: "Active Streaks",
     completedDays: "Completed Days",
     todayCompleted: "Completed Today",
+    today: "Today",
     longestStreak: "Longest Streak",
     currentStreak: "Current Streak",
     averagePerWeek: "Average per Week",
@@ -259,6 +267,12 @@ const englishTranslations: Translations = {
     categoryBreakdown: "Category Breakdown",
     noDataAvailable: "No data available",
     days: "days",
+
+    // Week navigation
+    lastWeek: "Last Week",
+    nextWeek: "Next Week",
+    weeksAgo: "weeks ago",
+    weeksAhead: "weeks ahead",
 
     // Category and emoji selection
     selectCategory: "Select Category",
@@ -424,6 +438,7 @@ const turkishTranslations: Translations = {
     activeStreaks: "Aktif Alışkanlık",
     completedDays: "Tamamlanan Gün",
     todayCompleted: "Bugün Tamamlanan",
+    today: "Bugün",
     longestStreak: "En Uzun Seri",
     currentStreak: "Mevcut Seri",
     averagePerWeek: "Haftalık Ortalama",
@@ -432,6 +447,12 @@ const turkishTranslations: Translations = {
     categoryBreakdown: "Kategori Dağılımı",
     noDataAvailable: "Veri bulunamadı",
     days: "gün",
+
+    // Week navigation
+    lastWeek: "Geçen Hafta",
+    nextWeek: "Gelecek Hafta",
+    weeksAgo: "hafta önce",
+    weeksAhead: "hafta sonra",
 
     // Category and emoji selection
     selectCategory: "Kategori Seç",
