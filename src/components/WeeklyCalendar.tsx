@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Box,
   Typography,
-  Paper,
   IconButton,
   Badge,
 } from "@mui/material";
@@ -187,18 +186,16 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
   };
 
   return (
-    <Paper
-      elevation={1}
+    <Box
       sx={{
         mx: { xs: 2, sm: 3 },
-        mt: 2,
-        mb: 3,
-        p: { xs: 2, sm: 3 },
-        borderRadius: 3,
+        mt: 1,
+        mb: 2,
+        p: { xs: 1.5, sm: 2 },
         backgroundColor: "background.paper",
+        borderRadius: 1.5,
         border: "1px solid",
         borderColor: "divider",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
       }}
       tabIndex={0}
       onKeyDown={handleKeyDown}
@@ -209,7 +206,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          mb: 3,
+          mb: 2,
         }}
       >
         <IconButton
@@ -223,8 +220,6 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           })()}
           sx={{
             color: "text.secondary",
-            minWidth: { xs: 40, sm: 32 },
-            minHeight: { xs: 40, sm: 32 },
             "&:hover": {
               backgroundColor: "action.hover",
             },
@@ -233,21 +228,18 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
             },
           }}
         >
-          <ChevronLeftIcon />
+          <ChevronLeftIcon fontSize="small" />
         </IconButton>
 
         <Typography
-          variant="h6"
+          variant="subtitle1"
           sx={{
-            fontWeight: 600,
+            fontWeight: 500,
             color: "text.primary",
-            fontSize: { xs: "1rem", sm: "1.1rem" },
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
+            fontSize: { xs: "0.9rem", sm: "1rem" },
           }}
         >
-          📅 {getWeekTitle()}
+          {getWeekTitle()}
         </Typography>
 
         <IconButton
@@ -256,8 +248,6 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           disabled={weekOffset >= 0} // Can't go beyond current week
           sx={{
             color: "text.secondary",
-            minWidth: { xs: 40, sm: 32 },
-            minHeight: { xs: 40, sm: 32 },
             "&:hover": {
               backgroundColor: "action.hover",
             },
@@ -266,7 +256,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
             },
           }}
         >
-          <ChevronRightIcon />
+          <ChevronRightIcon fontSize="small" />
         </IconButton>
       </Box>
 
@@ -275,12 +265,8 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
         sx={{
           display: "grid",
           gridTemplateColumns: "repeat(7, 1fr)",
-          gap: { xs: 1, sm: 1.5 },
-          overflowX: "auto",
-          pb: 1,
-          minWidth: "280px", // Ensure minimum width for mobile
-          width: "100%",
-          touchAction: "pan-x", // Allow horizontal swipe
+          gap: { xs: 0.5, sm: 1 },
+          mb: 1,
         }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -294,22 +280,24 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           return (
             <Badge
               key={index}
-              badgeContent={completedCount > 0 ? completedCount : undefined}
+              badgeContent={completedCount > 0 ? completedCount : 0}
+              showZero={false}
               color="success"
-              overlap="circular"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
               sx={{
                 "& .MuiBadge-badge": {
-                  top: { xs: 10, sm: 10 },
-                
-                  fontSize: "0.7rem",
-                  minWidth: { xs: 16, sm: 18 },
-                  height: { xs: 16, sm: 18 },
+                  top: 2,
+                  right: 15,
+                  fontSize: "0.65rem",
+                  minWidth: 14,
+                  height: 14,
                   backgroundColor: "success.main",
-                  color: "success.contrastText",
+                  color: "white",
                   fontWeight: 600,
-                  border: "2px solid",
-                  borderColor: "background.paper",
-                  zIndex: 1,
+                  transform: "translate(50%, -50%)",
                 },
               }}
             >
@@ -318,58 +306,46 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  p: { xs: 1, sm: 1.5 },
-                  borderRadius: 3,
-                  backgroundColor: isCurrentDay 
-                    ? "primary.main" 
-                    : isFutureDate 
-                      ? "action.disabled"
-                      : "action.hover",
-                  color: isCurrentDay 
-                    ? "primary.contrastText" 
-                    : isFutureDate 
-                      ? "text.disabled"
-                      : "text.primary",
-                  transition: "all 0.3s ease-in-out",
-                  minHeight: { xs: 60, sm: 70 },
                   justifyContent: "center",
-                  position: "relative",
+                  py: { xs: 1, sm: 1.5 },
+                  px: 0.5,
+                  borderRadius: 1.5,
+                  backgroundColor: "transparent",
+                  color: isFutureDate 
+                    ? "text.disabled"
+                    : "text.primary",
+                  transition: "all 0.2s ease",
+                  minHeight: { xs: 45, sm: 50 },
                   cursor: isFutureDate ? "default" : "pointer",
                   opacity: isFutureDate ? 0.5 : 1,
+                  border: isCurrentDay ? "2px solid" : "2px solid transparent",
+                  borderColor: isCurrentDay ? "primary.main" : "transparent",
                   "&:hover": !isFutureDate ? {
-                    backgroundColor: isCurrentDay 
-                      ? "primary.dark" 
-                      : "action.selected",
-                    transform: "translateY(-2px)",
-                    boxShadow: isCurrentDay 
-                      ? "0 4px 12px rgba(124, 58, 237, 0.3)"
-                      : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    backgroundColor: "action.hover",
                   } : {},
-                  ...(isCurrentDay && {
-                    boxShadow: "0 4px 12px rgba(124, 58, 237, 0.3)",
-                    transform: "scale(1.05)",
-                  }),
                 }}
               >
                 <Typography
                   variant="caption"
                   sx={{
-                    fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                    fontSize: { xs: "0.6rem", sm: "0.65rem" },
                     fontWeight: isCurrentDay ? 600 : 500,
-                    opacity: isCurrentDay ? 1 : 0.8,
+                    opacity: isCurrentDay ? 1 : 0.7,
                     textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    mb: 0.5,
+                    letterSpacing: "0.3px",
+                    mb: 0.2,
+                    color: isCurrentDay ? "primary.main" : "inherit",
                   }}
                 >
                   {shortDayNames[index]}
                 </Typography>
                 <Typography
-                  variant="body1"
+                  variant="body2"
                   sx={{
-                    fontSize: { xs: "1rem", sm: "1.2rem" },
-                    fontWeight: isCurrentDay ? 700 : 600,
+                    fontSize: { xs: "0.9rem", sm: "1rem" },
+                    fontWeight: isCurrentDay ? 700 : 500,
                     lineHeight: 1,
+                    color: isCurrentDay ? "primary.main" : "inherit",
                   }}
                 >
                   {formatDate(date)}
@@ -385,9 +361,9 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
         sx={{
           display: "block",
           textAlign: "center",
-          mt: 2,
+          mt: 1,
           color: "text.secondary",
-          fontSize: "0.75rem",
+          fontSize: "0.7rem",
         }}
       >
         {t.today}: {today.toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { 
@@ -396,7 +372,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           month: 'long' 
         })}
       </Typography>
-    </Paper>
+    </Box>
   );
 };
 
