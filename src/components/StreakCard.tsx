@@ -33,6 +33,7 @@ interface StreakCardProps {
   onEdit: (streakId: string) => void;
   onDetail: (streakId: string) => void;
   language: Language;
+  isTodayFreeDay?: boolean;
 }
 
 const StreakCard: React.FC<StreakCardProps> = ({
@@ -43,6 +44,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   onEdit,
   onDetail,
   language,
+  isTodayFreeDay = false,
 }) => {
   const [isSwipedOpen, setIsSwipedOpen] = useState(false);
   const [isShaking, setIsShaking] = useState(false); // Titreşim state'i
@@ -337,6 +339,24 @@ const StreakCard: React.FC<StreakCardProps> = ({
         }}
         onClick={() => isSwipedOpen && setIsSwipedOpen(false)}
       >
+        {/* Free Day Banner */}
+        {isTodayFreeDay && (
+          <Box
+            sx={{
+              backgroundColor: "primary.main",
+              color: "primary.contrastText",
+              textAlign: "center",
+              py: 1,
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              borderTopLeftRadius: 1.5,
+              borderTopRightRadius: isSwipedOpen ? 0 : 1.5,
+            }}
+          >
+            🎉 {t.todayIsFreeDay} {t.celebrateAndRelax}
+          </Box>
+        )}
+
         <Box sx={{ display: "flex", alignItems: "center", p: 3 }}>
           {/* Drag Handle */}
           <Box

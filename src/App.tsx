@@ -17,8 +17,16 @@ import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
 import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
-import type { Streak, CreateStreakFormData } from "./types";
-import { loadStreaks, saveStreaks, generateId } from "./utils/localStorage";
+import type { Streak, CreateStreakFormData, FreeDaySettings } from "./types";
+import {
+  loadStreaks,
+  saveStreaks,
+  generateId,
+  loadFreeDaySettings,
+  saveFreeDaySettings,
+  shouldShowFreeDayConfetti,
+  isTodayFreeDay,
+} from "./utils/localStorage";
 import { initAudio, getAudioEnabled } from "./utils/audio";
 import {
   getCurrentLanguage,
@@ -47,6 +55,10 @@ function App() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const [themeColor, setThemeColor] = useState<ThemeColor>("purple");
+  const [freeDaySettings, setFreeDaySettings] = useState<FreeDaySettings>({
+    enabled: true,
+    dayOfWeek: 0, // Sunday default
+  });
 
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -78,6 +90,25 @@ function App() {
     const themeSettings = getThemeSettings();
     setThemeMode(themeSettings.mode);
     setThemeColor(themeSettings.color);
+
+    // Load free day settings
+    const savedFreeDaySettings = loadFreeDaySettings();
+    setFreeDaySettings(savedFreeDaySettings);
+
+    // Check if we should show free day confetti
+    if (shouldShowFreeDayConfetti(savedFreeDaySettings)) {
+      // Show confetti after a small delay for better UX
+      setTimeout(() => {
+        setShowConfetti(true);
+        // Update last shown date
+        const updatedSettings = {
+          ...savedFreeDaySettings,
+          lastShownDate: new Date(),
+        };
+        saveFreeDaySettings(updatedSettings);
+        setFreeDaySettings(updatedSettings);
+      }, 1000);
+    }
 
     // Initialize audio context and load audio preference
     initAudio();
@@ -323,6 +354,11 @@ function App() {
     saveThemeSettings({ mode: themeMode, color });
   };
 
+  const handleFreeDaySettingsChange = (settings: FreeDaySettings) => {
+    setFreeDaySettings(settings);
+    saveFreeDaySettings(settings);
+  };
+
   const handleReorderStreaks = (reorderedStreaks: Streak[]) => {
     // Order değerini güncelle
     const updatedStreaks = reorderedStreaks.map((streak, index) => ({
@@ -438,6 +474,7 @@ function App() {
             onDetail={handleDetailStreak}
             onReorder={handleReorderStreaks}
             language={currentLanguage}
+            isTodayFreeDay={isTodayFreeDay(freeDaySettings)}
           />
         </Box>
 
@@ -475,6 +512,8 @@ function App() {
           themeColor={themeColor}
           onThemeColorChange={handleThemeColorChange}
           onClearData={handleClearData}
+          freeDaySettings={freeDaySettings}
+          onFreeDaySettingsChange={handleFreeDaySettingsChange}
         />
 
         {/* Edit Streak Bottom Sheet */}

@@ -122,6 +122,16 @@ export interface Translations {
     dark: string;
     dangerZone: string;
     confirmClearData: string;
+
+    // Free Day
+    freeDay: string;
+    freeDaySettings: string;
+    enableFreeDay: string;
+    freeDayDescription: string;
+    selectFreeDayOfWeek: string;
+    todayIsFreeDay: string;
+    freeDayMessage: string;
+    celebrateAndRelax: string;
 }
 
 const englishTranslations: Translations = {
@@ -244,6 +254,16 @@ const englishTranslations: Translations = {
     dark: "Dark",
     dangerZone: "Danger Zone",
     confirmClearData: "Confirm Clear Data",
+
+    // Free Day
+    freeDay: "Free Day",
+    freeDaySettings: "Free Day Settings",
+    enableFreeDay: "Enable Free Day",
+    freeDayDescription: "Choose a day to relax without breaking your streaks",
+    selectFreeDayOfWeek: "Select Free Day",
+    todayIsFreeDay: "Today is Free Day!",
+    freeDayMessage: "Relax and Enjoy! 🎉",
+    celebrateAndRelax: "No pressure today - celebrate and relax!",
 };
 
 const turkishTranslations: Translations = {
@@ -366,6 +386,16 @@ const turkishTranslations: Translations = {
     dark: "Koyu",
     dangerZone: "Tehlike Bölgesi",
     confirmClearData: "Veri Silmeyi Onayla",
+
+    // Free Day
+    freeDay: "Serbest Gün",
+    freeDaySettings: "Serbest Gün Ayarları",
+    enableFreeDay: "Serbest Günü Etkinleştir",
+    freeDayDescription: "Alışkanlıklarını bozmadan dinlenebileceğin bir gün seç",
+    selectFreeDayOfWeek: "Serbest Günü Seç",
+    todayIsFreeDay: "Bugün Serbest Gün!",
+    freeDayMessage: "Coş ve Eğlen! 🎉",
+    celebrateAndRelax: "Bugün baskı yok - kutla ve dinlen!",
 };
 
 const translations: Record<Language, Translations> = {

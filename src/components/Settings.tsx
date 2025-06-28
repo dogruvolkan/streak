@@ -22,6 +22,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
+import type { FreeDaySettings } from "../types";
 
 export type ThemeMode = "light" | "dark";
 export type ThemeColor = "purple" | "blue" | "green" | "orange" | "pink";
@@ -36,6 +37,8 @@ interface SettingsProps {
   themeColor: ThemeColor;
   onThemeColorChange: (color: ThemeColor) => void;
   onClearData: () => void;
+  freeDaySettings: FreeDaySettings;
+  onFreeDaySettingsChange: (settings: FreeDaySettings) => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({
@@ -48,6 +51,8 @@ const Settings: React.FC<SettingsProps> = ({
   themeColor,
   onThemeColorChange,
   onClearData,
+  freeDaySettings,
+  onFreeDaySettingsChange,
 }) => {
   const t = useTranslations(language);
   const theme = useTheme();
@@ -141,7 +146,9 @@ const Settings: React.FC<SettingsProps> = ({
             backgroundColor: theme.palette.background.default,
           }}
         >
-          <Box sx={{ px: 3, pb: 2, pt:2, maxHeight: "70vh", overflowY: "auto" }}>
+          <Box
+            sx={{ px: 3, pb: 2, pt: 2, maxHeight: "70vh", overflowY: "auto" }}
+          >
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {/* Language Selection */}
               <Box>
@@ -354,6 +361,79 @@ const Settings: React.FC<SettingsProps> = ({
                         }
                       />
                     ))}
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+            </Box>
+
+            {/* Free Day Settings */}
+            <Box sx={{ mt: 3 }}>
+              <Divider sx={{ mb: 3 }} />
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 600, color: "text.primary" }}
+                >
+                  🎉 {t.freeDaySettings}
+                </Typography>
+              </Box>
+
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                {t.freeDayDescription}
+              </Typography>
+
+              <Box sx={{ mb: 3 }}>
+                <FormControl>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: 500, color: "text.primary" }}
+                  >
+                    {t.selectFreeDayOfWeek}
+                  </Typography>
+                  <RadioGroup
+                    value={freeDaySettings.dayOfWeek}
+                    onChange={(e) =>
+                      onFreeDaySettingsChange({
+                        ...freeDaySettings,
+                        dayOfWeek: parseInt(e.target.value),
+                      })
+                    }
+                  >
+                    <FormControlLabel
+                      value={0}
+                      control={<Radio />}
+                      label={t.sunday}
+                    />
+                    <FormControlLabel
+                      value={1}
+                      control={<Radio />}
+                      label={t.monday}
+                    />
+                    <FormControlLabel
+                      value={2}
+                      control={<Radio />}
+                      label={t.tuesday}
+                    />
+                    <FormControlLabel
+                      value={3}
+                      control={<Radio />}
+                      label={t.wednesday}
+                    />
+                    <FormControlLabel
+                      value={4}
+                      control={<Radio />}
+                      label={t.thursday}
+                    />
+                    <FormControlLabel
+                      value={5}
+                      control={<Radio />}
+                      label={t.friday}
+                    />
+                    <FormControlLabel
+                      value={6}
+                      control={<Radio />}
+                      label={t.saturday}
+                    />
                   </RadioGroup>
                 </FormControl>
               </Box>

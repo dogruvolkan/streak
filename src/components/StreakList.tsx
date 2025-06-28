@@ -30,6 +30,7 @@ interface StreakListProps {
   onDetail: (streakId: string) => void;
   onReorder: (streaks: Streak[]) => void;
   language: Language;
+  isTodayFreeDay?: boolean;
 }
 
 const StreakList: React.FC<StreakListProps> = ({
@@ -41,6 +42,7 @@ const StreakList: React.FC<StreakListProps> = ({
   onDetail,
   onReorder,
   language,
+  isTodayFreeDay = false,
 }) => {
   const t = useTranslations(language);
   // Drag sensors
@@ -181,6 +183,7 @@ const StreakList: React.FC<StreakListProps> = ({
                 onEdit={onEdit}
                 onDetail={onDetail}
                 language={language}
+                isTodayFreeDay={isTodayFreeDay}
               />
             ))}
           </SortableContext>

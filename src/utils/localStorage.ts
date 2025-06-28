@@ -1,4 +1,4 @@
-import type { Streak } from '../types';
+import type { Streak, FreeDaySettings } from '../types';
 import type { Language } from './i18n';
 
 const STORAGE_KEY = 'streak-tracker-data';
@@ -100,4 +100,64 @@ export const getRepeatTypeDisplayText = (repeatType: string, selectedDays?: numb
         default:
             return translations.unknown;
     }
+};
+
+// Free Day Settings
+const FREE_DAY_STORAGE_KEY = 'streakApp_freeDaySettings';
+
+export const loadFreeDaySettings = (): FreeDaySettings => {
+    try {
+        const data = localStorage.getItem(FREE_DAY_STORAGE_KEY);
+        if (!data) {
+            // Default: Pazar günü free day
+            return {
+                enabled: true,
+                dayOfWeek: 0, // Sunday
+            };
+        }
+
+        const settings = JSON.parse(data);
+        return {
+            ...settings,
+            lastShownDate: settings.lastShownDate ? new Date(settings.lastShownDate) : undefined,
+        };
+    } catch (error) {
+        console.error('Error loading free day settings:', error);
+        return {
+            enabled: true,
+            dayOfWeek: 0, // Sunday default
+        };
+    }
+};
+
+export const saveFreeDaySettings = (settings: FreeDaySettings): void => {
+    try {
+        localStorage.setItem(FREE_DAY_STORAGE_KEY, JSON.stringify(settings));
+    } catch (error) {
+        console.error('Error saving free day settings:', error);
+    }
+};
+
+// Check if today is free day
+export const isTodayFreeDay = (settings: FreeDaySettings): boolean => {
+    if (!settings.enabled) return false;
+
+    const today = new Date();
+    return today.getDay() === settings.dayOfWeek;
+};
+
+// Check if we should show confetti today
+export const shouldShowFreeDayConfetti = (settings: FreeDaySettings): boolean => {
+    if (!isTodayFreeDay(settings)) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Eğer bugün hiç gösterilmemişse veya farklı bir günde gösterilmişse
+    if (!settings.lastShownDate) return true;
+
+    const lastShownDate = new Date(settings.lastShownDate);
+    lastShownDate.setHours(0, 0, 0, 0);
+
+    return lastShownDate.getTime() !== today.getTime();
 };

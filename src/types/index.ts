@@ -29,6 +29,13 @@ export interface Streak {
 
 export type RepeatType = 'day' | 'week' | 'month';
 
+// Free Day Settings
+export interface FreeDaySettings {
+    enabled: boolean;
+    dayOfWeek: number; // 0=Sunday, 1=Monday, ..., 6=Saturday
+    lastShownDate?: Date; // Son confetti gösterilme tarihi
+}
+
 export interface CreateStreakFormData {
     name: string;
     repeatType: RepeatType;
