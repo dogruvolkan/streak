@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import StreakList from "./components/StreakList";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
 import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
+import HelpBottomSheet from "./components/HelpBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import type { Streak, CreateStreakFormData, FreeDaySettings } from "./types";
@@ -51,6 +53,7 @@ function App() {
   const [editingStreak, setEditingStreak] = useState<Streak | null>(null);
   const [detailStreak, setDetailStreak] = useState<Streak | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
@@ -460,6 +463,17 @@ function App() {
               {t.appTitle}
             </Typography>
 
+            {/* Help button */}
+            <IconButton
+              onClick={() => setIsHelpOpen(true)}
+              sx={{
+                color: "primary.main",
+                mr: 1,
+              }}
+            >
+              <HelpOutlineIcon />
+            </IconButton>
+
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
@@ -558,10 +572,32 @@ function App() {
           language={currentLanguage}
         />
 
+        {/* Help Bottom Sheet */}
+        <HelpBottomSheet
+          open={isHelpOpen}
+          onClose={() => setIsHelpOpen(false)}
+          language={currentLanguage}
+        />
+
         {/* Confetti Component */}
         <ConfettiComponent
           active={showConfetti}
           onComplete={() => setShowConfetti(false)}
+        />
+
+        {/* Settings Bottom Sheet */}
+        <Settings
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          language={currentLanguage}
+          onLanguageChange={handleLanguageChange}
+          themeMode={themeMode}
+          onThemeModeChange={handleThemeModeChange}
+          themeColor={themeColor}
+          onThemeColorChange={handleThemeColorChange}
+          onClearData={handleClearData}
+          freeDaySettings={freeDaySettings}
+          onFreeDaySettingsChange={setFreeDaySettings}
         />
       </Box>
     </ThemeProvider>

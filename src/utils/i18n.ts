@@ -118,6 +118,7 @@ export interface Translations {
     todayProgress: string;
 
     // Settings
+    help: string;
     light: string;
     dark: string;
     dangerZone: string;
@@ -138,6 +139,40 @@ export interface Translations {
     weeklyOnceDesc: string;
     specificDays: string;
     specificDaysDesc: string;
+
+    // Help/Tutorial content
+    helpWelcomeTitle: string;
+    helpWelcomeDesc: string;
+    helpWelcomeContent: string;
+    helpCreateStreakTitle: string;
+    helpCreateStreakDesc: string;
+    helpCreateStreakAction: string;
+    helpCreateStreakContent: string;
+    helpTrackProgressTitle: string;
+    helpTrackProgressDesc: string;
+    helpTrackProgressContent: string;
+    helpExampleStreakName: string;
+    helpStreakTypesTitle: string;
+    helpStreakTypesDesc: string;
+    helpSimpleStreakContent: string;
+    helpQuantityStreakContent: string;
+    helpExampleUnit: string;
+    helpRepeatPatternsTitle: string;
+    helpRepeatPatternsDesc: string;
+    helpDailyContent: string;
+    helpWeeklyContent: string;
+    helpMonthlyContent: string;
+    helpFeatureSummaryTitle: string;
+    helpFeatureSummaryDesc: string;
+    helpFeatureTracking: string;
+    helpFeatureTrackingDesc: string;
+    helpFeatureMobile: string;
+    helpFeatureMobileDesc: string;
+    helpFeatureCustomize: string;
+    helpFeatureCustomizeDesc: string;
+    helpFeatureProgress: string;
+    helpFeatureProgressDesc: string;
+    helpReadyToStart: string;
 }
 
 const englishTranslations: Translations = {
@@ -183,11 +218,11 @@ const englishTranslations: Translations = {
     sat: "Sat",
 
     // Messages
-    noStreaks: "No streaks yet",
-    startFirstStreak: "Create your first streak to get started!",
+    noStreaks: "No habits yet",
+    startFirstStreak: "Create your first habit to get started!",
 
     // Form validation
-    nameRequired: "Streak name is required",
+    nameRequired: "Habit name is required",
     selectAtLeastOneDay: "Please select at least one day",
 
     // Additional translations
@@ -195,6 +230,7 @@ const englishTranslations: Translations = {
     next: "Next",
 
     // Settings
+    help: "Help",
     settings: "Settings",
     language: "Language",
     appearance: "Appearance",
@@ -276,6 +312,40 @@ const englishTranslations: Translations = {
     weeklyOnceDesc: "You can click on any day",
     specificDays: "Specific Days",
     specificDaysDesc: "You can only click on selected days",
+
+    // Help/Tutorial content
+    helpWelcomeTitle: "Welcome to Streak Tracker! 🎯",
+    helpWelcomeDesc: "Your personal companion for building life-changing habits",
+    helpWelcomeContent: "Transform your daily routines into powerful habits with our intuitive tracking system. Whether you're aiming to drink more water, exercise regularly, or learn something new - we're here to support your journey to consistency and growth.",
+    helpCreateStreakTitle: "Creating Your First Streak ✨",
+    helpCreateStreakDesc: "Building habits starts with a single step - let's take it together",
+    helpCreateStreakAction: "Tap the + button to begin your journey",
+    helpCreateStreakContent: "Start by choosing a category that resonates with your goal (Health, Productivity, Learning, etc.). Pick a fun emoji that represents your habit, give it a meaningful name, and decide how often you want to practice it. The more specific and personal you make it, the more motivated you'll stay!",
+    helpTrackProgressTitle: "Tracking Your Daily Progress 📈",
+    helpTrackProgressDesc: "Consistency is key - every small action counts towards your bigger goal",
+    helpTrackProgressContent: "Each time you complete your habit, simply tap the button on your streak card. Watch your streak counter grow day by day and feel the incredible satisfaction of building momentum. Remember: progress, not perfection!",
+    helpExampleStreakName: "Drink 8 Glasses of Water",
+    helpStreakTypesTitle: "Two Powerful Tracking Styles 🔄",
+    helpStreakTypesDesc: "Choose the approach that best fits your habit and lifestyle",
+    helpSimpleStreakContent: "Perfect for binary habits like 'Did I meditate today?' or 'Did I call a friend?' Simple, clean, and motivating - just one tap when you've completed your habit for the day.",
+    helpQuantityStreakContent: "Ideal for measurable goals like drinking water, reading pages, or workout minutes. Set your daily target, then incrementally track your progress throughout the day. Visual progress bars keep you motivated!",
+    helpExampleUnit: "glasses",
+    helpRepeatPatternsTitle: "Flexible Scheduling Options 📅",
+    helpRepeatPatternsDesc: "Life is unpredictable - customize your habits to fit your real lifestyle",
+    helpDailyContent: "Practice every single day. Perfect for foundational habits you want to make automatic and non-negotiable in your life.",
+    helpWeeklyContent: "Choose specific weekdays that work best for you, or set a 'once per week' goal for maximum flexibility. Great for busy schedules and weekend activities.",
+    helpMonthlyContent: "Ideal for bigger projects and goals like 'Read one book,' 'Deep clean the house,' or 'Complete a monthly review.' Give yourself the whole month to succeed.",
+    helpFeatureSummaryTitle: "Everything You Need to Succeed 🚀",
+    helpFeatureSummaryDesc: "Powerful features designed to support your habit-building journey",
+    helpFeatureTracking: "Smart & Reliable Tracking",
+    helpFeatureTrackingDesc: "Never lose your progress with our bulletproof tracking system",
+    helpFeatureMobile: "Mobile-First Experience",
+    helpFeatureMobileDesc: "Seamlessly track habits anywhere, anytime with our beautiful mobile interface",
+    helpFeatureCustomize: "Completely Personalized",
+    helpFeatureCustomizeDesc: "Custom categories, emojis, themes, and even free days - make it truly yours",
+    helpFeatureProgress: "Motivating Visual Feedback",
+    helpFeatureProgressDesc: "Beautiful progress indicators and streak counters that celebrate your wins",
+    helpReadyToStart: "Ready to transform your life one habit at a time? Your journey to lasting change starts with just one tap on that + button. You've got this! 💪",
 };
 
 const turkishTranslations: Translations = {
@@ -333,6 +403,7 @@ const turkishTranslations: Translations = {
     next: "İleri",
 
     // Settings
+    help: "Yardım",
     settings: "Ayarlar",
     language: "Dil",
     appearance: "Görünüm",
@@ -414,6 +485,40 @@ const turkishTranslations: Translations = {
     weeklyOnceDesc: "Herhangi bir gün tıklayabilirsin",
     specificDays: "Belirli Günlerde",
     specificDaysDesc: "Sadece seçilen günlerde tıklayabilirsin",
+
+    // Help/Tutorial content
+    helpWelcomeTitle: "Streak Tracker'a Hoş Geldin! 🎯",
+    helpWelcomeDesc: "Hayat değiştiren alışkanlıklar oluşturmak için kişisel yardımcın",
+    helpWelcomeContent: "Günlük rutinlerini güçlü alışkanlıklara dönüştür! Su içmek, düzenli egzersiz yapmak ya da yeni bir şeyler öğrenmek istiyorsan - tutarlılık ve gelişim yolculuğunda yanındayız.",
+    helpCreateStreakTitle: "İlk Alışkanlığını Oluştur ✨",
+    helpCreateStreakDesc: "Alışkanlık oluşturmak tek bir adımla başlar - hadi birlikte atalım",
+    helpCreateStreakAction: "Yolculuğuna başlamak için + butonuna dokun",
+    helpCreateStreakContent: "Hedefine uygun bir kategori seç (Sağlık, Verimlilik, Öğrenim vs.). Alışkanlığını temsil eden eğlenceli bir emoji seç, anlamlı bir isim ver ve ne sıklıkla yapmak istediğine karar ver. Ne kadar kişisel ve spesifik yaparsan, o kadar motive kalırsın!",
+    helpTrackProgressTitle: "Günlük İlerlemeni Takip Et 📈",
+    helpTrackProgressDesc: "Tutarlılık anahtar - her küçük eylem büyük hedefinize katkıda bulunur",
+    helpTrackProgressContent: "Tamamlandı olarak işaretlemek için her alışkanlık kartındaki butona dokun. Tutarlılık oluşturdukça sayının artışını izle!",
+    helpExampleStreakName: "Su İçmek",
+    helpStreakTypesTitle: "Alışkanlık Türleri",
+    helpStreakTypesDesc: "Basit alışkanlıklar veya miktar bazlı hedefler arasında seçim yap.",
+    helpSimpleStreakContent: "Meditasyon, egzersiz veya okuma gibi evet/hayır alışkanlıkları için mükemmel. Tamamlandı olarak işaretlemek için günde bir kez dokun.",
+    helpQuantityStreakContent: "Su içmek, sayfa okumak veya egzersiz dakikaları gibi ölçülebilir hedefler için harika. Günlük hedef belirle ve ilerlemeyi takip et.",
+    helpExampleUnit: "bardak",
+    helpRepeatPatternsTitle: "Tekrar Kalıpları",
+    helpRepeatPatternsDesc: "Alışkanlığını ne sıklıkla uygulamak istediğini özelleştir.",
+    helpDailyContent: "Her gün uygula. Tutarlı günlük rutinler oluşturmak için mükemmel.",
+    helpWeeklyContent: "Belirli günleri seç veya haftanın herhangi bir gününe izin ver. Esnek programlama için harika.",
+    helpMonthlyContent: "Ayda bir kez. Kitap okuma veya detaylı temizlik gibi aylık hedefler için ideal.",
+    helpFeatureSummaryTitle: "Hazırsın!",
+    helpFeatureSummaryDesc: "Streak Tracker'ı özel kılan özellikler:",
+    helpFeatureTracking: "Kolay Takip",
+    helpFeatureTrackingDesc: "Tek dokunuşla ilerleme güncellemeleri",
+    helpFeatureMobile: "Mobil Optimize",
+    helpFeatureMobileDesc: "Hareket halindeyken takip için mükemmel",
+    helpFeatureCustomize: "Özelleştirilebilir",
+    helpFeatureCustomizeDesc: "Kategoriler, emojiler ve temalar",
+    helpFeatureProgress: "Görsel İlerleme",
+    helpFeatureProgressDesc: "Zaman içindeki büyümeni gör",
+    helpReadyToStart: "Daha iyi alışkanlıklar oluşturmaya hazır mısın? İlk alışkanlığını oluşturmak için + butonuna dokun!",
 };
 
 const translations: Record<Language, Translations> = {
