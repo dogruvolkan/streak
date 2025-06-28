@@ -187,6 +187,38 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
               mb: 2,
             }}
           />
+
+          {/* Title */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              px: 3,
+              pb: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, color: "text.primary" }}
+            >
+              {getTitle()}
+            </Typography>
+            <IconButton
+              onClick={onClose}
+              edge="end"
+              sx={{
+                backgroundColor: "action.hover",
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "action.selected",
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+          </Box>
         </Sheet.Header>
 
         <Sheet.Content
@@ -195,37 +227,6 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
           }}
         >
           <Box sx={{ px: 3, pb: 2 }}>
-            {/* Title */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                pb: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, color: "text.primary" }}
-              >
-                {getTitle()}
-              </Typography>
-              <IconButton
-                onClick={handleClose}
-                edge="end"
-                sx={{
-                  backgroundColor: "action.hover",
-                  width: 32,
-                  height: 32,
-                  "&:hover": {
-                    backgroundColor: "action.selected",
-                  },
-                }}
-              >
-                <CloseIcon sx={{ fontSize: 20 }} />
-              </IconButton>
-            </Box>
-
             {/* Content */}
             {step === "category" && (
               <Box sx={{ mt: 2 }}>

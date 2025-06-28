@@ -111,6 +111,38 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
               mb: 2,
             }}
           />
+
+          {/* Title */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              px: 3,
+              pb: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, color: "text.primary" }}
+            >
+              {streak.emoji} {t.editStreak}
+            </Typography>
+            <IconButton
+              onClick={onClose}
+              edge="end"
+              sx={{
+                backgroundColor: "action.hover",
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "action.selected",
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+          </Box>
         </Sheet.Header>
 
         <Sheet.Content
@@ -120,45 +152,9 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
         >
           <Box sx={{ px: 3, pb: 2 }}>
             {/* Title */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                pb: 2,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Typography
-                  component="span"
-                  sx={{
-                    fontSize: "2rem",
-                    lineHeight: 1,
-                  }}
-                >
-                  {streak.emoji}
-                </Typography>
-                <Typography variant="h5" component="h2" fontWeight="bold">
-                  {t.editStreak}
-                </Typography>
-              </Box>
-              <IconButton
-                onClick={handleClose}
-                sx={{
-                  backgroundColor: "action.hover",
-                  width: 32,
-                  height: 32,
-                  "&:hover": {
-                    backgroundColor: "action.selected",
-                  },
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
 
             {/* Category and Type Info */}
-            <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
+            <Box sx={{ display: "flex", gap: 1, mb: 3, mt:2 }}>
               <Chip
                 label={getCategoryName(streak.category, language)}
                 sx={{
@@ -399,7 +395,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
                 gap: 2,
                 width: "100%",
                 mt: 3,
-                p: 3,         
+                p: 3,
                 backdropFilter: "blur(10px)",
                 borderTop: "1px solid",
                 borderTopColor: "divider",

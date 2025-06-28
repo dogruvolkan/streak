@@ -96,6 +96,38 @@ const StreakDetailBottomSheet: React.FC<StreakDetailBottomSheetProps> = ({
               mb: 2,
             }}
           />
+
+          {/* Title */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              px: 3,
+              pb: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, color: "text.primary" }}
+            >
+              {streak.emoji} {streak.name}
+            </Typography>
+            <IconButton
+              onClick={onClose}
+              edge="end"
+              sx={{
+                backgroundColor: "action.hover",
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "action.selected",
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+          </Box>
         </Sheet.Header>
 
         <Sheet.Content
@@ -104,40 +136,8 @@ const StreakDetailBottomSheet: React.FC<StreakDetailBottomSheetProps> = ({
           }}
         >
           <Box sx={{ px: 2, pb: 2 }}>
-            {/* Title */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, pb: 2 }}>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}
-              >
-                <Typography
-                  component="span"
-                  sx={{
-                    fontSize: "1.5em",
-                    lineHeight: 1,
-                  }}
-                >
-                  {streak.emoji}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: 600 }}
-                >
-                  {streak.name}
-                </Typography>
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                onClick={onClose}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-
             {/* Kategori ve Tekrar Tipi */}
-            <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
+            <Box sx={{ display: "flex", gap: 1, mb: 3, mt:2 }}>
               <Chip
                 label={getCategoryName(streak.category, language)}
                 size="small"
