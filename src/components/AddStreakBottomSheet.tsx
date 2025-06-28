@@ -26,8 +26,6 @@ import {
   getCategoryName,
   categoryColors,
   categoryEmojis,
-  getSuggestedEmojis,
-  popularEmojis,
 } from "../utils/categories";
 
 interface AddStreakBottomSheetProps {
@@ -279,6 +277,10 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                             formData.category === category
                               ? `${categoryColors[category]}20`
                               : "transparent",
+                          color:
+                            formData.category === category
+                              ? "text.primary"
+                              : "text.primary",
                           "&:hover": {
                             backgroundColor: `${categoryColors[category]}30`,
                           },
@@ -296,81 +298,45 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                   {t.selectEmoji}
                 </Typography>
 
-                {/* Suggested emojis for selected category */}
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2, mb: 1 }}
-                >
-                  {t.suggestedEmojis}
-                </Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}>
-                  {getSuggestedEmojis(formData.category).map((emoji, index) => (
-                    <IconButton
-                      key={index}
-                      onClick={() => setFormData({ ...formData, emoji })}
-                      sx={{
-                        width: 48,
-                        height: 48,
-                        fontSize: "1.5rem",
-                        border: "2px solid",
-                        borderColor:
-                          formData.emoji === emoji ? "primary.main" : "divider",
-                        backgroundColor:
-                          formData.emoji === emoji
-                            ? "primary.50"
-                            : "transparent",
-                        "&:hover": {
-                          backgroundColor: "action.hover",
-                        },
-                      }}
-                    >
-                      {emoji}
-                    </IconButton>
-                  ))}
-                </Box>
-
-                {/* Popular emojis */}
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 1 }}
-                >
-                  {t.popularEmojis}
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 1,
-                    maxHeight: 200,
-                    overflowY: "auto",
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label={t.selectEmoji}
+                  value={formData.emoji}
+                  onChange={(e) => {
+                    // Sadece emoji karakterlerini kabul et (basit kontrol)
+                    const value = e.target.value;
+                    if (value.length <= 2) {
+                      // En fazla 2 karakter (bazı emojiler 2 char)
+                      setFormData({ ...formData, emoji: value });
+                    }
                   }}
-                >
-                  {popularEmojis.map((emoji, index) => (
-                    <IconButton
-                      key={index}
-                      onClick={() => setFormData({ ...formData, emoji })}
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        fontSize: "1.3rem",
-                        border: "1px solid",
-                        borderColor:
-                          formData.emoji === emoji ? "primary.main" : "divider",
-                        backgroundColor:
-                          formData.emoji === emoji
-                            ? "primary.50"
-                            : "transparent",
-                        "&:hover": {
-                          backgroundColor: "action.hover",
-                        },
-                      }}
-                    >
-                      {emoji}
-                    </IconButton>
-                  ))}
-                </Box>
+                  placeholder="😊"
+                  variant="filled"
+                  inputProps={{
+                    style: { fontSize: "2rem", textAlign: "center" },
+                  }}
+                  sx={{
+                    mt: 2,
+                    "& .MuiFilledInput-root": {
+                      border: "none",
+                      backgroundColor: "action.hover",
+                      "&:hover": {
+                        backgroundColor: "action.selected",
+                      },
+                      "&.Mui-focused": {
+                        backgroundColor: "action.hover",
+                        border: "none",
+                      },
+                      "&:before": {
+                        display: "none",
+                      },
+                      "&:after": {
+                        display: "none",
+                      },
+                    },
+                  }}
+                />
               </Box>
             )}
 
@@ -429,14 +395,32 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                           alignItems: "center",
                           gap: 1,
                           py: 1,
+                          width: "100%",
+                          textAlign: "left",
                         }}
                       >
                         <Box sx={{ fontSize: "1.2em" }}>✅</Box>
-                        <Box>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        <Box sx={{ flex: 1, textAlign: "left" }}>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontWeight: 500,
+                              color: !formData.isQuantityBased
+                                ? "primary.contrastText"
+                                : "text.primary",
+                            }}
+                          >
                             {t.simpleStreak}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: !formData.isQuantityBased
+                                ? "primary.contrastText"
+                                : "text.secondary",
+                              opacity: !formData.isQuantityBased ? 0.8 : 1,
+                            }}
+                          >
                             {t.simpleStreakDesc}
                           </Typography>
                         </Box>
@@ -470,14 +454,32 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                           alignItems: "center",
                           gap: 1,
                           py: 1,
+                          width: "100%",
+                          textAlign: "left",
                         }}
                       >
                         <Box sx={{ fontSize: "1.2em" }}>📊</Box>
-                        <Box>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        <Box sx={{ flex: 1, textAlign: "left" }}>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontWeight: 500,
+                              color: formData.isQuantityBased
+                                ? "primary.contrastText"
+                                : "text.primary",
+                            }}
+                          >
                             {t.quantityBasedStreak}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: formData.isQuantityBased
+                                ? "primary.contrastText"
+                                : "text.secondary",
+                              opacity: formData.isQuantityBased ? 0.8 : 1,
+                            }}
+                          >
                             {t.quantityBasedStreakDesc}
                           </Typography>
                         </Box>
@@ -519,15 +521,16 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                         label={t.targetAmount}
                         type="number"
                         value={formData.dailyGoal}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value) || 1;
                           setFormData({
                             ...formData,
-                            dailyGoal: Number(e.target.value),
-                          })
-                        }
+                            dailyGoal: value,
+                          });
+                        }}
                         variant="filled"
                         sx={{ flex: 1 }}
-                        inputProps={{ min: 1 }}
+                        inputProps={{ min: 1, pattern: "[0-9]*" }}
                       />
                       <TextField
                         label={t.unit}
@@ -610,7 +613,6 @@ const AddStreakBottomSheet: React.FC<AddStreakBottomSheetProps> = ({
                 gap: 1.5,
                 p: 3,
                 pt: 2,
-                backgroundColor: "background.paper",
                 backdropFilter: "blur(10px)",
                 borderTop: "1px solid",
                 borderTopColor: "divider",

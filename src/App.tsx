@@ -99,7 +99,7 @@ function App() {
       selectedDays: formData.selectedDays,
       count: 0,
       createdAt: new Date(),
-      lastUpdated: new Date(0), // Epoch time to ensure it's not clicked today
+      lastUpdated: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 gün önce, böylece bugün tıklanmamış görünür
       order: streaks.length, // Yeni streak en sona eklenir
       category: formData.category,
       emoji: formData.emoji,
@@ -254,7 +254,7 @@ function App() {
           ? {
               ...streak,
               count: 0,
-              lastUpdated: new Date(0), // Epoch time to ensure it's not clicked today
+              lastUpdated: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 gün önce, böylece bugün tıklanmamış görünür
               dailyProgress: 0,
               lastProgressDate: undefined,
               history: [], // History'yi temizle
