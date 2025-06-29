@@ -72,7 +72,9 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
       snapPoints={[0.98, 0.7, 0.4]}
       initialSnap={0}
     >
-      <Sheet.Container style={{ backgroundColor: theme.palette.background.paper }}>
+      <Sheet.Container
+        style={{ backgroundColor: theme.palette.background.paper }}
+      >
         <Sheet.Header>
           <Box
             sx={{
@@ -217,7 +219,12 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                     ref={(el) => {
                       itemRefs.current[todo.id] = el as HTMLDivElement | null;
                     }}
-                    sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 1,
+                    }}
                   >
                     <Button
                       size="small"
@@ -290,7 +297,9 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                           sx={{
                             textDecoration: todo.done ? "line-through" : "none",
                             flex: 1,
-                            color: todo.done ? "text.secondary" : "text.primary",
+                            color: todo.done
+                              ? "text.secondary"
+                              : "text.primary",
                             cursor: "pointer",
                             wordBreak: "break-word",
                             whiteSpace: "pre-line",
