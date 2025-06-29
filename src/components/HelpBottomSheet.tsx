@@ -280,6 +280,94 @@ const HelpBottomSheet: React.FC<HelpBottomSheetProps> = ({
         </Box>
       ),
     },
+    {
+      title: t.moodTracker,
+      description: t.moodStats,
+      content: (
+        <Box sx={{ py: 2 }}>
+          <Card
+            sx={{
+              mb: 3,
+              border: "2px solid",
+              borderColor: "info.main",
+              backgroundColor: "info.50",
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography sx={{ fontSize: "1.5em", mr: 2 }}>😊</Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {t.moodTracker}
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+                    <Chip
+                      label={t.todaysMood}
+                      size="small"
+                      sx={{
+                        backgroundColor: "info.main",
+                        color: "white",
+                        fontSize: "0.65rem",
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                {t.moodEntrySummary.replace("{count}", "--")}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Typography variant="body2" color="text.secondary">
+            {t.moodNoteOptional}
+          </Typography>
+        </Box>
+      ),
+    },
+    {
+      title: t.pomodoroTitle,
+      description: t.pomodoroHistoryTitle,
+      content: (
+        <Box sx={{ py: 2 }}>
+          <Card
+            sx={{
+              mb: 3,
+              border: "2px solid",
+              borderColor: "warning.main",
+              backgroundColor: "warning.50",
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography sx={{ fontSize: "1.5em", mr: 2 }}>⏲️</Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {t.pomodoroTitle}
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+                    <Chip
+                      label={t.pomodoroWork}
+                      size="small"
+                      sx={{
+                        backgroundColor: "warning.main",
+                        color: "white",
+                        fontSize: "0.65rem",
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                {t.pomodoroHistoryTitle}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Typography variant="body2" color="text.secondary">
+            {t.pomodoroFocus} / {t.pomodoroShortBreak} / {t.pomodoroLongBreak}
+          </Typography>
+        </Box>
+      ),
+    },
   ];
 
   const handleNext = () => {
