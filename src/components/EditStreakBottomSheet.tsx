@@ -37,6 +37,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
   const [count, setCount] = useState(0);
   const [dailyGoal, setDailyGoal] = useState(1);
   const [dailyProgress, setDailyProgress] = useState(0);
+  const [emoji, setEmoji] = useState(streak?.emoji || "");
 
   const t = useTranslations(language);
   const theme = useTheme();
@@ -47,6 +48,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
       setCount(streak.count);
       setDailyGoal(streak.dailyGoal || 1);
       setDailyProgress(streak.dailyProgress || 0);
+      setEmoji(streak.emoji || "");
     }
   }, [streak]);
 
@@ -56,6 +58,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
     const updates: Partial<Streak> = {
       name: name.trim(),
       count: Math.max(0, count),
+      emoji: emoji,
     };
 
     if (streak.isQuantityBased) {
@@ -154,7 +157,7 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
             {/* Title */}
 
             {/* Category and Type Info */}
-            <Box sx={{ display: "flex", gap: 1, mb: 3, mt:2 }}>
+            <Box sx={{ display: "flex", gap: 1, mb: 3, mt: 2 }}>
               <Chip
                 label={getCategoryName(streak.category, language)}
                 sx={{
@@ -186,18 +189,42 @@ const EditStreakBottomSheet: React.FC<EditStreakBottomSheetProps> = ({
               >
                 {t.streakName}
               </Typography>
-              <TextField
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t.enterStreakName}
-                variant="outlined"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
-              />
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography variant="caption" sx={{ mb: 0.5 }}>
+                    {t.emoji}
+                  </Typography>
+                  <TextField
+                    value={emoji}
+                    onChange={(e) => setEmoji(e.target.value)}
+                    sx={{
+                      width: 100,
+                      minWidth: 100,
+                      p: 0,
+                      "& input": { textAlign: "center" },
+                    }}
+                    variant="outlined"
+                  />
+                </Box>
+                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                  <Typography variant="caption" sx={{ mb: 0.5 }}>
+                    {t.streakName}
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={t.enterStreakName}
+                  />
+                </Box>
+              </Box>
             </Box>
 
             {/* Count Adjustment */}
