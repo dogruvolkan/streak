@@ -219,7 +219,7 @@ export interface Translations {
     pomodoroPause: string;
     pomodoroReset: string;
 
-    // TodoBottomSheet
+    // TodoBottomSheet keys
     todoTitle: string;
     todoAddPlaceholder: string;
     todoFilterAll: string;
@@ -503,7 +503,7 @@ const englishTranslations: Translations = {
     pomodoroPause: "Pause",
     pomodoroReset: "Reset",
 
-    // TodoBottomSheet
+    // TodoBottomSheet keys
     todoTitle: "Todos",
     todoAddPlaceholder: "Add a new todo...",
     todoFilterAll: "All",

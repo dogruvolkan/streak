@@ -722,6 +722,7 @@ function App() {
           onToggle={handleGlobalToggleTodo}
           onDelete={handleGlobalDeleteTodo}
           onEdit={handleGlobalEditTodo}
+          language={currentLanguage}
         />
 
         {/* Global Money Tracker Bottom Sheet */}
