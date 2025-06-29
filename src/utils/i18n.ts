@@ -218,6 +218,21 @@ export interface Translations {
     pomodoroStart: string;
     pomodoroPause: string;
     pomodoroReset: string;
+
+    // TodoBottomSheet
+    todoTitle: string;
+    todoAddPlaceholder: string;
+    todoFilterAll: string;
+    todoFilterActive: string;
+    todoFilterDone: string;
+    todoClearCompleted: string;
+    todoNoTodos: string;
+    todoNoCompleted: string;
+    todoAllDone: string;
+    todoEditAria: string;
+    todoDeleteAria: string;
+    todoMarkDoneAria: string;
+    todoMarkActiveAria: string;
 }
 
 const englishTranslations: Translations = {
@@ -437,6 +452,21 @@ const englishTranslations: Translations = {
     pomodoroStart: "Start",
     pomodoroPause: "Pause",
     pomodoroReset: "Reset",
+
+    // TodoBottomSheet
+    todoTitle: "Todos",
+    todoAddPlaceholder: "Add a new todo...",
+    todoFilterAll: "All",
+    todoFilterActive: "Active",
+    todoFilterDone: "Completed",
+    todoClearCompleted: "Clear Completed ({count})",
+    todoNoTodos: "No todos yet.",
+    todoNoCompleted: "No completed todos.",
+    todoAllDone: "All todos completed!",
+    todoEditAria: "Edit todo",
+    todoDeleteAria: "Delete",
+    todoMarkDoneAria: "Mark as done",
+    todoMarkActiveAria: "Mark as active",
 };
 
 const turkishTranslations: Translations = {
@@ -655,6 +685,21 @@ const turkishTranslations: Translations = {
     pomodoroStart: "Başlat",
     pomodoroPause: "Duraklat",
     pomodoroReset: "Sıfırla",
+
+    // TodoBottomSheet
+    todoTitle: "Yapılacaklar",
+    todoAddPlaceholder: "Yeni yapılacak ekle...",
+    todoFilterAll: "Tümü",
+    todoFilterActive: "Aktif",
+    todoFilterDone: "Tamamlanan",
+    todoClearCompleted: "Tamamlananları Temizle ({count})",
+    todoNoTodos: "Henüz yapılacak yok.",
+    todoNoCompleted: "Tamamlanan yapılacak yok.",
+    todoAllDone: "Tüm yapılacaklar tamamlandı!",
+    todoEditAria: "Yapılacak düzenle",
+    todoDeleteAria: "Sil",
+    todoMarkDoneAria: "Tamamlandı olarak işaretle",
+    todoMarkActiveAria: "Aktif olarak işaretle",
 };
 
 const translations: Record<Language, Translations> = {

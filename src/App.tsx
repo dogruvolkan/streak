@@ -14,6 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MoodIcon from "@mui/icons-material/Mood";
 import TimerIcon from "@mui/icons-material/Timer";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import StreakList from "./components/StreakList";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
@@ -25,11 +26,13 @@ import ConfettiComponent from "./components/ConfettiComponent";
 import MoodTracker from "./components/MoodTracker";
 import PomodoroTimer from "./components/PomodoroTimer";
 import PomodoroHistoryBottomSheet from "./components/PomodoroHistoryBottomSheet";
+import TodoBottomSheet from "./components/TodoBottomSheet";
 import type {
   Streak,
   CreateStreakFormData,
   FreeDaySettings,
   PomodoroHistoryEntry,
+  TodoItem,
 } from "./types";
 import {
   loadStreaks,
@@ -57,9 +60,12 @@ import {
 import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 import { getTodayMood, getMoodEmoji } from "./utils/mood";
 import { getPomodoroHistory } from "./utils/pomodoro";
+import { loadTodos, saveTodos } from "./utils/todoLocalStorage";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isEditBottomSheetOpen, setIsEditBottomSheetOpen] = useState(false);
   const [isDetailBottomSheetOpen, setIsDetailBottomSheetOpen] = useState(false);
@@ -84,6 +90,7 @@ function App() {
   const [pomodoroHistoryEntries, setPomodoroHistoryEntries] = useState<
     PomodoroHistoryEntry[]
   >([]);
+  const [isTodoSheetOpen, setIsTodoSheetOpen] = useState(false);
 
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
@@ -99,10 +106,11 @@ function App() {
     };
   }, []);
 
-  // Load streaks from localStorage on component mount
+  // Load streaks and todos from localStorage on mount
   useEffect(() => {
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
+    setTodos(loadTodos());
     setIsLoaded(true);
 
     // Load language preference
@@ -138,12 +146,13 @@ function App() {
     getAudioEnabled(); // This loads the preference from localStorage
   }, []);
 
-  // Save streaks to localStorage whenever streaks state changes (but not on initial load)
+  // Save streaks and todos to localStorage
   useEffect(() => {
     if (isLoaded) {
       saveStreaks(streaks);
+      saveTodos(todos);
     }
-  }, [streaks, isLoaded]);
+  }, [streaks, todos, isLoaded]);
 
   const handleAddStreak = (formData: CreateStreakFormData) => {
     const newStreak: Streak = {
@@ -457,6 +466,30 @@ function App() {
     setIsPomodoroHistoryOpen(true);
   };
 
+  const handleGlobalAddTodo = (text: string) => {
+    if (!text.trim()) return;
+    setTodos((prev) => [
+      ...prev,
+      {
+        id: uuidv4(),
+        text: text.trim(),
+        done: false,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+  };
+  const handleGlobalToggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+    );
+  };
+  const handleGlobalDeleteTodo = (id: string) => {
+    setTodos((prev) => prev.filter((t) => t.id !== id));
+  };
+  const handleGlobalEditTodo = (id: string, text: string) => {
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, text } : t)));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -498,6 +531,14 @@ function App() {
             >
               {t.appTitle}
             </Typography>
+            {/* Todo button */}
+            <IconButton
+              onClick={() => setIsTodoSheetOpen(true)}
+              sx={{ color: "primary.main", mr: 1 }}
+              aria-label="Tüm yapılacaklar"
+            >
+              <AssignmentIcon />
+            </IconButton>
             {/* Help button */}
             <IconButton
               onClick={() => setIsHelpOpen(true)}
@@ -675,6 +716,17 @@ function App() {
           onClose={() => setIsPomodoroHistoryOpen(false)}
           entries={pomodoroHistoryEntries}
           date={pomodoroHistoryDate}
+        />
+
+        {/* Global Todo Bottom Sheet */}
+        <TodoBottomSheet
+          open={isTodoSheetOpen}
+          onClose={() => setIsTodoSheetOpen(false)}
+          todoList={todos}
+          onAdd={handleGlobalAddTodo}
+          onToggle={handleGlobalToggleTodo}
+          onDelete={handleGlobalDeleteTodo}
+          onEdit={handleGlobalEditTodo}
         />
       </Box>
     </ThemeProvider>

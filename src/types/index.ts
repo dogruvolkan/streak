@@ -26,6 +26,14 @@ export interface StreakHistoryEntry {
     timestamp: Date; // Tam tarih ve saat
 }
 
+export interface TodoItem {
+    id: string;
+    text: string;
+    done: boolean;
+    streakId?: string; // Hangi alışkanlığa ait
+    createdAt?: string; // ISO string
+}
+
 export interface Streak {
     id: string;
     name: string;

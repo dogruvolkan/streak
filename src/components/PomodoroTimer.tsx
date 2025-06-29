@@ -132,7 +132,7 @@ const PomodoroTimer: React.FC<{
   };
 
   return (
-    <Sheet isOpen={open} onClose={onClose} snapPoints={[0.6]} initialSnap={0}>
+    <Sheet isOpen={open} onClose={onClose} snapPoints={[0.7]} initialSnap={0}>
       <Sheet.Container
         style={{
           backgroundColor: theme.palette.background.paper,
