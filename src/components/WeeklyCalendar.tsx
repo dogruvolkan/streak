@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Badge,
-} from "@mui/material";
+import { Box, Typography, IconButton, Badge } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import type { Language } from "../utils/i18n";
@@ -15,9 +10,14 @@ import { getMoodForDate, getMoodEmoji } from "../utils/mood";
 interface WeeklyCalendarProps {
   language: Language;
   streaks: Streak[];
+  onDayClick?: (date: Date) => void;
 }
 
-const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) => {
+const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
+  language,
+  streaks,
+  onDayClick,
+}) => {
   const t = useTranslations(language);
   const [weekOffset, setWeekOffset] = useState(0); // 0 = bu hafta, -1 = geçen hafta, +1 = gelecek hafta
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -25,8 +25,8 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
 
   // Referans tarihi (bugün + week offset)
   const referenceDate = new Date();
-  referenceDate.setDate(referenceDate.getDate() + (weekOffset * 7));
-  
+  referenceDate.setDate(referenceDate.getDate() + weekOffset * 7);
+
   const today = new Date();
   const currentDay = referenceDate.getDay(); // 0 = Pazar, 1 = Pazartesi, ...
 
@@ -44,15 +44,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
   }
 
   // Kısa gün adları (Pazartesi'den başlayarak)
-  const shortDayNames = [
-    t.mon,
-    t.tue,
-    t.wed,
-    t.thu,
-    t.fri,
-    t.sat,
-    t.sun,
-  ];
+  const shortDayNames = [t.mon, t.tue, t.wed, t.thu, t.fri, t.sat, t.sun];
 
   const isToday = (date: Date) => {
     return date.toDateString() === today.toDateString();
@@ -65,42 +57,42 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
   // Belirli bir gün için tamamlanan streak sayısını hesapla
   const getCompletedStreaksForDate = (date: Date) => {
     if (!streaks || streaks.length === 0) return 0;
-    
+
     // Sadece geçmiş günler ve bugün için hesapla
     if (date > today) return 0;
-    
+
     let completedCount = 0;
-    
-    streaks.forEach(streak => {
+
+    streaks.forEach((streak) => {
       if (!streak.history || streak.history.length === 0) return;
-      
+
       const targetDate = new Date(date);
       targetDate.setHours(0, 0, 0, 0);
-      
+
       // Bu tarihte history'de entry var mı kontrol et
-      const hasEntryOnDate = streak.history.some(entry => {
+      const hasEntryOnDate = streak.history.some((entry) => {
         const entryDate = new Date(entry.date);
         entryDate.setHours(0, 0, 0, 0);
         return entryDate.getTime() === targetDate.getTime();
       });
-      
+
       if (hasEntryOnDate) {
         completedCount++;
       }
     });
-    
+
     return completedCount;
   };
 
   // Find the earliest streak start date to limit backward navigation
   const getEarliestStreakDate = () => {
     if (!streaks || streaks.length === 0) return today;
-    
+
     const earliestDate = streaks.reduce((earliest, streak) => {
       const streakStart = new Date(streak.createdAt);
       return streakStart < earliest ? streakStart : earliest;
     }, today);
-    
+
     return earliestDate;
   };
 
@@ -108,17 +100,17 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
     const earliestDate = getEarliestStreakDate();
     const proposedDate = new Date(referenceDate);
     proposedDate.setDate(proposedDate.getDate() - 7);
-    
+
     // Check if proposed date would be before earliest streak
     if (proposedDate >= earliestDate) {
-      setWeekOffset(prev => prev - 1);
+      setWeekOffset((prev) => prev - 1);
     }
   };
 
   const handleNextWeek = () => {
     // Don't allow going beyond current week
     if (weekOffset < 0) {
-      setWeekOffset(prev => prev + 1);
+      setWeekOffset((prev) => prev + 1);
     }
   };
 
@@ -136,7 +128,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -155,7 +147,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
 
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') {
+    if (e.key === "ArrowLeft") {
       e.preventDefault();
       const earliestDate = getEarliestStreakDate();
       const proposedDate = new Date(referenceDate);
@@ -163,7 +155,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
       if (proposedDate >= earliestDate) {
         handlePreviousWeek();
       }
-    } else if (e.key === 'ArrowRight') {
+    } else if (e.key === "ArrowRight") {
       e.preventDefault();
       if (weekOffset < 0) {
         handleNextWeek();
@@ -175,14 +167,17 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
     if (weekOffset === 0) return t.thisWeek;
     if (weekOffset === -1) return t.lastWeek;
     if (weekOffset === 1) return t.nextWeek;
-    
+
     // For older weeks, show month and year
     const weekDate = new Date(referenceDate);
-    const monthName = weekDate.toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { 
-      month: 'long',
-      year: 'numeric'
-    });
-    
+    const monthName = weekDate.toLocaleDateString(
+      language === "tr" ? "tr-TR" : "en-US",
+      {
+        month: "long",
+        year: "numeric",
+      }
+    );
+
     return monthName;
   };
 
@@ -278,7 +273,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           const completedCount = getCompletedStreaksForDate(date);
           const isFutureDate = date > today;
           const dayMood = getMoodForDate(date);
-          
+
           return (
             <Badge
               key={index}
@@ -286,8 +281,8 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
               showZero={false}
               color="success"
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               sx={{
                 "& .MuiBadge-badge": {
@@ -313,18 +308,21 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
                   px: 0.5,
                   borderRadius: 1.5,
                   backgroundColor: "transparent",
-                  color: isFutureDate 
-                    ? "text.disabled"
-                    : "text.primary",
+                  color: isFutureDate ? "text.disabled" : "text.primary",
                   transition: "all 0.2s ease",
                   minHeight: { xs: 45, sm: 50 },
                   cursor: isFutureDate ? "default" : "pointer",
                   opacity: isFutureDate ? 0.5 : 1,
                   border: isCurrentDay ? "2px solid" : "2px solid transparent",
                   borderColor: isCurrentDay ? "primary.main" : "transparent",
-                  "&:hover": !isFutureDate ? {
-                    backgroundColor: "action.hover",
-                  } : {},
+                  "&:hover": !isFutureDate
+                    ? {
+                        backgroundColor: "action.hover",
+                      }
+                    : {},
+                }}
+                onClick={() => {
+                  if (!isFutureDate && onDayClick) onDayClick(date);
                 }}
               >
                 <Typography
@@ -352,7 +350,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
                 >
                   {formatDate(date)}
                 </Typography>
-                
+
                 {/* Mood indicator */}
                 {dayMood && (
                   <Box
@@ -360,15 +358,15 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
                       mt: 0.5,
                       fontSize: { xs: "0.8rem", sm: "1rem" },
                       lineHeight: 1,
-                      backgroundColor: 'primary.50',
-                      borderRadius: '50%',
+                      backgroundColor: "primary.50",
+                      borderRadius: "50%",
                       width: { xs: 20, sm: 24 },
                       height: { xs: 20, sm: 24 },
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '1px solid',
-                      borderColor: 'primary.200',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid",
+                      borderColor: "primary.200",
                     }}
                   >
                     {getMoodEmoji(dayMood.mood)}
@@ -390,10 +388,11 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           fontSize: "0.7rem",
         }}
       >
-        {t.today}: {today.toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { 
-          weekday: 'long', 
-          day: 'numeric', 
-          month: 'long' 
+        {t.today}:{" "}
+        {today.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
         })}
       </Typography>
     </Box>

@@ -67,3 +67,11 @@ export interface CreateStreakFormData {
     dailyGoal?: number;
     unit?: string;
 }
+
+export interface PomodoroHistoryEntry {
+    id: string;
+    date: string; // YYYY-MM-DD
+    type: 'work' | 'short' | 'long';
+    start: string; // ISO
+    end: string; // ISO
+}

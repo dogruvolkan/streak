@@ -202,6 +202,22 @@ export interface Translations {
     helpFeatureProgress: string;
     helpFeatureProgressDesc: string;
     helpReadyToStart: string;
+
+    // Pomodoro
+    pomodoroTitle: string;
+    pomodoroHistoryTitle: string;
+    pomodoroWork: string;
+    pomodoroShort: string;
+    pomodoroLong: string;
+    pomodoroFocus: string;
+    pomodoroShortBreak: string;
+    pomodoroLongBreak: string;
+    pomodoroToday: string;
+    pomodoroTotal: string;
+    pomodoroNoRecords: string;
+    pomodoroStart: string;
+    pomodoroPause: string;
+    pomodoroReset: string;
 }
 
 const englishTranslations: Translations = {
@@ -405,6 +421,22 @@ const englishTranslations: Translations = {
     helpFeatureProgress: "Motivating Visual Feedback",
     helpFeatureProgressDesc: "Beautiful progress indicators and streak counters that celebrate your wins",
     helpReadyToStart: "Ready to transform your life one habit at a time? Your journey to lasting change starts with just one tap on that + button. You've got this! 💪",
+
+    // Pomodoro
+    pomodoroTitle: "Pomodoro Timer",
+    pomodoroHistoryTitle: "Pomodoro History",
+    pomodoroWork: "Work",
+    pomodoroShort: "Short Break",
+    pomodoroLong: "Long Break",
+    pomodoroFocus: "Focus",
+    pomodoroShortBreak: "Short break",
+    pomodoroLongBreak: "Long break",
+    pomodoroToday: "Today",
+    pomodoroTotal: "Total",
+    pomodoroNoRecords: "No records.",
+    pomodoroStart: "Start",
+    pomodoroPause: "Pause",
+    pomodoroReset: "Reset",
 };
 
 const turkishTranslations: Translations = {
@@ -607,6 +639,22 @@ const turkishTranslations: Translations = {
     helpFeatureProgress: "Görsel İlerleme",
     helpFeatureProgressDesc: "Zaman içindeki büyümeni gör",
     helpReadyToStart: "Daha iyi alışkanlıklar oluşturmaya hazır mısın? İlk alışkanlığını oluşturmak için + butonuna dokun!",
+
+    // Pomodoro
+    pomodoroTitle: "Pomodoro Zamanlayıcı",
+    pomodoroHistoryTitle: "Pomodoro Geçmişi",
+    pomodoroWork: "Çalışma",
+    pomodoroShort: "Kısa Mola",
+    pomodoroLong: "Uzun Mola",
+    pomodoroFocus: "Odaklanma",
+    pomodoroShortBreak: "Kısa mola",
+    pomodoroLongBreak: "Uzun mola",
+    pomodoroToday: "Bu gün",
+    pomodoroTotal: "Toplam",
+    pomodoroNoRecords: "Kayıt yok.",
+    pomodoroStart: "Başlat",
+    pomodoroPause: "Duraklat",
+    pomodoroReset: "Sıfırla",
 };
 
 const translations: Record<Language, Translations> = {

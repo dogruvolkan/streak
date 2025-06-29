@@ -13,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MoodIcon from "@mui/icons-material/Mood";
+import TimerIcon from "@mui/icons-material/Timer";
 import StreakList from "./components/StreakList";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
@@ -22,7 +23,14 @@ import HelpBottomSheet from "./components/HelpBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import MoodTracker from "./components/MoodTracker";
-import type { Streak, CreateStreakFormData, FreeDaySettings } from "./types";
+import PomodoroTimer from "./components/PomodoroTimer";
+import PomodoroHistoryBottomSheet from "./components/PomodoroHistoryBottomSheet";
+import type {
+  Streak,
+  CreateStreakFormData,
+  FreeDaySettings,
+  PomodoroHistoryEntry,
+} from "./types";
 import {
   loadStreaks,
   saveStreaks,
@@ -48,6 +56,7 @@ import {
 } from "./utils/theme";
 import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 import { getTodayMood, getMoodEmoji } from "./utils/mood";
+import { getPomodoroHistory } from "./utils/pomodoro";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
@@ -70,6 +79,12 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isMoodTrackerOpen, setIsMoodTrackerOpen] = useState(false);
   const [moodRefresh, setMoodRefresh] = useState(0); // Force re-render for mood updates
+  const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
+  const [isPomodoroHistoryOpen, setIsPomodoroHistoryOpen] = useState(false);
+  const [pomodoroHistoryDate, setPomodoroHistoryDate] = useState<string>("");
+  const [pomodoroHistoryEntries, setPomodoroHistoryEntries] = useState<
+    PomodoroHistoryEntry[]
+  >([]);
 
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
@@ -187,7 +202,11 @@ function App() {
         // Miktar bazlı streakler için özel logic
         if (streak.isQuantityBased) {
           // Haftalık repeat type için gün kontrolü (sadece selectedDays varsa)
-          if (streak.repeatType === "week" && streak.selectedDays && streak.selectedDays.length > 0) {
+          if (
+            streak.repeatType === "week" &&
+            streak.selectedDays &&
+            streak.selectedDays.length > 0
+          ) {
             const todayDayOfWeek = today.getDay();
             if (!streak.selectedDays.includes(todayDayOfWeek)) {
               return streak; // Bu gün seçili değil, değişiklik yapma
@@ -224,7 +243,11 @@ function App() {
         // Normal streakler için limit kontrolleri
         const canClickBasedOnRepeatType = () => {
           // Haftalık repeat type için gün kontrolü (sadece selectedDays varsa)
-          if (streak.repeatType === "week" && streak.selectedDays && streak.selectedDays.length > 0) {
+          if (
+            streak.repeatType === "week" &&
+            streak.selectedDays &&
+            streak.selectedDays.length > 0
+          ) {
             const todayDayOfWeek = today.getDay();
             if (!streak.selectedDays.includes(todayDayOfWeek)) {
               return false; // Bu gün seçili değil
@@ -238,7 +261,7 @@ function App() {
             if (!streak.history || streak.history.length === 0) {
               return true; // Hiç tıklanmamış, tıklanabilir
             }
-            
+
             return !streak.history.some((entry) => {
               const entryDate = new Date(entry.date);
               entryDate.setHours(0, 0, 0, 0);
@@ -251,7 +274,7 @@ function App() {
             if (!streak.history || streak.history.length === 0) {
               return true; // Hiç tıklanmamış, tıklanabilir
             }
-            
+
             const startOfWeek = new Date(today);
             const dayOfWeek = today.getDay();
             startOfWeek.setDate(today.getDate() - dayOfWeek);
@@ -427,6 +450,14 @@ function App() {
     setEditingStreak(null);
   };
 
+  // Takvimde bir güne tıklanınca Pomodoro geçmişini aç
+  const handleCalendarDayClick = (date: Date) => {
+    const dateStr = date.toISOString().slice(0, 10);
+    setPomodoroHistoryDate(dateStr);
+    setPomodoroHistoryEntries(getPomodoroHistory(dateStr));
+    setIsPomodoroHistoryOpen(true);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -434,12 +465,12 @@ function App() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "100vh", // Fixed height instead of minHeight
+          height: "100vh",
           backgroundColor: "background.default",
           position: "relative",
           width: "100%",
           maxWidth: "100vw",
-          overflow: "hidden", // Prevent body scroll
+          overflow: "hidden",
         }}
       >
         {/* Header with settings button */}
@@ -453,7 +484,7 @@ function App() {
             right: 0,
             top: 0,
             paddingTop: "env(safe-area-inset-top)",
-            zIndex: 1300, // Higher z-index to stay above everything
+            zIndex: 1300,
           }}
         >
           <Toolbar>
@@ -468,57 +499,52 @@ function App() {
             >
               {t.appTitle}
             </Typography>
-
             {/* Help button */}
             <IconButton
               onClick={() => setIsHelpOpen(true)}
-              sx={{
-                color: "primary.main",
-                mr: 1,
-              }}
+              sx={{ color: "primary.main", mr: 1 }}
             >
               <HelpOutlineIcon />
             </IconButton>
-
+            {/* Pomodoro Timer button */}
+            <IconButton
+              onClick={() => setIsPomodoroOpen(true)}
+              sx={{ color: "primary.main", mr: 1 }}
+            >
+              <TimerIcon />
+            </IconButton>
             {/* Mood Tracker button */}
             <IconButton
               onClick={() => setIsMoodTrackerOpen(true)}
-              sx={{
-                color: "primary.main",
-                mr: 1,
-                position: 'relative',
-              }}
+              sx={{ color: "primary.main", mr: 1 }}
             >
               <MoodIcon />
               {getTodayMood() && (
                 <Box
                   sx={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: -2,
                     right: -2,
-                    fontSize: '0.75rem',
-                    backgroundColor: 'background.paper',
-                    borderRadius: '50%',
+                    fontSize: "0.75rem",
+                    backgroundColor: "background.paper",
+                    borderRadius: "50%",
                     minWidth: 18,
                     height: 18,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid',
-                    borderColor: 'primary.main',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "1px solid",
+                    borderColor: "primary.main",
                   }}
                 >
                   {getMoodEmoji(getTodayMood()!.mood)}
                 </Box>
               )}
             </IconButton>
-
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
-              sx={{
-                color: "primary.main",
-              }}
+              sx={{ color: "primary.main" }}
             >
               <SettingsIcon />
             </IconButton>
@@ -538,12 +564,12 @@ function App() {
           }}
         >
           {/* Weekly Calendar */}
-          <WeeklyCalendar 
-            key={moodRefresh} 
-            language={currentLanguage} 
-            streaks={streaks} 
+          <WeeklyCalendar
+            language={currentLanguage}
+            streaks={streaks}
+            onDayClick={handleCalendarDayClick}
           />
-          
+
           <StreakList
             streaks={streaks}
             onIncrement={handleIncrementStreak}
@@ -632,8 +658,8 @@ function App() {
           language={currentLanguage}
           onMoodAdded={() => {
             // Refresh calendar to show new mood
-            setMoodRefresh(prev => prev + 1);
-            console.log('Mood entry added successfully!');
+            setMoodRefresh((prev) => prev + 1);
+            console.log("Mood entry added successfully!");
           }}
         />
 
@@ -643,19 +669,18 @@ function App() {
           onComplete={() => setShowConfetti(false)}
         />
 
-        {/* Settings Bottom Sheet */}
-        <Settings
-          open={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          language={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-          themeMode={themeMode}
-          onThemeModeChange={handleThemeModeChange}
-          themeColor={themeColor}
-          onThemeColorChange={handleThemeColorChange}
-          onClearData={handleClearData}
-          freeDaySettings={freeDaySettings}
-          onFreeDaySettingsChange={setFreeDaySettings}
+        {/* Pomodoro Timer Modal */}
+        <PomodoroTimer
+          open={isPomodoroOpen}
+          onClose={() => setIsPomodoroOpen(false)}
+        />
+
+        {/* Pomodoro History Bottom Sheet */}
+        <PomodoroHistoryBottomSheet
+          open={isPomodoroHistoryOpen}
+          onClose={() => setIsPomodoroHistoryOpen(false)}
+          entries={pomodoroHistoryEntries}
+          date={pomodoroHistoryDate}
         />
       </Box>
     </ThemeProvider>
