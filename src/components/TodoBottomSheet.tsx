@@ -39,6 +39,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
   const [editingText, setEditingText] = React.useState("");
   const [todoInput, setTodoInput] = React.useState("");
   const [filter, setFilter] = useState<"all" | "active" | "done">("all");
+  const [isEditing, setIsEditing] = useState(false);
 
   // Her todo için ref tut
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -46,7 +47,10 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
   // Edit moduna girildiğinde ilgili satırı merkeze kaydır
   useEffect(() => {
     if (editingId && itemRefs.current[editingId]) {
-      itemRefs.current[editingId]?.scrollIntoView({ behavior: "smooth", block: "center" });
+      itemRefs.current[editingId]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [editingId]);
 
@@ -63,7 +67,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
     <Sheet
       isOpen={open}
       onClose={onClose}
-      snapPoints={[0.8, 0.4]}
+      snapPoints={[0.98, 0.7, 0.4]}
       initialSnap={0}
     >
       <Sheet.Container
@@ -103,7 +107,10 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
           </Box>
         </Sheet.Header>
         <Sheet.Content
-          style={{ backgroundColor: theme.palette.background.default }}
+          style={{
+            backgroundColor: theme.palette.background.default,
+            paddingBottom: isEditing ? 120 : undefined,
+          }}
         >
           <Box sx={{ p: 3 }}>
             {/* Todo Input */}
@@ -195,7 +202,9 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
               filteredTodos.map((todo) => (
                 <Box
                   key={todo.id}
-                  ref={el => { itemRefs.current[todo.id] = el as HTMLDivElement | null; }}
+                  ref={(el) => {
+                    itemRefs.current[todo.id] = el as HTMLDivElement | null;
+                  }}
                   sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
                 >
                   <Button
@@ -216,15 +225,19 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                         size="small"
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
+                        onFocus={() => setIsEditing(true)}
+                        onBlur={() => setIsEditing(false)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             onEdit(todo.id, editingText);
                             setEditingId(null);
                             setEditingText("");
+                            setIsEditing(false);
                           }
                           if (e.key === "Escape") {
                             setEditingId(null);
                             setEditingText("");
+                            setIsEditing(false);
                           }
                         }}
                         autoFocus
@@ -240,6 +253,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                           onEdit(todo.id, editingText);
                           setEditingId(null);
                           setEditingText("");
+                          setIsEditing(false);
                         }}
                         sx={{ minWidth: 32, px: 1 }}
                       >
@@ -251,6 +265,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                         onClick={() => {
                           setEditingId(null);
                           setEditingText("");
+                          setIsEditing(false);
                         }}
                         sx={{ minWidth: 32, px: 1 }}
                       >
