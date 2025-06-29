@@ -63,6 +63,8 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
 
   const completedCount = todoList.filter((t) => t.done).length;
 
+  const listScrollable = filteredTodos.length > 4;
+
   return (
     <Sheet
       isOpen={open}
@@ -70,9 +72,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
       snapPoints={[0.98, 0.7, 0.4]}
       initialSnap={0}
     >
-      <Sheet.Container
-        style={{ backgroundColor: theme.palette.background.paper }}
-      >
+      <Sheet.Container style={{ backgroundColor: theme.palette.background.paper }}>
         <Sheet.Header>
           <Box
             sx={{
@@ -199,112 +199,125 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
                   : t.todoNoTodos}
               </Typography>
             ) : (
-              filteredTodos.map((todo) => (
-                <Box
-                  key={todo.id}
-                  ref={(el) => {
-                    itemRefs.current[todo.id] = el as HTMLDivElement | null;
-                  }}
-                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-                >
-                  <Button
-                    size="small"
-                    variant={todo.done ? "contained" : "outlined"}
-                    color={todo.done ? "success" : "primary"}
-                    onClick={() => onToggle(todo.id)}
-                    sx={{ minWidth: 32, px: 1 }}
-                    aria-label={
-                      todo.done ? t.todoMarkDoneAria : t.todoMarkActiveAria
-                    }
+              <Box
+                sx={
+                  listScrollable
+                    ? {
+                        maxHeight: 320,
+                        overflowY: "auto",
+                        pr: 1,
+                        transition: "max-height 0.2s",
+                      }
+                    : {}
+                }
+              >
+                {filteredTodos.map((todo) => (
+                  <Box
+                    key={todo.id}
+                    ref={(el) => {
+                      itemRefs.current[todo.id] = el as HTMLDivElement | null;
+                    }}
+                    sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
                   >
-                    ✓
-                  </Button>
-                  {editingId === todo.id ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                        onFocus={() => setIsEditing(true)}
-                        onBlur={() => setIsEditing(false)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
+                    <Button
+                      size="small"
+                      variant={todo.done ? "contained" : "outlined"}
+                      color={todo.done ? "success" : "primary"}
+                      onClick={() => onToggle(todo.id)}
+                      sx={{ minWidth: 32, px: 1 }}
+                      aria-label={
+                        todo.done ? t.todoMarkDoneAria : t.todoMarkActiveAria
+                      }
+                    >
+                      ✓
+                    </Button>
+                    {editingId === todo.id ? (
+                      <>
+                        <TextField
+                          size="small"
+                          value={editingText}
+                          onChange={(e) => setEditingText(e.target.value)}
+                          onFocus={() => setIsEditing(true)}
+                          onBlur={() => setIsEditing(false)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              onEdit(todo.id, editingText);
+                              setEditingId(null);
+                              setEditingText("");
+                              setIsEditing(false);
+                            }
+                            if (e.key === "Escape") {
+                              setEditingId(null);
+                              setEditingText("");
+                              setIsEditing(false);
+                            }
+                          }}
+                          autoFocus
+                          sx={{ flex: 1 }}
+                          inputProps={{ "aria-label": t.todoEditAria }}
+                          multiline
+                          maxRows={3}
+                        />
+                        <Button
+                          size="small"
+                          color="success"
+                          onClick={() => {
                             onEdit(todo.id, editingText);
                             setEditingId(null);
                             setEditingText("");
                             setIsEditing(false);
-                          }
-                          if (e.key === "Escape") {
+                          }}
+                          sx={{ minWidth: 32, px: 1 }}
+                        >
+                          ✓
+                        </Button>
+                        <Button
+                          size="small"
+                          color="inherit"
+                          onClick={() => {
                             setEditingId(null);
                             setEditingText("");
                             setIsEditing(false);
-                          }
-                        }}
-                        autoFocus
-                        sx={{ flex: 1 }}
-                        inputProps={{ "aria-label": t.todoEditAria }}
-                        multiline
-                        maxRows={3}
-                      />
-                      <Button
-                        size="small"
-                        color="success"
-                        onClick={() => {
-                          onEdit(todo.id, editingText);
-                          setEditingId(null);
-                          setEditingText("");
-                          setIsEditing(false);
-                        }}
-                        sx={{ minWidth: 32, px: 1 }}
-                      >
-                        ✓
-                      </Button>
-                      <Button
-                        size="small"
-                        color="inherit"
-                        onClick={() => {
-                          setEditingId(null);
-                          setEditingText("");
-                          setIsEditing(false);
-                        }}
-                        sx={{ minWidth: 32, px: 1 }}
-                      >
-                        ✕
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Typography
-                        sx={{
-                          textDecoration: todo.done ? "line-through" : "none",
-                          flex: 1,
-                          color: todo.done ? "text.secondary" : "text.primary",
-                          cursor: "pointer",
-                          wordBreak: "break-word",
-                          whiteSpace: "pre-line",
-                        }}
-                        variant="body2"
-                        onClick={() => {
-                          setEditingId(todo.id);
-                          setEditingText(todo.text);
-                        }}
-                        aria-label={t.todoEditAria}
-                      >
-                        {todo.text}
-                      </Typography>
-                      <Button
-                        size="small"
-                        color="error"
-                        onClick={() => onDelete(todo.id)}
-                        sx={{ minWidth: 32, px: 1 }}
-                        aria-label={t.todoDeleteAria}
-                      >
-                        ✕
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              ))
+                          }}
+                          sx={{ minWidth: 32, px: 1 }}
+                        >
+                          ✕
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Typography
+                          sx={{
+                            textDecoration: todo.done ? "line-through" : "none",
+                            flex: 1,
+                            color: todo.done ? "text.secondary" : "text.primary",
+                            cursor: "pointer",
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-line",
+                          }}
+                          variant="body2"
+                          onClick={() => {
+                            setEditingId(todo.id);
+                            setEditingText(todo.text);
+                          }}
+                          aria-label={t.todoEditAria}
+                        >
+                          {todo.text}
+                        </Typography>
+                        <Button
+                          size="small"
+                          color="error"
+                          onClick={() => onDelete(todo.id)}
+                          sx={{ minWidth: 32, px: 1 }}
+                          aria-label={t.todoDeleteAria}
+                        >
+                          ✕
+                        </Button>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
             )}
           </Box>
         </Sheet.Content>
