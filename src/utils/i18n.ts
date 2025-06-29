@@ -233,7 +233,52 @@ export interface Translations {
     todoDeleteAria: string;
     todoMarkDoneAria: string;
     todoMarkActiveAria: string;
-}
+
+    // Money Tracker
+    moneyTrackerTitle: string;
+    income: string;
+    expense: string;
+    amount: string;
+    description: string;
+    totalIncome: string;
+    totalExpense: string;
+    balance: string;
+    noMoneyEntries: string;
+    close: string;
+    currencyLabel: string;
+    budgetLabel: string;
+    budgetLeft: string;
+    categoryLabel: string;
+    categoryShopping: string;
+    categoryFood: string;
+    categorySalary: string;
+    categoryTransport: string;
+    categoryOther: string;
+    // Yeni kategori çevirileri
+    categoryFreelance: string;
+    categoryBonus: string;
+    categoryInterest: string;
+    categoryInvestment: string;
+    categoryRental: string;
+    categoryGift: string;
+    categoryLottery: string;
+    categorySales: string;
+    categoryRent: string;
+    categoryBills: string;
+    categoryGroceries: string;
+    categorySubscriptions: string;
+    categoryHealth: string;
+    categoryEducation: string;
+    categoryCreditCard: string;
+    categoryEntertainment: string;
+    categoryClothing: string;
+    categoryTravel: string;
+    categoryDonation: string;
+    categoryHome: string;
+    totalIncomeVsExpense: string;
+    carryOverBalance: string;
+    startByAddingEntry: string;
+};
 
 const englishTranslations: Translations = {
     // App title and header
@@ -467,6 +512,51 @@ const englishTranslations: Translations = {
     todoDeleteAria: "Delete",
     todoMarkDoneAria: "Mark as done",
     todoMarkActiveAria: "Mark as active",
+
+    // Money Tracker
+    moneyTrackerTitle: "Money Tracker",
+    income: "Income",
+    expense: "Expense",
+    amount: "Amount",
+    description: "Description",
+    totalIncome: "Total Income",
+    totalExpense: "Total Expense",
+    balance: "Balance",
+    noMoneyEntries: "No entries yet.",
+    close: "Close",
+    currencyLabel: "Currency",
+    budgetLabel: "Budget",
+    budgetLeft: "Remaining Budget",
+    categoryLabel: "Category",
+    categoryShopping: "Shopping",
+    categoryFood: "Food",
+    categorySalary: "Salary",
+    categoryTransport: "Transportation",
+    categoryOther: "Other",
+    // New category translations
+    categoryFreelance: "Freelance",
+    categoryBonus: "Bonus",
+    categoryInterest: "Interest Income",
+    categoryInvestment: "Investment Income",
+    categoryRental: "Rental Income",
+    categoryGift: "Gift",
+    categoryLottery: "Lottery / Prize",
+    categorySales: "Sales Income",
+    categoryRent: "Rent",
+    categoryBills: "Bills",
+    categoryGroceries: "Groceries",
+    categorySubscriptions: "Subscriptions",
+    categoryHealth: "Health",
+    categoryEducation: "Education",
+    categoryCreditCard: "Credit Card Payment",
+    categoryEntertainment: "Entertainment / Social Life",
+    categoryClothing: "Clothing",
+    categoryTravel: "Vacation / Travel",
+    categoryDonation: "Gift / Donation",
+    categoryHome: "Home Goods / Furniture",
+    totalIncomeVsExpense: "Income vs Expense",
+    carryOverBalance: "Carry Over",
+    startByAddingEntry: "Start by adding your first entry above",
 };
 
 const turkishTranslations: Translations = {
@@ -700,6 +790,51 @@ const turkishTranslations: Translations = {
     todoDeleteAria: "Sil",
     todoMarkDoneAria: "Tamamlandı olarak işaretle",
     todoMarkActiveAria: "Aktif olarak işaretle",
+
+    // Money Tracker
+    moneyTrackerTitle: "Para Takibi",
+    income: "Gelir",
+    expense: "Gider",
+    amount: "Tutar",
+    description: "Açıklama",
+    totalIncome: "Toplam Gelir",
+    totalExpense: "Toplam Gider",
+    balance: "Bakiye",
+    noMoneyEntries: "Henüz kayıt yok.",
+    close: "Kapat",
+    currencyLabel: "Para Birimi",
+    budgetLabel: "Bütçe",
+    budgetLeft: "Kalan Bütçe",
+    categoryLabel: "Kategori",
+    categoryShopping: "Alışveriş",
+    categoryFood: "Yemek",
+    categorySalary: "Maaş",
+    categoryTransport: "Ulaşım",
+    categoryOther: "Diğer",
+    // Yeni kategori çevirileri
+    categoryFreelance: "Serbest Çalışma",
+    categoryBonus: "Prim / Bonus",
+    categoryInterest: "Faiz Geliri",
+    categoryInvestment: "Yatırım Geliri",
+    categoryRental: "Kira Geliri",
+    categoryGift: "Hediye",
+    categoryLottery: "İkramiye / Piyango",
+    categorySales: "Satış Geliri",
+    categoryRent: "Kira",
+    categoryBills: "Faturalar",
+    categoryGroceries: "Market / Alışveriş",
+    categorySubscriptions: "Abonelikler",
+    categoryHealth: "Sağlık",
+    categoryEducation: "Eğitim",
+    categoryCreditCard: "Kredi Kartı Ödemesi",
+    categoryEntertainment: "Eğlence / Sosyal Yaşam",
+    categoryClothing: "Giyim",
+    categoryTravel: "Tatil / Seyahat",
+    categoryDonation: "Hediye / Bağış",
+    categoryHome: "Ev Eşyası / Mobilya",
+    totalIncomeVsExpense: "Gelir vs Gider",
+    carryOverBalance: "Devreden",
+    startByAddingEntry: "Yukarıdan ilk kaydınızı ekleyin",
 };
 
 const translations: Record<Language, Translations> = {

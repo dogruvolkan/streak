@@ -15,6 +15,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MoodIcon from "@mui/icons-material/Mood";
 import TimerIcon from "@mui/icons-material/Timer";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import StreakList from "./components/StreakList";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
@@ -27,6 +28,7 @@ import MoodTracker from "./components/MoodTracker";
 import PomodoroTimer from "./components/PomodoroTimer";
 import PomodoroHistoryBottomSheet from "./components/PomodoroHistoryBottomSheet";
 import TodoBottomSheet from "./components/TodoBottomSheet";
+import MoneyTrackerBottomSheet from "./components/MoneyTrackerBottomSheet";
 import type {
   Streak,
   CreateStreakFormData,
@@ -61,11 +63,15 @@ import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 import { getTodayMood, getMoodEmoji } from "./utils/mood";
 import { getPomodoroHistory } from "./utils/pomodoro";
 import { loadTodos, saveTodos } from "./utils/todoLocalStorage";
+import { loadMoneyEntries, saveMoneyEntries } from "./utils/moneyLocalStorage";
 import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
   const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [moneyList, setMoneyList] = useState<
+    import("./components/MoneyTrackerBottomSheet").MoneyEntry[]
+  >([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isEditBottomSheetOpen, setIsEditBottomSheetOpen] = useState(false);
   const [isDetailBottomSheetOpen, setIsDetailBottomSheetOpen] = useState(false);
@@ -91,6 +97,7 @@ function App() {
     PomodoroHistoryEntry[]
   >([]);
   const [isTodoSheetOpen, setIsTodoSheetOpen] = useState(false);
+  const [isMoneySheetOpen, setIsMoneySheetOpen] = useState(false);
 
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
@@ -111,6 +118,7 @@ function App() {
     const loadedStreaks = loadStreaks();
     setStreaks(loadedStreaks);
     setTodos(loadTodos());
+    setMoneyList(loadMoneyEntries());
     setIsLoaded(true);
 
     // Load language preference
@@ -151,8 +159,9 @@ function App() {
     if (isLoaded) {
       saveStreaks(streaks);
       saveTodos(todos);
+      saveMoneyEntries(moneyList);
     }
-  }, [streaks, todos, isLoaded]);
+  }, [streaks, todos, isLoaded, moneyList]);
 
   const handleAddStreak = (formData: CreateStreakFormData) => {
     const newStreak: Streak = {
@@ -490,6 +499,16 @@ function App() {
     setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, text } : t)));
   };
 
+  // Money tracker handlers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleAddMoney = (entry: any) => {
+    setMoneyList((prev) => [...prev, { ...entry, id: uuidv4() }]);
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDeleteMoney = (id: any) => {
+    setMoneyList((prev) => prev.filter((e) => e.id !== id));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -587,6 +606,14 @@ function App() {
               sx={{ color: "primary.main" }}
             >
               <SettingsIcon />
+            </IconButton>
+            {/* Money Tracker button */}
+            <IconButton
+              onClick={() => setIsMoneySheetOpen(true)}
+              sx={{ color: "primary.main", mr: 1 }}
+              aria-label="Para Takibi"
+            >
+              <MonetizationOnIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -727,6 +754,16 @@ function App() {
           onToggle={handleGlobalToggleTodo}
           onDelete={handleGlobalDeleteTodo}
           onEdit={handleGlobalEditTodo}
+        />
+
+        {/* Global Money Tracker Bottom Sheet */}
+        <MoneyTrackerBottomSheet
+          open={isMoneySheetOpen}
+          onClose={() => setIsMoneySheetOpen(false)}
+          moneyList={moneyList}
+          onAdd={handleAddMoney}
+          onDelete={handleDeleteMoney}
+          language={currentLanguage}
         />
       </Box>
     </ThemeProvider>
