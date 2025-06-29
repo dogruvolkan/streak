@@ -53,7 +53,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
     <Sheet
       isOpen={open}
       onClose={onClose}
-      snapPoints={[0.7, 0.4]}
+      snapPoints={[0.8, 0.4]}
       initialSnap={0}
     >
       <Sheet.Container
