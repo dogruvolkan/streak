@@ -1,5 +1,25 @@
 export type StreakCategory = 'health' | 'fitness' | 'nutrition' | 'productivity' | 'learning' | 'hobby' | 'personal' | 'social' | 'finance' | 'other';
 
+// Mood tracking types
+export type MoodLevel = 1 | 2 | 3 | 4 | 5; // 1=very bad, 2=bad, 3=neutral, 4=good, 5=very good
+
+export interface MoodEntry {
+    id: string;
+    date: Date;
+    mood: MoodLevel;
+    note?: string; // Optional note about the mood
+    createdAt: Date;
+}
+
+export interface MoodStats {
+    averageMood: number;
+    totalEntries: number;
+    moodDistribution: Record<MoodLevel, number>;
+    bestDay?: Date;
+    worstDay?: Date;
+    currentStreak: number; // Days with mood tracking
+}
+
 export interface StreakHistoryEntry {
     date: Date;
     quantity?: number; // Miktar bazlı streakler için

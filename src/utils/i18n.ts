@@ -147,6 +147,28 @@ export interface Translations {
     specificDays: string;
     specificDaysDesc: string;
 
+    moodTracker: string;
+    howAreYouFeeling: string;
+    todaysMood: string;
+    selectMood: string;
+    moodNote: string;
+    moodNoteOptional: string;
+    moodVeryBad: string;
+    moodBad: string;
+    moodNeutral: string;
+    moodGood: string;
+    moodVeryGood: string;
+    moodSaved: string;
+    moodStats: string;
+    averageMood: string;
+    trackingStreak: string;
+    moodDistribution: string;
+    notableDays: string;
+    bestDay: string;
+    toughestDay: string;
+    noMoodData: string;
+    moodEntrySummary: string;
+
     // Help/Tutorial content
     helpWelcomeTitle: string;
     helpWelcomeDesc: string;
@@ -327,6 +349,29 @@ const englishTranslations: Translations = {
     specificDays: "Specific Days",
     specificDaysDesc: "You can only click on selected days",
 
+    // Mood Tracking
+    moodTracker: "Mood Tracker",
+    howAreYouFeeling: "How Are You Feeling?",
+    todaysMood: "Today's mood:",
+    selectMood: "How are you feeling today?",
+    moodNote: "Note (optional)",
+    moodNoteOptional: "What happened today? How did you feel?",
+    moodVeryBad: "Very Bad",
+    moodBad: "Bad",
+    moodNeutral: "Neutral",
+    moodGood: "Good",
+    moodVeryGood: "Very Good",
+    moodSaved: "Mood saved successfully!",
+    moodStats: "Mood Statistics",
+    averageMood: "Average Mood",
+    trackingStreak: "Tracking Streak",
+    moodDistribution: "Mood Distribution",
+    notableDays: "Notable Days",
+    bestDay: "Best:",
+    toughestDay: "Toughest:",
+    noMoodData: "No mood entries yet. Start tracking your mood today!",
+    moodEntrySummary: "You've tracked your mood for {count} days in the last 30 days. Keep it up! 🌟",
+
     // Help/Tutorial content
     helpWelcomeTitle: "Welcome to Streak Tracker! 🎯",
     helpWelcomeDesc: "Your personal companion for building life-changing habits",
@@ -506,6 +551,28 @@ const turkishTranslations: Translations = {
     weeklyOnceDesc: "Herhangi bir gün tıklayabilirsin",
     specificDays: "Belirli Günlerde",
     specificDaysDesc: "Sadece seçilen günlerde tıklayabilirsin",
+
+    moodTracker: "Ruh Hali Takibi",
+    howAreYouFeeling: "Ruh Halim",
+    todaysMood: "Bugünkü ruh halin:",
+    selectMood: "Bugün nasıl hissediyorsun?",
+    moodNote: "Not (opsiyonel)",
+    moodNoteOptional: "Bugün neler yaşadın, neler hissettin?",
+    moodVeryBad: "Çok Kötü",
+    moodBad: "Kötü",
+    moodNeutral: "Normal",
+    moodGood: "İyi",
+    moodVeryGood: "Çok İyi",
+    moodSaved: "Ruh hali başarıyla kaydedildi!",
+    moodStats: "Ruh Hali İstatistikleri",
+    averageMood: "Ortalama Ruh Hali",
+    trackingStreak: "Kayıt Serisi",
+    moodDistribution: "Ruh Hali Dağılımı",
+    notableDays: "Önemli Günler",
+    bestDay: "En İyi:",
+    toughestDay: "En Zor:",
+    noMoodData: "Henüz ruh hali kaydın yok. İlk ruh halini kaydetmeye başla!",
+    moodEntrySummary: "Son 30 günde {count} gün ruh halini kaydettiniz. Devam edin! 🌟",
 
     // Help/Tutorial content
     helpWelcomeTitle: "Streak Tracker'a Hoş Geldin! 🎯",

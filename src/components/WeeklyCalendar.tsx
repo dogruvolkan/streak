@@ -10,6 +10,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import type { Language } from "../utils/i18n";
 import { useTranslations } from "../utils/i18n";
 import type { Streak } from "../types";
+import { getMoodForDate, getMoodEmoji } from "../utils/mood";
 
 interface WeeklyCalendarProps {
   language: Language;
@@ -276,6 +277,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
           const isCurrentDay = isToday(date);
           const completedCount = getCompletedStreaksForDate(date);
           const isFutureDate = date > today;
+          const dayMood = getMoodForDate(date);
           
           return (
             <Badge
@@ -350,6 +352,28 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ language, streaks }) =>
                 >
                   {formatDate(date)}
                 </Typography>
+                
+                {/* Mood indicator */}
+                {dayMood && (
+                  <Box
+                    sx={{
+                      mt: 0.5,
+                      fontSize: { xs: "0.8rem", sm: "1rem" },
+                      lineHeight: 1,
+                      backgroundColor: 'primary.50',
+                      borderRadius: '50%',
+                      width: { xs: 20, sm: 24 },
+                      height: { xs: 20, sm: 24 },
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid',
+                      borderColor: 'primary.200',
+                    }}
+                  >
+                    {getMoodEmoji(dayMood.mood)}
+                  </Box>
+                )}
               </Box>
             </Badge>
           );

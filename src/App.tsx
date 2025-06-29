@@ -12,6 +12,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import MoodIcon from "@mui/icons-material/Mood";
 import StreakList from "./components/StreakList";
 import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
@@ -20,6 +21,7 @@ import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
 import HelpBottomSheet from "./components/HelpBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
+import MoodTracker from "./components/MoodTracker";
 import type { Streak, CreateStreakFormData, FreeDaySettings } from "./types";
 import {
   loadStreaks,
@@ -45,6 +47,7 @@ import {
   type ThemeColor,
 } from "./utils/theme";
 import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
+import { getTodayMood, getMoodEmoji } from "./utils/mood";
 
 function App() {
   const [streaks, setStreaks] = useState<Streak[]>([]);
@@ -65,6 +68,8 @@ function App() {
   });
 
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isMoodTrackerOpen, setIsMoodTrackerOpen] = useState(false);
+  const [moodRefresh, setMoodRefresh] = useState(0); // Force re-render for mood updates
 
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
@@ -475,6 +480,39 @@ function App() {
               <HelpOutlineIcon />
             </IconButton>
 
+            {/* Mood Tracker button */}
+            <IconButton
+              onClick={() => setIsMoodTrackerOpen(true)}
+              sx={{
+                color: "primary.main",
+                mr: 1,
+                position: 'relative',
+              }}
+            >
+              <MoodIcon />
+              {getTodayMood() && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -2,
+                    right: -2,
+                    fontSize: '0.75rem',
+                    backgroundColor: 'background.paper',
+                    borderRadius: '50%',
+                    minWidth: 18,
+                    height: 18,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid',
+                    borderColor: 'primary.main',
+                  }}
+                >
+                  {getMoodEmoji(getTodayMood()!.mood)}
+                </Box>
+              )}
+            </IconButton>
+
             {/* Settings button */}
             <IconButton
               onClick={() => setIsSettingsOpen(true)}
@@ -500,7 +538,11 @@ function App() {
           }}
         >
           {/* Weekly Calendar */}
-          <WeeklyCalendar language={currentLanguage} streaks={streaks} />
+          <WeeklyCalendar 
+            key={moodRefresh} 
+            language={currentLanguage} 
+            streaks={streaks} 
+          />
           
           <StreakList
             streaks={streaks}
@@ -581,6 +623,18 @@ function App() {
           open={isHelpOpen}
           onClose={() => setIsHelpOpen(false)}
           language={currentLanguage}
+        />
+
+        {/* Mood Tracker Bottom Sheet */}
+        <MoodTracker
+          open={isMoodTrackerOpen}
+          onClose={() => setIsMoodTrackerOpen(false)}
+          language={currentLanguage}
+          onMoodAdded={() => {
+            // Refresh calendar to show new mood
+            setMoodRefresh(prev => prev + 1);
+            console.log('Mood entry added successfully!');
+          }}
         />
 
         {/* Confetti Component */}
