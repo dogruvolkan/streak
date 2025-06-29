@@ -4,7 +4,7 @@ import {
   Typography,
   Button,
   IconButton,
-  LinearProgress,
+  CircularProgress,
   useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -13,9 +13,10 @@ import { savePomodoroEntry } from "../utils/pomodoro";
 import { v4 as uuidv4 } from "uuid";
 import { Sheet } from "react-modal-sheet";
 import { getCurrentLanguage, useTranslations } from "../utils/i18n";
+import ringSound from "../assets/ring.mp3";
 
-const POMODORO_DURATION = 1 * 1; // 25 dakika
-const SHORT_BREAK = 1 * 1; // 5 dakika
+const POMODORO_DURATION = 25 * 60; // 25 dakika
+const SHORT_BREAK = 5 * 60; // 5 dakika
 const LONG_BREAK = 15 * 60; // 15 dakika
 
 const formatTime = (seconds: number) => {
@@ -95,7 +96,7 @@ const PomodoroTimer: React.FC<{
     }
     if (typeof window !== "undefined") {
       try {
-        new Audio("/ring.mp3").play();
+        new Audio(ringSound).play();
       } catch (err) {
         console.log(err);
       }
@@ -131,7 +132,7 @@ const PomodoroTimer: React.FC<{
   };
 
   return (
-    <Sheet isOpen={open} onClose={onClose} snapPoints={[0.4]} initialSnap={0}>
+    <Sheet isOpen={open} onClose={onClose} snapPoints={[0.5]} initialSnap={0}>
       <Sheet.Container
         style={{
           backgroundColor: theme.palette.background.paper,
@@ -221,28 +222,39 @@ const PomodoroTimer: React.FC<{
               </Button>
             </Box>
 
-            <Box sx={{ textAlign: "center", mb: 2 }}>
-              <Typography
-                variant="h2"
-                fontWeight={700}
-                sx={{ letterSpacing: 2 }}
-              >
-                {formatTime(seconds)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {mode === "work"
-                  ? t.pomodoroFocus
-                  : mode === "short"
-                  ? t.pomodoroShortBreak
-                  : t.pomodoroLongBreak}
-              </Typography>
+            {/* Progress Indicator */}
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <Box sx={{ position: "relative", display: "inline-flex" }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={progress()}
+                  size={160}
+                  thickness={4}
+                  sx={{ color: theme.palette.primary.main }}
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    color="text.primary"
+                    fontWeight={700}
+                  >
+                    {formatTime(seconds)}
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
-
-            <LinearProgress
-              variant="determinate"
-              value={progress()}
-              sx={{ height: 8, borderRadius: 4, mb: 2 }}
-            />
 
             <Box sx={{ display: "flex", gap: 2 }}>
               {running ? (
