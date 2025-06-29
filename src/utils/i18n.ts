@@ -278,6 +278,11 @@ export interface Translations {
     totalIncomeVsExpense: string;
     carryOverBalance: string;
     startByAddingEntry: string;
+
+    // SummaryBottomSheet keys
+    streaksCompleted: string;
+    todosCompleted: string;
+    pomodoroMinutes: string;
 };
 
 const englishTranslations: Translations = {
@@ -557,6 +562,11 @@ const englishTranslations: Translations = {
     totalIncomeVsExpense: "Income vs Expense",
     carryOverBalance: "Carry Over",
     startByAddingEntry: "Start by adding your first entry above",
+
+    // SummaryBottomSheet keys
+    streaksCompleted: "Streaks Completed",
+    todosCompleted: "Todos Completed",
+    pomodoroMinutes: "Pomodoro Minutes",
 };
 
 const turkishTranslations: Translations = {
@@ -835,6 +845,11 @@ const turkishTranslations: Translations = {
     totalIncomeVsExpense: "Gelir vs Gider",
     carryOverBalance: "Devreden",
     startByAddingEntry: "Yukarıdan ilk kaydınızı ekleyin",
+
+    // SummaryBottomSheet keys
+    streaksCompleted: "Tamamlanan Alışkanlık",
+    todosCompleted: "Tamamlanan Yapılacak",
+    pomodoroMinutes: "Pomodoro Dakikası",
 };
 
 const translations: Record<Language, Translations> = {

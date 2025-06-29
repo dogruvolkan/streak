@@ -24,14 +24,13 @@ import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import MoodTracker from "./components/MoodTracker";
 import PomodoroTimer from "./components/PomodoroTimer";
-import PomodoroHistoryBottomSheet from "./components/PomodoroHistoryBottomSheet";
 import TodoBottomSheet from "./components/TodoBottomSheet";
 import MoneyTrackerBottomSheet from "./components/MoneyTrackerBottomSheet";
+import SummaryBottomSheet from "./components/SummaryBottomSheet";
 import type {
   Streak,
   CreateStreakFormData,
   FreeDaySettings,
-  PomodoroHistoryEntry,
   TodoItem,
 } from "./types";
 import {
@@ -59,7 +58,6 @@ import {
 } from "./utils/theme";
 import { celebrateAchievement, setConfettiCallback } from "./utils/confetti";
 import { getTodayMood, getMoodEmoji } from "./utils/mood";
-import { getPomodoroHistory } from "./utils/pomodoro";
 import { loadTodos, saveTodos } from "./utils/todoLocalStorage";
 import { loadMoneyEntries, saveMoneyEntries } from "./utils/moneyLocalStorage";
 import { v4 as uuidv4 } from "uuid";
@@ -88,13 +86,10 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isMoodTrackerOpen, setIsMoodTrackerOpen] = useState(false);
   const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
-  const [isPomodoroHistoryOpen, setIsPomodoroHistoryOpen] = useState(false);
-  const [pomodoroHistoryDate, setPomodoroHistoryDate] = useState<string>("");
-  const [pomodoroHistoryEntries, setPomodoroHistoryEntries] = useState<
-    PomodoroHistoryEntry[]
-  >([]);
   const [isTodoSheetOpen, setIsTodoSheetOpen] = useState(false);
   const [isMoneySheetOpen, setIsMoneySheetOpen] = useState(false);
+  const [isSummarySheetOpen, setIsSummarySheetOpen] = useState(false);
+  const [summaryDate, setSummaryDate] = useState<string>("");
 
   const t = useTranslations(currentLanguage);
   const theme = createAppTheme(themeMode, themeColor);
@@ -464,12 +459,10 @@ function App() {
     setEditingStreak(null);
   };
 
-  // Takvimde bir güne tıklanınca Pomodoro geçmişini aç
+  // Takvimde bir güne tıklanınca Summary Bottom Sheet aç
   const handleCalendarDayClick = (date: Date) => {
-    const dateStr = date.toISOString().slice(0, 10);
-    setPomodoroHistoryDate(dateStr);
-    setPomodoroHistoryEntries(getPomodoroHistory(dateStr));
-    setIsPomodoroHistoryOpen(true);
+    setSummaryDate(date.toISOString().slice(0, 10));
+    setIsSummarySheetOpen(true);
   };
 
   const handleGlobalAddTodo = (text: string) => {
@@ -720,14 +713,6 @@ function App() {
           onClose={() => setIsPomodoroOpen(false)}
         />
 
-        {/* Pomodoro History Bottom Sheet */}
-        <PomodoroHistoryBottomSheet
-          open={isPomodoroHistoryOpen}
-          onClose={() => setIsPomodoroHistoryOpen(false)}
-          entries={pomodoroHistoryEntries}
-          date={pomodoroHistoryDate}
-        />
-
         {/* Global Todo Bottom Sheet */}
         <TodoBottomSheet
           open={isTodoSheetOpen}
@@ -747,6 +732,81 @@ function App() {
           onAdd={handleAddMoney}
           onDelete={handleDeleteMoney}
           language={currentLanguage}
+        />
+
+        {/* Summary Bottom Sheet */}
+        <SummaryBottomSheet
+          open={isSummarySheetOpen}
+          onClose={() => setIsSummarySheetOpen(false)}
+          date={summaryDate}
+          streaksCompleted={(() => {
+            // O gün tamamlanan streak sayısı
+            const d = new Date(summaryDate);
+            d.setHours(0, 0, 0, 0);
+            return streaks.filter((s) =>
+              (s.history || []).some((h) => {
+                const hd = new Date(h.date);
+                hd.setHours(0, 0, 0, 0);
+                return hd.getTime() === d.getTime();
+              })
+            ).length;
+          })()}
+          todosCompleted={(() => {
+            // O gün tamamlanan todo sayısı
+            return todos.filter((todo) => {
+              if (!todo.done || !todo.createdAt) return false;
+              const dateStr =
+                typeof todo.createdAt === "string"
+                  ? todo.createdAt.slice(0, 10)
+                  : new Date(todo.createdAt).toISOString().slice(0, 10);
+              return dateStr === summaryDate;
+            }).length;
+          })()}
+          mood={(() => {
+            // Sadece bugünün mood'u gösterilecek, number ise stringe maplenir
+            const mood = getTodayMood();
+            if (!mood) return undefined;
+            const moodMap = {
+              1: t.moodVeryBad || "Very Bad",
+              2: t.moodBad || "Bad",
+              3: t.moodNeutral || "Neutral",
+              4: t.moodGood || "Good",
+              5: t.moodVeryGood || "Very Good",
+            };
+            const moodStr =
+              typeof mood.mood === "number"
+                ? moodMap[String(mood.mood) as unknown as keyof typeof moodMap]
+                : mood.mood;
+            return {
+              mood: moodStr,
+              note: mood.note,
+              emoji: getMoodEmoji(mood.mood),
+            };
+          })()}
+          income={(() => {
+            // O gün gelen para
+            return moneyList
+              .filter(
+                (e) =>
+                  e.type === "income" && e.date.slice(0, 10) === summaryDate
+              )
+              .reduce((sum, e) => sum + e.amount, 0);
+          })()}
+          expense={(() => {
+            // O gün harcanan para
+            return moneyList
+              .filter(
+                (e) =>
+                  e.type === "expense" && e.date.slice(0, 10) === summaryDate
+              )
+              .reduce((sum, e) => sum + e.amount, 0);
+          })()}
+          pomodoroMinutes={(() => {
+            // O gün Pomodoro ile çalışılan dakika
+            return 0; // duration/workMinutes alanı yoksa 0 döndür
+          })()}
+          t={t}
+          currency={"₺"}
         />
       </Box>
     </ThemeProvider>
