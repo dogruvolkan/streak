@@ -78,7 +78,6 @@ function App() {
 
   const [showConfetti, setShowConfetti] = useState(false);
   const [isMoodTrackerOpen, setIsMoodTrackerOpen] = useState(false);
-  const [moodRefresh, setMoodRefresh] = useState(0); // Force re-render for mood updates
   const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
   const [isPomodoroHistoryOpen, setIsPomodoroHistoryOpen] = useState(false);
   const [pomodoroHistoryDate, setPomodoroHistoryDate] = useState<string>("");
@@ -656,11 +655,6 @@ function App() {
           open={isMoodTrackerOpen}
           onClose={() => setIsMoodTrackerOpen(false)}
           language={currentLanguage}
-          onMoodAdded={() => {
-            // Refresh calendar to show new mood
-            setMoodRefresh((prev) => prev + 1);
-            console.log("Mood entry added successfully!");
-          }}
         />
 
         {/* Confetti Component */}
