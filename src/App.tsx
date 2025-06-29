@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MoodIcon from "@mui/icons-material/Mood";
 import TimerIcon from "@mui/icons-material/Timer";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -21,7 +20,6 @@ import WeeklyCalendar from "./components/WeeklyCalendar";
 import AddStreakBottomSheet from "./components/AddStreakBottomSheet";
 import EditStreakBottomSheet from "./components/EditStreakBottomSheet";
 import StreakDetailBottomSheet from "./components/StreakDetailBottomSheet";
-import HelpBottomSheet from "./components/HelpBottomSheet";
 import Settings from "./components/Settings";
 import ConfettiComponent from "./components/ConfettiComponent";
 import MoodTracker from "./components/MoodTracker";
@@ -78,7 +76,6 @@ function App() {
   const [editingStreak, setEditingStreak] = useState<Streak | null>(null);
   const [detailStreak, setDetailStreak] = useState<Streak | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
@@ -558,13 +555,6 @@ function App() {
             >
               <AssignmentIcon />
             </IconButton>
-            {/* Help button */}
-            <IconButton
-              onClick={() => setIsHelpOpen(true)}
-              sx={{ color: "primary.main", mr: 1 }}
-            >
-              <HelpOutlineIcon />
-            </IconButton>
             {/* Pomodoro Timer button */}
             <IconButton
               onClick={() => setIsPomodoroOpen(true)}
@@ -600,13 +590,6 @@ function App() {
                 </Box>
               )}
             </IconButton>
-            {/* Settings button */}
-            <IconButton
-              onClick={() => setIsSettingsOpen(true)}
-              sx={{ color: "primary.main" }}
-            >
-              <SettingsIcon />
-            </IconButton>
             {/* Money Tracker button */}
             <IconButton
               onClick={() => setIsMoneySheetOpen(true)}
@@ -614,6 +597,13 @@ function App() {
               aria-label="Para Takibi"
             >
               <MonetizationOnIcon />
+            </IconButton>
+            {/* Settings button */}
+            <IconButton
+              onClick={() => setIsSettingsOpen(true)}
+              sx={{ color: "primary.main" }}
+            >
+              <SettingsIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -708,13 +698,6 @@ function App() {
             setDetailStreak(null);
           }}
           streak={detailStreak}
-          language={currentLanguage}
-        />
-
-        {/* Help Bottom Sheet */}
-        <HelpBottomSheet
-          open={isHelpOpen}
-          onClose={() => setIsHelpOpen(false)}
           language={currentLanguage}
         />
 
