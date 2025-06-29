@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -39,6 +39,16 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
   const [editingText, setEditingText] = React.useState("");
   const [todoInput, setTodoInput] = React.useState("");
   const [filter, setFilter] = useState<"all" | "active" | "done">("all");
+
+  // Her todo için ref tut
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Edit moduna girildiğinde ilgili satırı merkeze kaydır
+  useEffect(() => {
+    if (editingId && itemRefs.current[editingId]) {
+      itemRefs.current[editingId]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [editingId]);
 
   // Filtrelenmiş todo'lar (arama ve sıralama yok)
   const filteredTodos = todoList.filter((t) => {
@@ -185,6 +195,7 @@ const TodoBottomSheet: React.FC<TodoBottomSheetProps> = ({
               filteredTodos.map((todo) => (
                 <Box
                   key={todo.id}
+                  ref={el => { itemRefs.current[todo.id] = el as HTMLDivElement | null; }}
                   sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
                 >
                   <Button
